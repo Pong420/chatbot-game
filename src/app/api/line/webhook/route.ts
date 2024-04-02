@@ -57,7 +57,8 @@ async function handleEvent(event: WebhookEvent) {
 
   await supabase
     .from('counter')
-    .upsert({ id: event.source.userId, count: next });
+    .upsert({ id: event.source.userId, count: next })
+    .select();
 
   return client.replyMessage({
     replyToken: event.replyToken,

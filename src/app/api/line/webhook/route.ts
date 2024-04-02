@@ -9,7 +9,6 @@ import {
   Request as LineRequest,
   Response as LineResponse,
 } from '@line/bot-sdk/dist/middleware';
-import { supabase } from '@/utils/supabase';
 
 const channelSecret = process.env.LINE_CHANNEL_SECRET || '';
 const channelAccessToken = process.env.LINE_CHANNEL_ACCESS_TOKEN || '';
@@ -46,26 +45,12 @@ async function handleEvent(event: WebhookEvent) {
     throw new Error(`userId not found`);
   }
 
-  const user = await supabase
-    .from('counter')
-    .select('count')
-    .eq('id', event.source.userId)
-    .single();
-
-  const count = user.data?.count || 0;
-  const next = count + 1;
-
-  await supabase
-    .from('counter')
-    .upsert({ id: event.source.userId, count: next })
-    .select();
-
   return client.replyMessage({
     replyToken: event.replyToken,
     messages: [
       {
         type: 'text',
-        text: '' + next,
+        text: event.message.text,
       },
     ],
   });

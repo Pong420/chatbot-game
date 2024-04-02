@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { messagingApi, middleware } from '@line/bot-sdk';
+import { messagingApi, middleware, MessageEvent } from '@line/bot-sdk';
 import {
   Request as LineRequest,
   Response as LineResponse,
 } from '@line/bot-sdk/dist/middleware';
+import { Event } from '@line/bot-sdk/dist/webhook/api';
 
 const channelSecret = process.env.LINE_CHANNEL_SECRET || '';
 const channelAccessToken = process.env.LINE_CHANNEL_ACCESS_TOKEN || '';
@@ -16,13 +17,33 @@ const client = new messagingApi.MessagingApiClient({
 });
 
 export async function POST(req: NextRequest, res: NextResponse) {
-  const resp = await middleware({ channelSecret, channelAccessToken })(
+  await middleware({ channelSecret, channelAccessToken })(
     req as unknown as LineRequest,
     res as unknown as LineResponse,
     () => NextResponse.next()
   );
 
-  console.log(resp, req.body);
+  if (req.body && 'events' in req.body) {
+    const events = req.body.events as MessageEvent[];
+    events.forEach(handleEvent);
+    return Response.json({ ok: true });
+  }
 
-  return Response.json({ channelSecret, channelAccessToken });
+  return new Response(`Invalid`, { status: 400 });
+}
+
+function handleEvent(event: MessageEvent) {
+  if (event.type !== 'message' || event.message.type !== 'text') {
+    return Promise.resolve(null);
+  }
+
+  return client.replyMessage({
+    replyToken: event.replyToken,
+    messages: [
+      {
+        type: 'text',
+        text: event.message.text,
+      },
+    ],
+  });
 }

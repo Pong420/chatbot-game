@@ -1,0 +1,14 @@
+{
+  "*.{js,jsx}": [
+    "eslint --rule 'no-console: [\"error\", { allow: [\"warn\", \"error\", \"debug\", \"info\"] }]' --rule 'no-debugger: [\"error\"]' --max-warnings=0",
+    "prettier --write"
+  ],
+  "*.{ts,tsx}": [
+    "eslint --rule 'no-console: [\"error\", { allow: [\"warn\", \"error\", \"debug\", \"info\"] }]' --rule 'no-debugger: [\"error\"]' --max-warnings=0",
+    "bash -c \"tsc --noEmit\"",
+    "prettier --write"
+  ],
+  "{*.json,.{babelrc,eslintrc,prettierrc}}": ["prettier --write"],
+  "*.{css,scss}": ["prettier --single-quote --write"],
+  "*.{yml,md}": ["prettier --single-quote --write"]
+}

@@ -1,14 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import {
-  messagingApi,
-  middleware,
-  WebhookEvent,
-  WebhookRequestBody,
-} from '@line/bot-sdk';
-import {
-  Request as LineRequest,
-  Response as LineResponse,
-} from '@line/bot-sdk/dist/middleware';
+import { messagingApi, middleware, WebhookEvent, WebhookRequestBody } from '@line/bot-sdk';
+import { Request as LineRequest, Response as LineResponse } from '@line/bot-sdk/dist/middleware';
 
 const channelSecret = process.env.LINE_CHANNEL_SECRET || '';
 const channelAccessToken = process.env.LINE_CHANNEL_ACCESS_TOKEN || '';
@@ -17,7 +9,7 @@ if (!channelSecret) throw new Error(`channel secret not found`);
 if (!channelAccessToken) throw new Error(`access token not found`);
 
 const client = new messagingApi.MessagingApiClient({
-  channelAccessToken,
+  channelAccessToken
 });
 
 export async function POST(req: NextRequest, res: NextResponse) {
@@ -50,8 +42,8 @@ async function handleEvent(event: WebhookEvent) {
     messages: [
       {
         type: 'text',
-        text: event.message.text,
-      },
-    ],
+        text: event.message.text
+      }
+    ]
   });
 }

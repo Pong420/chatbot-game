@@ -4,7 +4,6 @@ import {
   Request as LineRequest,
   Response as LineResponse,
 } from '@line/bot-sdk/dist/middleware';
-import { Event } from '@line/bot-sdk/dist/webhook/api';
 
 const channelSecret = process.env.LINE_CHANNEL_SECRET || '';
 const channelAccessToken = process.env.LINE_CHANNEL_ACCESS_TOKEN || '';
@@ -22,6 +21,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
     res as unknown as LineResponse,
     () => NextResponse.next()
   );
+
+  console.log({ body: req.json() });
 
   if (req.body && 'events' in req.body) {
     const events = req.body.events as MessageEvent[];

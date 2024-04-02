@@ -46,7 +46,7 @@ async function handleEvent(event: WebhookEvent) {
     messages: [
       {
         type: 'text',
-        text: event.message.text,
+        text: event.source.userId || `userId not found`,
       },
     ],
   });

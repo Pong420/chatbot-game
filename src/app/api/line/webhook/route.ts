@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { messagingApi, middleware, MessageEvent } from '@line/bot-sdk';
+import {
+  messagingApi,
+  middleware,
+  WebhookEvent,
+  WebhookRequestBody,
+} from '@line/bot-sdk';
 import {
   Request as LineRequest,
   Response as LineResponse,
@@ -22,18 +27,16 @@ export async function POST(req: NextRequest, res: NextResponse) {
     () => NextResponse.next()
   );
 
-  console.log({ body: req.json() });
-
-  if (req.body && 'events' in req.body) {
-    const events = req.body.events as MessageEvent[];
-    events.forEach(handleEvent);
+  try {
+    const { events }: WebhookRequestBody = await req.json();
+    await Promise.all(events.map(handleEvent));
     return Response.json({ ok: true });
+  } catch (error) {
+    return new Response(`Bad Request`, { status: 500 });
   }
-
-  return new Response(`Invalid`, { status: 400 });
 }
 
-function handleEvent(event: MessageEvent) {
+async function handleEvent(event: WebhookEvent) {
   if (event.type !== 'message' || event.message.type !== 'text') {
     return Promise.resolve(null);
   }

@@ -15,7 +15,7 @@ const client = new messagingApi.MessagingApiClient({
   channelAccessToken,
 });
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest, res: NextResponse) {
   const resp = await middleware({ channelSecret, channelAccessToken })(
     req as unknown as LineRequest,
     res as unknown as LineResponse,

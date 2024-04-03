@@ -3,6 +3,7 @@ export type UnionToIntercetion<U> = (U extends any ? (arg: U) => any : never) ex
 export type Constructable<T extends abstract new (...args: any) => any> = new (
   ...args: ConstructorParameters<T>
 ) => InstanceType<T>;
+// export type Constructable<T extends any> = new (...args: any[]) => T;
 
 /**
  * https://github.com/type-challenges/type-challenges/issues/7939

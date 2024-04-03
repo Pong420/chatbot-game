@@ -1,7 +1,11 @@
-import { Character, CauseOfDeath } from './character';
+import { Character } from './_character';
+import { CauseOfDeath } from '../cause-of-death';
 
-export class WereWolf extends Character {
+export class Werewolf extends Character {
+  character = 'werewolf';
+
   killed: Character[] = [];
+
   hungry = false;
 
   get suicide() {

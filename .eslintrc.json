@@ -5,7 +5,7 @@
   },
   "overrides": [
     {
-      "files": ["src/utils/database.types.ts"],
+      "files": ["src/utils/database.types.ts", "src/types/**/*"],
       "rules": {
         "no-unused-vars": 0
       }

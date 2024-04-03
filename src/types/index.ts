@@ -1,9 +1,6 @@
 export type ValueOf<T> = T[keyof T];
 export type UnionToIntercetion<U> = (U extends any ? (arg: U) => any : never) extends (arg: infer I) => any ? I : never;
-export type Constructable<T extends abstract new (...args: any) => any> = new (
-  ...args: ConstructorParameters<T>
-) => InstanceType<T>;
-// export type Constructable<T extends any> = new (...args: any[]) => T;
+export type Constructable<T extends any> = new (...args: any[]) => T;
 
 /**
  * https://github.com/type-challenges/type-challenges/issues/7939

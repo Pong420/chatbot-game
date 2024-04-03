@@ -3,6 +3,6 @@ import { Night } from './night';
 
 export class Vote extends Stage {
   next() {
-    return this.transition(() => Night);
+    return Night;
   }
 }

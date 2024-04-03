@@ -1,8 +1,8 @@
 import { test, expect } from 'vitest';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { Game } from './game';
-import { Pending, Start, Night } from './stage';
 import { Character } from './character';
+import { Pending, Start, Night } from './stage';
 
 test('serialize / deserialize', () => {
   const game = plainToInstance(Game, { id: '1' });
@@ -20,7 +20,6 @@ test('serialize / deserialize', () => {
 
   stage = game.next();
   stage = game.next();
-  expect(stage).toBeInstanceOf(Night);
 
   plain = instanceToPlain(game);
   let game2 = plainToInstance(Game, plain);
@@ -30,17 +29,20 @@ test('serialize / deserialize', () => {
   expect(game.players.get('1')).toEqual(game2.players.get('1'));
 });
 
-test('stage', () => {
+test('flow', () => {
   const game = plainToInstance(Game, { id: '1' });
-  const pending = game.stage as Pending;
-  expect(pending).toBeInstanceOf(Pending);
+  let stage = game.stage;
 
-  for (let i = 0; i < pending.numOfPlayers; i++) {
-    pending.join({ id: `${i}`, name: `player_${i}` });
+  expect(stage).toBeInstanceOf(Pending);
+
+  for (let i = 0; i < stage.numOfPlayers; i++) {
+    stage.as(Pending).join({ id: `${i}`, name: `player_${i}` });
   }
-  expect(pending.players.size).toEqual(pending.numOfPlayers);
+  expect(game.players.size).toEqual(game.stage.numOfPlayers);
 
-  const start = (game.stage = pending.next());
-  expect(start).toBeInstanceOf(Start);
-  expect(pending.players.size).toEqual(pending.numOfPlayers);
+  stage = game.next();
+  expect(stage).toBeInstanceOf(Start);
+
+  stage = game.next();
+  expect(stage).toBeInstanceOf(Night);
 });

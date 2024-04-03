@@ -1,6 +1,5 @@
 import 'reflect-metadata';
-import { instanceToPlain, plainToInstance, Transform, TransformationType, Type } from 'class-transformer';
-import { Constructable } from '@/types';
+import { Transform, TransformationType, Type } from 'class-transformer';
 import { Character } from '../character';
 
 export class Stage {
@@ -16,18 +15,17 @@ export class Stage {
     Object.assign(this, { ...initialState });
   }
 
-  as<C extends Constructable<typeof Stage>>(StageConstructor: C) {
+  as<C extends typeof Stage>(StageConstructor: C) {
     if (!(this instanceof StageConstructor)) {
       throw new Error(`expect ${StageConstructor.name} but it is ${this['name']}`);
     }
     return this as InstanceType<C>;
   }
 
-  transition(stage: () => any) {
-    return plainToInstance(stage(), instanceToPlain(this)) as Stage;
-  }
-
-  next(): Stage {
+  next(): typeof Stage {
     throw `bad implementation`;
   }
+
+  onStart() {}
+  onEnd() {}
 }

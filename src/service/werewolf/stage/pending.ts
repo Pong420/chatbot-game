@@ -20,6 +20,6 @@ export class Pending extends Stage {
     if (this.players.size < this.numOfPlayers) {
       throw `遊戲人數不足以開始遊戲`;
     }
-    return this.transition(() => Start);
+    return Start;
   }
 }

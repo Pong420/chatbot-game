@@ -1,4 +1,4 @@
-import { Type, DiscriminatorDescriptor, Exclude } from 'class-transformer';
+import { Type, DiscriminatorDescriptor, Exclude, plainToInstance, instanceToPlain } from 'class-transformer';
 import { Stage, Pending, stages } from './stage';
 
 const subTypes: DiscriminatorDescriptor['subTypes'] = [];
@@ -32,7 +32,10 @@ export class Game {
   }
 
   next() {
-    this.stage = this.stage.next();
+    const Stage = this.stage.next();
+    this.stage.onEnd();
+    this.stage = plainToInstance(Stage, instanceToPlain(this.stage)) as Stage;
+    this.stage.onStart();
     return this.stage;
   }
 }

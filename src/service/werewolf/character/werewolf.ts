@@ -11,14 +11,22 @@ export class Werewolf extends Character {
 
   @Action(() => Night)
   kill(character: Character) {
+    if (character.isDead) throw errors('TARGET_IS_DEAD');
+    const suicide = this.id === character.id;
     character.dead(KillBy, { userId: this.id });
     this.killed.push(character.id);
-    this.hungry = false;
+    this.hungry = !suicide;
+    return { suicide };
   }
 
   @Action(() => Night)
   idle() {
     if (this.hungry) throw errors('HUNGRY');
     this.hungry = true;
+  }
+
+  @Action(() => Night)
+  suicide() {
+    return this.kill(this);
   }
 }

@@ -35,6 +35,9 @@ export class Stage {
     this['__type'] = this['constructor'].name;
   }
 
+  /**
+   * TODO: remove it
+   */
   as<C extends typeof Stage>(StageConstructor: C) {
     if (!(this instanceof StageConstructor)) {
       throw new Error(`expect ${StageConstructor.name} but it is ${this['name']}`);
@@ -52,12 +55,10 @@ export class Stage {
     return targets;
   }
 
-  endTurn() {
+  ended() {
     let endTurn = true;
     this.survivors.forEach(player => {
-      if (!player.endTurn) {
-        endTurn = false;
-      }
+      endTurn = !player.endTurn ? false : endTurn;
     });
     return endTurn;
   }

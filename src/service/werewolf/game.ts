@@ -46,7 +46,7 @@ export class Game {
 
   next() {
     // TODO:
-    if (!this.stage.endTurn()) throw errors('NOT_END');
+    if (!this.stage.ended()) throw errors('NOT_END');
     const Stage = this.stage.next();
     this.stage.onEnd();
     this.stage = plainToInstance(Stage, instanceToPlain(this.stage)) as Stage;

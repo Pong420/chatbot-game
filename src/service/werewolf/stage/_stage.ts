@@ -54,7 +54,7 @@ export class Stage {
 
   endTurn() {
     let endTurn = true;
-    this.players.forEach(player => {
+    this.survivors.forEach(player => {
       if (!player.endTurn) {
         endTurn = false;
       }
@@ -69,6 +69,8 @@ export class Stage {
   onStart() {
     this.survivors = [];
     this.players.forEach(player => {
+      player.stage = this;
+      player.isDead = player.causeOfDeath.length > 0;
       !player.isDead && this.survivors.push(player);
     });
   }

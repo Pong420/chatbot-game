@@ -1,12 +1,15 @@
 const keys = [
-  'END_TURN',
+  'SYSTEM_ERROR',
+  'TURN_ENDED',
   'HUNGRY',
-  'NOT_END',
+  'STAGE_NOT_ENDED',
   'GAME_FULL',
   'NOT_ENOUGH_PLAYERS',
   'DUPLICATED_JOIN',
   'YOU_DEAD',
-  'NOT_YOUR_TURN'
+  'NOT_YOUR_TURN',
+  'VOTED',
+  'TARGET_IS_DEAD'
 ] as const;
 
 export class WerewolfError extends Error {} // for future use, attached with more information

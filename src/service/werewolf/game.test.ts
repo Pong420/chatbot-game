@@ -15,8 +15,6 @@ test('flow', () => {
   let stage = game.stage;
   let werewolfs: Werewolf[] = [];
   let villagers: Villager[] = [];
-  let [werewolf] = werewolfs;
-  let [villager] = villagers;
 
   const next = (StageConstructor: typeof Stage) => {
     stage = game.next();
@@ -25,8 +23,6 @@ test('flow', () => {
 
     werewolfs = game.getCharacters(Werewolf);
     villagers = game.getCharacters(Villager);
-    [werewolf] = werewolfs;
-    [villager] = villagers;
   };
 
   expect(stage).toBeInstanceOf(Init);
@@ -54,15 +50,18 @@ test('flow', () => {
   next(Night);
   expect(werewolfs.length).toBeGreaterThanOrEqual(1);
   expect(villagers.length).toBeGreaterThanOrEqual(1);
-  expect(() => game.next()).toThrowError(errors('NOT_END'));
+  expect(() => game.next()).toThrowError(errors('STAGE_NOT_ENDED'));
 
-  werewolf.kill(villager);
+  werewolfs[0].kill(villagers[0]);
   werewolfs.forEach(w => !w.endTurn && w.idle());
+  expect(() => werewolfs[0].kill(villagers[0])).toThrowError();
 
   // --------------------------------------------------------------------------------
 
   next(Daytime);
   expect(stage.survivors).toHaveLength(stage.numOfPlayers - 1);
-  expect(stage.survivors).not.toContainEqual(villager);
-  expect(() => werewolf.kill(villagers[1])).toThrowError(errors('NOT_YOUR_TURN'));
+  expect(stage.survivors).not.toContainEqual(villagers[0]);
+  expect(() => werewolfs[0].kill(villagers[1])).toThrowError(errors('NOT_YOUR_TURN'));
+
+  // expect
 });

@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { Transform, TransformationType, instanceToPlain, plainToInstance } from 'class-transformer';
 import { Character, characters } from '../character';
+import { errors } from '../error';
 
 // const subTypes: DiscriminatorDescriptor['subTypes'] = [];
 const characterMap: Record<string, typeof Character> = {};
@@ -64,7 +65,7 @@ export class Stage {
   }
 
   next(): typeof Stage {
-    throw `bad implementation`;
+    throw errors('SYSTEM_ERROR');
   }
 
   onStart() {

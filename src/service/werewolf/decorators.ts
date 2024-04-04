@@ -13,7 +13,7 @@ export function Action(get?: () => Constructable<Stage>) {
         throw errors('NOT_YOUR_TURN');
       }
       if (this.isDead) throw errors('YOU_DEAD');
-      if (this.endTurn) throw errors('END_TURN');
+      if (this.endTurn) throw errors('TURN_ENDED');
       this.endTurn = true;
       return method.apply(this, arguments);
     };

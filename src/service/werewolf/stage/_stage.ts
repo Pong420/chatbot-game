@@ -12,6 +12,8 @@ for (const k in characters) {
 }
 
 export class Stage {
+  __type: string;
+
   numOfPlayers = 6;
 
   @Transform(({ value, options, type }) => {
@@ -28,8 +30,8 @@ export class Stage {
   })
   players = new Map<string, Character>();
 
-  constructor(initialState?: object) {
-    Object.assign(this, { ...initialState });
+  constructor() {
+    this['__type'] = this['constructor'].name;
   }
 
   as<C extends typeof Stage>(StageConstructor: C) {

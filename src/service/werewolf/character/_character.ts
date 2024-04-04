@@ -1,4 +1,5 @@
-import { VoteResult, CauseOfDeath } from '../cause-of-death';
+import { Type } from 'class-transformer';
+import { VoteResult, CauseOfDeath, Death, deathSubTypes } from '../death';
 
 export class Character {
   id: string; // user id
@@ -8,7 +9,20 @@ export class Character {
   turn = 1;
   endTurn = true;
 
+  @Type(() => Death, {
+    discriminator: {
+      property: '__type',
+      subTypes: deathSubTypes
+    }
+  })
   causeOfDeath: CauseOfDeath[] = [];
+
+  is<C extends typeof Character>(CharacterConstructor: C) {
+    if (!(this instanceof CharacterConstructor)) {
+      throw new Error(`expect ${CharacterConstructor.name} but it is ${this['name']}`);
+    }
+    return this as InstanceType<C>;
+  }
 
   get isDead() {
     return this.causeOfDeath.length > 0;

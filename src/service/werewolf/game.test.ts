@@ -25,11 +25,11 @@ test('serialize / deserialize', () => {
   stage = game.next();
   expect(game.stage).toBeInstanceOf(Night);
 
-  let game2 = Game.create({ id: game.id, stage: game.serialize().stage });
+  let game2 = Game.create({ ...game.serialize() });
 
   expect(game2.stage).toBeInstanceOf(Night);
+  expect(game2.stage).toEqual(game.stage);
   expect(game2.players.get('1')).toBeInstanceOf(Character);
-  expect(game2.players.get('1')?.character).toEqual(expect.any(String));
   expect(game.players.get('1')).toEqual(game2.players.get('1'));
 });
 
@@ -64,7 +64,7 @@ test('flow', () => {
 
   expect(werewolfs.length).toBeGreaterThanOrEqual(1);
   expect(villagers.length).toBeGreaterThanOrEqual(1);
-  expect(() => game.next()).toThrowError(expect.any(String));
+  expect(() => game.next()).toThrowError(errors('NOT_END'));
 
   werewolf.kill(villagers[0]);
   werewolfs.forEach(w => !w.endTurn && w.idle());

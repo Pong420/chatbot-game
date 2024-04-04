@@ -1,6 +1,6 @@
 import { test, expect } from 'vitest';
 import { Game } from './game';
-import { Character } from './character';
+import { Character, Villager, Werewolf } from './character';
 import { Init, Start, Night } from './stage';
 
 test('serialize / deserialize', () => {
@@ -55,4 +55,9 @@ test('flow', () => {
 
   stage = game.next();
   expect(stage).toBeInstanceOf(Night);
+
+  const werewolfs = game.getCharacters(Werewolf);
+  const villagers = game.getCharacters(Villager);
+  expect(werewolfs.length).toBeGreaterThanOrEqual(1);
+  expect(villagers.length).toBeGreaterThanOrEqual(1);
 });

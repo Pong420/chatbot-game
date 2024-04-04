@@ -1,5 +1,6 @@
 import { Type, DiscriminatorDescriptor, plainToInstance, instanceToPlain } from 'class-transformer';
 import { Init, Stage, stages } from './stage';
+import { Character } from './character';
 
 const subTypes: DiscriminatorDescriptor['subTypes'] = [];
 
@@ -28,6 +29,16 @@ export class Game {
 
   get players() {
     return this.stage.players;
+  }
+
+  getCharacters<C extends typeof Character>(CharacterContructor: C) {
+    const targets: InstanceType<C>[] = [];
+    this.players.forEach(c => {
+      if (c instanceof CharacterContructor) {
+        targets.push(c as InstanceType<C>);
+      }
+    });
+    return targets;
   }
 
   static create({ id, stage }: CreateGame) {

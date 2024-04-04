@@ -1,7 +1,8 @@
 import { test, expect } from 'vitest';
 import { Game } from './game';
 import { Character, Villager, Werewolf } from './character';
-import { Init, Start, Night } from './stage';
+import { Init, Start, Night, Daytime } from './stage';
+import { errors } from './error';
 
 test('serialize / deserialize', () => {
   const game = Game.create({ id: '1' });
@@ -39,25 +40,35 @@ test('flow', () => {
 
   stage = game.next();
   expect(stage).toBeInstanceOf(Start);
-  expect(() => game.next()).toThrowError(expect.any(String));
+  expect(() => game.next()).toThrowError(errors('NOT_ENOUGH_PLAYERS'));
 
   for (let i = 0; i <= stage.numOfPlayers; i++) {
     const join = () => stage.as(Start).join({ id: `${i}`, name: `player_${i}` });
 
     if (i >= stage.numOfPlayers) {
-      expect(join).toThrowError(expect.any(String)); // full
+      expect(join).toThrowError(errors('GAME_FULL')); // full
     } else {
       join();
-      expect(join).toThrowError(expect.any(String)); // duplicated join
+      expect(join).toThrowError(errors('DUPLICATED_JOIN')); // duplicated join
     }
   }
+
   expect(game.players.size).toEqual(game.stage.numOfPlayers);
 
   stage = game.next();
   expect(stage).toBeInstanceOf(Night);
 
-  const werewolfs = game.getCharacters(Werewolf);
-  const villagers = game.getCharacters(Villager);
+  const werewolfs = game.stage.getCharacters(Werewolf);
+  const villagers = game.stage.getCharacters(Villager);
+  const [werewolf] = werewolfs;
+
   expect(werewolfs.length).toBeGreaterThanOrEqual(1);
   expect(villagers.length).toBeGreaterThanOrEqual(1);
+  expect(() => game.next()).toThrowError(expect.any(String));
+
+  werewolf.kill(villagers[0]);
+  werewolfs.forEach(w => !w.endTurn && w.idle());
+
+  stage = game.next();
+  expect(stage).toBeInstanceOf(Daytime);
 });

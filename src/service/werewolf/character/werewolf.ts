@@ -1,23 +1,24 @@
 import { Character } from './_character';
-import { CauseOfDeath } from '../cause-of-death';
+import { Action } from '../decorators';
+import { errors } from '../error';
 
 export class Werewolf extends Character {
   character = 'werewolf';
 
-  killed: Character[] = [];
-
   hungry = false;
 
-  get suicide() {
-    return this.isKilledBy(this);
-  }
+  killed: string[] = [];
 
+  @Action()
   kill(character: Character) {
     character.dead(this);
-    this.killed.push(character);
+    this.killed.push(character.id);
+    this.hungry = false;
   }
 
-  killBy(causeOfDeath: CauseOfDeath) {
-    super.dead(causeOfDeath);
+  @Action()
+  idle() {
+    if (this.hungry) throw errors('HUNGRY');
+    this.hungry = true;
   }
 }

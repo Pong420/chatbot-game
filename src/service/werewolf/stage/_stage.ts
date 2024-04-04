@@ -39,6 +39,26 @@ export class Stage {
     return this as InstanceType<C>;
   }
 
+  getCharacters<C extends typeof Character>(CharacterContructor: C) {
+    const targets: InstanceType<C>[] = [];
+    this.players.forEach(c => {
+      if (c instanceof CharacterContructor) {
+        targets.push(c as InstanceType<C>);
+      }
+    });
+    return targets;
+  }
+
+  endTurn() {
+    let endTurn = true;
+    this.players.forEach(player => {
+      if (!player.endTurn) {
+        endTurn = false;
+      }
+    });
+    return endTurn;
+  }
+
   next(): typeof Stage {
     throw `bad implementation`;
   }

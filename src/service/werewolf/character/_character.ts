@@ -6,6 +6,7 @@ export class Character {
   character: string;
 
   turn = 1;
+  endTurn = true;
 
   causeOfDeath: CauseOfDeath[] = [];
 

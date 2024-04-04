@@ -4,6 +4,7 @@ import { Character, Villager, Werewolf } from '../character';
 import { Stage } from './_stage';
 import { Night } from './night';
 import type { Init } from './init';
+import { errors } from '../error';
 
 /**
  * For extends configuration from Init
@@ -13,11 +14,11 @@ export interface Start extends Init {}
 export class Start extends Stage {
   join(player: Pick<Character, 'id' | 'name'>) {
     if (this.players.has(player.id)) {
-      throw '已經加入遊戲';
+      throw errors('DUPLICATED_JOIN');
     }
 
     if (this.players.size === this.numOfPlayers) {
-      throw '遊戲已滿';
+      throw errors('GAME_FULL');
     }
 
     this.players.set(player.id, plainToInstance(Character, player));
@@ -25,7 +26,7 @@ export class Start extends Stage {
 
   next() {
     if (this.players.size < this.numOfPlayers) {
-      throw `遊戲人數不足以開始遊戲`;
+      throw errors('NOT_ENOUGH_PLAYERS');
     }
     return Night;
   }

@@ -1,5 +1,5 @@
-import { Type, DiscriminatorDescriptor, Exclude, plainToInstance, instanceToPlain } from 'class-transformer';
-import { Stage, Pending, stages } from './stage';
+import { Type, DiscriminatorDescriptor, plainToInstance, instanceToPlain } from 'class-transformer';
+import { Pending, Stage, stages } from './stage';
 
 const subTypes: DiscriminatorDescriptor['subTypes'] = [];
 
@@ -10,25 +10,32 @@ for (const k in stages) {
   }
 }
 
+export interface CreateGame {
+  id: string;
+  stage?: object;
+}
+
 export class Game {
   id: string;
 
   @Type(() => Stage, {
-    keepDiscriminatorProperty: true,
     discriminator: {
-      property: 'name',
+      property: '__type',
       subTypes
     }
   })
   stage: Stage = new Pending();
 
-  @Exclude()
   get players() {
     return this.stage.players;
   }
 
-  constructor(initialState?: object) {
-    Object.assign(this, { ...initialState });
+  static create({ id, stage }: CreateGame) {
+    return plainToInstance(Game, { id, stage }, { exposeUnsetFields: false });
+  }
+
+  serialize() {
+    return instanceToPlain(this) as Game;
   }
 
   next() {

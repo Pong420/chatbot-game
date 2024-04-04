@@ -3,8 +3,6 @@ import { Transform, TransformationType, Type } from 'class-transformer';
 import { Character } from '../character';
 
 export class Stage {
-  name: string;
-
   numOfPlayers = 6;
 
   @Type(() => Character)

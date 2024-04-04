@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { Transform, TransformationType, instanceToPlain, plainToInstance } from 'class-transformer';
 import { Character, characters } from '../character';
 
+// const subTypes: DiscriminatorDescriptor['subTypes'] = [];
 const characterMap: Record<string, typeof Character> = {};
 
 for (const k in characters) {
@@ -22,13 +23,13 @@ export class Stage {
       : new Map(
           value.map(([k, v]: [any, any]) => {
             const instance = plainToInstance(characterMap[v['__type']], v, options);
-            // @ts-expect-error
-            delete instance['__type'];
             return [k, instance];
           })
         );
   })
   players = new Map<string, Character>();
+
+  survivors: Character[] = [];
 
   constructor() {
     this['__type'] = this['constructor'].name;
@@ -65,6 +66,12 @@ export class Stage {
     throw `bad implementation`;
   }
 
-  onStart() {}
+  onStart() {
+    this.survivors = [];
+    this.players.forEach(player => {
+      !player.isDead && this.survivors.push(player);
+    });
+  }
+
   onEnd() {}
 }

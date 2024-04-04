@@ -1,44 +1,19 @@
 import { test, expect } from 'vitest';
 import { Game } from './game';
-import { Character, Villager, Werewolf } from './character';
+import { Villager, Werewolf } from './character';
 import { Init, Start, Night, Daytime } from './stage';
 import { errors } from './error';
 
-test('serialize / deserialize', () => {
-  const game = Game.create({ id: '1' });
-  let stage = game.stage;
-  expect(stage).toBeInstanceOf(Init);
-
-  stage = game.next();
-  expect(stage).toBeInstanceOf(Start);
-
-  expect(game.serialize().stage.players).toEqual([]);
-
-  for (let i = 0; i < stage.numOfPlayers; i++) {
-    stage.as(Start).join({ id: `${i}`, name: `player_${i}` });
-  }
-
-  expect(game.id).toEqual('1');
-  expect(game.players.get('1')).not.toMatchObject({ character: expect.any(String) });
-  expect(game.players.size).toEqual(stage.numOfPlayers);
-
-  stage = game.next();
-  expect(game.stage).toBeInstanceOf(Night);
-
-  let game2 = Game.create({ ...game.serialize() });
-
-  expect(game2.stage).toBeInstanceOf(Night);
-  expect(game2.stage).toEqual(game.stage);
-  expect(game2.players.get('1')).toBeInstanceOf(Character);
-  expect(game.players.get('1')).toEqual(game2.players.get('1'));
-});
+const testSerialisation = (game: Game) => expect(game).toEqual(Game.create({ ...game.serialize() }));
 
 test('flow', () => {
   const game = Game.create({ id: '1' });
   let stage = game.stage;
   expect(stage).toBeInstanceOf(Init);
+  testSerialisation(game);
 
   stage = game.next();
+  testSerialisation(game);
   expect(stage).toBeInstanceOf(Start);
   expect(() => game.next()).toThrowError(errors('NOT_ENOUGH_PLAYERS'));
 
@@ -56,10 +31,11 @@ test('flow', () => {
   expect(game.players.size).toEqual(game.stage.numOfPlayers);
 
   stage = game.next();
+  testSerialisation(game);
   expect(stage).toBeInstanceOf(Night);
 
-  const werewolfs = game.stage.getCharacters(Werewolf);
-  const villagers = game.stage.getCharacters(Villager);
+  const werewolfs = game.getCharacters(Werewolf);
+  const villagers = game.getCharacters(Villager);
   const [werewolf] = werewolfs;
 
   expect(werewolfs.length).toBeGreaterThanOrEqual(1);
@@ -70,5 +46,9 @@ test('flow', () => {
   werewolfs.forEach(w => !w.endTurn && w.idle());
 
   stage = game.next();
+  testSerialisation(game);
   expect(stage).toBeInstanceOf(Daytime);
+  expect(villagers[0].isDead).toBeTruthy();
+  expect(stage.survivors).toHaveLength(stage.numOfPlayers - 1);
+  expect(stage.survivors).not.toContainEqual(villagers[0]);
 });

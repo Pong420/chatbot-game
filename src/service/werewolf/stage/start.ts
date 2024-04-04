@@ -13,21 +13,14 @@ export interface Start extends Init {}
 
 export class Start extends Stage {
   join(player: Pick<Character, 'id' | 'name'>) {
-    if (this.players.has(player.id)) {
-      throw errors('DUPLICATED_JOIN');
-    }
-
-    if (this.players.size === this.numOfPlayers) {
-      throw errors('GAME_FULL');
-    }
+    if (this.players.has(player.id)) throw errors('DUPLICATED_JOIN');
+    if (this.players.size === this.numOfPlayers) throw errors('GAME_FULL');
 
     this.players.set(player.id, plainToInstance(Character, player));
   }
 
   next() {
-    if (this.players.size < this.numOfPlayers) {
-      throw errors('NOT_ENOUGH_PLAYERS');
-    }
+    if (this.players.size < this.numOfPlayers) throw errors('NOT_ENOUGH_PLAYERS');
     return Night;
   }
 
@@ -40,5 +33,7 @@ export class Start extends Stage {
     this.players = new Map(
       Array.from(this.players, ([k, v]) => [k, plainToInstance(randomPick(characters), { ...v })])
     );
+
+    this.survivors = Array.from(this.players.values());
   }
 }

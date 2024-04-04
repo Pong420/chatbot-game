@@ -1,6 +1,7 @@
 import { Type, DiscriminatorDescriptor, plainToInstance, instanceToPlain } from 'class-transformer';
 import { Init, Stage, stages } from './stage';
 import { errors } from './error';
+import { Character } from './character';
 
 const subTypes: DiscriminatorDescriptor['subTypes'] = [];
 
@@ -17,6 +18,10 @@ export interface CreateGame {
 }
 
 export class Game {
+  static create(payload: object) {
+    return plainToInstance(Game, payload, { exposeUnsetFields: false }) as Game;
+  }
+
   id: string;
 
   @Type(() => Stage, {
@@ -31,8 +36,8 @@ export class Game {
     return this.stage.players;
   }
 
-  static create({ id, stage }: CreateGame) {
-    return plainToInstance(Game, { id, stage }, { exposeUnsetFields: false });
+  getCharacters<C extends typeof Character>(CharacterContructor: C) {
+    return this.stage.getCharacters(CharacterContructor);
   }
 
   serialize() {

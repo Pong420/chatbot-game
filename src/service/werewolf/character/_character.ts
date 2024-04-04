@@ -1,5 +1,6 @@
-import { Type } from 'class-transformer';
+import { plainToInstance, Type } from 'class-transformer';
 import { VoteResult, CauseOfDeath, Death, deathSubTypes } from '../death';
+import { Constructable } from '@/types';
 
 export class Character {
   id: string; // user id
@@ -28,13 +29,14 @@ export class Character {
     return this.causeOfDeath.length > 0;
   }
 
-  dead(causeOfDeath: CauseOfDeath) {
+  dead<C extends CauseOfDeath>(causeOfDeath: Constructable<C>, payload: { [K in keyof C]?: C[K] }) {
+    const instance = plainToInstance(causeOfDeath, payload);
     // if (causeOfDeath instanceof Werewolf && this.protectedBy) {
     //   this.protectedBy.protected.push(this);
     //   this.protectedBy = undefined;
     //   return;
     // }
-    this.causeOfDeath.push(causeOfDeath);
+    this.causeOfDeath.push(instance);
   }
 
   isKilledBy(character: Character) {

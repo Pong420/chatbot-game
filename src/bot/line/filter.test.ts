@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { createHandler, WebhookEvent } from './createHandler';
+import { createHandler, WebhookEvent } from './handler';
 import { Group, Single, TextEqual, TextMatch, UserId } from './filter';
 import { User } from './test/mockUser';
 
@@ -30,9 +30,9 @@ test('UserId', () => {
 });
 
 test('TextEqual', () => {
-  const singleHandler = createHandler(Single, TextEqual('Hello'), text => (text === 'Hello' ? 'World' : 'Invalid'));
+  const singleHandler = createHandler(Single, TextEqual('Hello'), () => 'World');
   expect(singleHandler(user.singleMessage('Hello'))).resolves.toEqual('World');
-  expect(singleHandler(user.singleMessage(`${Math.random()}`))).resolves.toEqual('Invalid');
+  expect(singleHandler(user.singleMessage(`${Math.random()}`))).resolves.toBeUndefined();
 });
 
 test('TextMatch', () => {

@@ -43,17 +43,16 @@ export class Group {
   }
 }
 
-const getGroupMemberCount = vi.fn().mockImplementation(async function (groupId: string): Promise<MembersCountResponse> {
+client.getGroupMemberCount = vi.fn().mockImplementation(async function (
+  groupId: string
+): Promise<MembersCountResponse> {
   const group = groups.get(groupId);
   if (!group) throw new Error(`group not found`);
   return group.stats();
 });
 
-const getGroupSummary = vi.fn().mockImplementation(async function (groupId: string): Promise<GroupSummaryResponse> {
+client.getGroupSummary = vi.fn().mockImplementation(async function (groupId: string): Promise<GroupSummaryResponse> {
   const group = groups.get(groupId);
   if (!group) throw new Error(`group not found`);
   return group.stats();
 });
-
-client.getGroupMemberCount = getGroupMemberCount.bind(client);
-client.getGroupSummary = getGroupSummary.bind(client);

@@ -1,4 +1,4 @@
-import { createHandler } from '../createHandler';
+import { createHandler } from '../handler';
 import { Group, Single, TextEqual, UserId } from '../filter';
 
 export const testHandlers = [

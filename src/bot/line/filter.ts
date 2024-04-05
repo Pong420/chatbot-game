@@ -1,4 +1,4 @@
-import { createFilter } from './createHandler';
+import { createFilter } from './handler';
 import { getPostBackText, isGroupEvent, isPostBackEvent, isSingleEvent, isTextMessage } from './types';
 import { LineBotErrorMessage } from './errors';
 
@@ -33,7 +33,7 @@ export const TextEqual = (options: string | string[], { shouldReturn = true, pos
       text = event.message.text;
     }
 
-    if (text && shouldReturn && validate(text)) return text;
+    if (!!text && shouldReturn && validate(text)) return text;
   });
 };
 

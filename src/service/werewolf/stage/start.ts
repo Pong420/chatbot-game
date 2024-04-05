@@ -20,11 +20,12 @@ export class Start extends Stage {
   }
 
   next() {
-    if (this.players.size < this.numOfPlayers) throw errors('NOT_ENOUGH_PLAYERS');
     return Night;
   }
 
   onEnd(): void {
+    if (this.players.size < this.numOfPlayers) throw errors('NOT_ENOUGH_PLAYERS');
+
     const characters: (typeof Character)[] = [Werewolf];
     while (characters.length < this.numOfPlayers) {
       characters.push(Villager);
@@ -34,6 +35,6 @@ export class Start extends Stage {
       Array.from(this.players, ([k, v]) => [k, plainToInstance(randomPick(characters), { ...v })])
     );
 
-    this.survivors = Array.from(this.players.values());
+    super.onEnd();
   }
 }

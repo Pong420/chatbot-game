@@ -3,7 +3,6 @@ import { Transform, TransformationType, instanceToPlain, plainToInstance } from 
 import { Character, characters } from '../character';
 import { errors } from '../error';
 
-// const subTypes: DiscriminatorDescriptor['subTypes'] = [];
 const characterMap: Record<string, typeof Character> = {};
 
 for (const k in characters) {
@@ -16,11 +15,13 @@ for (const k in characters) {
 export class Stage {
   __type: string;
 
+  turn = 0;
+
   numOfPlayers = 6;
 
   @Transform(({ value, options, type }) => {
     return type === TransformationType.CLASS_TO_PLAIN
-      ? Array.from(value.entries(), ([k, v]) => [k, { ...instanceToPlain(v, options), __type: v.constructor.name }])
+      ? Array.from(value, ([k, v]) => [k, { ...instanceToPlain(v, options), __type: v.constructor.name }])
       : new Map(
           value.map(([k, v]: [any, any]) => {
             const instance = plainToInstance(characterMap[v['__type']], v, options);
@@ -69,13 +70,17 @@ export class Stage {
   }
 
   onStart() {
-    this.survivors = [];
     this.players.forEach(player => {
       player.stage = this;
+    });
+    this.survivors = this.survivors.map(survivor => this.players.get(survivor.id)!);
+  }
+
+  onEnd() {
+    this.survivors = [];
+    this.players.forEach(player => {
       player.isDead = player.causeOfDeath.length > 0;
       !player.isDead && this.survivors.push(player);
     });
   }
-
-  onEnd() {}
 }

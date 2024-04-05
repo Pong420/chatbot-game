@@ -9,6 +9,7 @@ const keys = [
   'YOU_DEAD',
   'NOT_YOUR_TURN',
   'VOTED',
+  'VOTE_OUT_OF_RANGE',
   'TARGET_IS_DEAD'
 ] as const;
 

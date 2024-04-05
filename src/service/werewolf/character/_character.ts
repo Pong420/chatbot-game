@@ -1,7 +1,9 @@
 import { Exclude, plainToInstance, Type } from 'class-transformer';
 import { Constructable } from '@/types';
 import { VoteResult, CauseOfDeath, Death, deathSubTypes } from '../death';
-import type { Stage } from '../stage';
+import { Daytime, type Stage } from '../stage';
+import { Action } from '../decorators';
+import { errors } from '../error';
 
 export class Character {
   id: string; // user id
@@ -22,6 +24,10 @@ export class Character {
   @Exclude()
   stage: Stage;
 
+  // TODO:
+  // statistics / action logs
+  // - number of votes, who vote most
+
   is<C extends typeof Character>(CharacterConstructor: C) {
     if (!(this instanceof CharacterConstructor)) {
       throw new Error(`expect ${CharacterConstructor.name} but it is ${this['name']}`);
@@ -37,6 +43,24 @@ export class Character {
     //   return;
     // }
     this.causeOfDeath.push(instance);
+  }
+
+  @Action(() => Daytime)
+  vote(character: Character) {
+    const stage = this.stage.as(Daytime);
+    if (character.isDead) throw errors('TARGET_IS_DEAD');
+    if (stage.voted.includes(this.id)) throw errors('VOTED');
+    if (stage.candidates && !stage.candidates.includes(character.id)) throw errors('VOTE_OUT_OF_RANGE');
+    stage.voted.push(this.id);
+    stage.votesResults[character.id].push(this.id);
+    return { self: this.id === character.id };
+  }
+
+  @Action(() => Daytime)
+  waive() {
+    const stage = this.stage.as(Daytime);
+    stage.voted.push(this.id);
+    stage.waived.push(this.id);
   }
 
   isKilledBy(character: Character) {

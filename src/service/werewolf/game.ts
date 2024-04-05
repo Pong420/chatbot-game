@@ -1,5 +1,5 @@
 import { Type, DiscriminatorDescriptor, plainToInstance, instanceToPlain } from 'class-transformer';
-import { Init, Stage, stages } from './stage';
+import { stages, Init, Stage, End } from './stage';
 import { errors } from './error';
 import { Character } from './character';
 
@@ -47,9 +47,10 @@ export class Game {
   next() {
     // TODO:
     if (!this.stage.ended()) throw errors('STAGE_NOT_ENDED');
-    const Stage = this.stage.next();
     this.stage.onEnd();
-    this.stage = plainToInstance(Stage, instanceToPlain(this.stage)) as Stage;
+
+    let NextStage = this.players.size > 0 && this.stage.survivors.length === 0 ? End : this.stage.next();
+    this.stage = plainToInstance(NextStage, instanceToPlain(this.stage)) as Stage;
     this.stage.onStart();
     return this.stage;
   }

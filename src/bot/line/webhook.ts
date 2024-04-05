@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { client, runMiddleware, WebhookEvent, WebhookRequestBody } from './client';
+import { WebhookEvent, WebhookRequestBody } from '@line/bot-sdk';
+import { client, runMiddleware } from './client';
+import { Handler } from './createHandler';
+import { textMessage } from './utils/createMessage';
+import { testHandlers } from './service/test';
 
 export async function POST(req: NextRequest, res: NextResponse) {
   await runMiddleware(req, res);
@@ -13,22 +17,19 @@ export async function POST(req: NextRequest, res: NextResponse) {
   }
 }
 
+const handlers: Handler[] = [...testHandlers];
+
 async function handleEvent(event: WebhookEvent) {
-  if (event.type !== 'message' || event.message.type !== 'text') {
-    return Promise.resolve(null);
-  }
-
-  if (!event.source.userId) {
-    throw new Error(`userId not found`);
-  }
-
-  return client.replyMessage({
-    replyToken: event.replyToken,
-    messages: [
-      {
-        type: 'text',
-        text: event.message.text
+  for (const handler of handlers) {
+    if ('replyToken' in event) {
+      const message = await handler(event);
+      if (message) {
+        return client.replyMessage({
+          replyToken: event.replyToken,
+          messages: typeof message === 'string' ? [textMessage(message)] : Array.isArray(message) ? message : [message],
+          notificationDisabled: true
+        });
       }
-    ]
-  });
+    }
+  }
 }

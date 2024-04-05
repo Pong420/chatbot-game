@@ -5,10 +5,8 @@ import { Request as LineRequest, Response as LineResponse } from '@line/bot-sdk/
 const channelSecret = process.env.LINE_CHANNEL_SECRET || '';
 const channelAccessToken = process.env.LINE_CHANNEL_ACCESS_TOKEN || '';
 
-if (!channelSecret) throw new Error(`channel secret not found`);
-if (!channelAccessToken) throw new Error(`access token not found`);
-
-export * from '@line/bot-sdk';
+if (!channelSecret && process.env.NODE_ENV !== 'test') throw new Error(`channel secret not found`);
+if (!channelAccessToken && process.env.NODE_ENV !== 'test') throw new Error(`access token not found`);
 
 export const client = new messagingApi.MessagingApiClient({
   channelAccessToken

@@ -31,3 +31,5 @@ export type Get<T, Paths> = Paths extends `${infer A}.${infer B}`
   : Paths extends keyof T
     ? T[Paths]
     : never;
+
+export type AnyFunction = (...args: any[]) => any;

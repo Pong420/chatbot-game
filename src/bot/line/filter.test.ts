@@ -13,20 +13,20 @@ test('Single & Group', () => {
     return `World`;
   };
   const singleHandler = createHandler(Single, callback);
-  const gorupHandler = createHandler(Group, callback);
+  const groupHandler = createHandler(Group, callback);
 
   expect(singleHandler(singleMessage)).resolves.toEqual('World');
   expect(singleHandler(groupMessage)).resolves.toBeUndefined();
-  expect(gorupHandler(singleMessage)).resolves.toBeUndefined();
-  expect(gorupHandler(groupMessage)).resolves.toEqual('World');
+  expect(groupHandler(singleMessage)).resolves.toBeUndefined();
+  expect(groupHandler(groupMessage)).resolves.toEqual('World');
 });
 
 test('UserId', () => {
   const singleHandler = createHandler(Single, UserId(), userId => userId);
-  const gorupHandler = createHandler(Group, UserId(), (_event, userId) => userId);
+  const groupHandler = createHandler(Group, UserId(), (_event, userId) => userId);
 
   expect(singleHandler(singleMessage)).resolves.toEqual(user.userId);
-  expect(gorupHandler(groupMessage)).resolves.toEqual(user.userId);
+  expect(groupHandler(groupMessage)).resolves.toEqual(user.userId);
 });
 
 test('TextEqual', () => {

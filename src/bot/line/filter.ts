@@ -1,6 +1,15 @@
-import { createFilter } from './handler';
 import { getPostBackText, isGroupEvent, isPostBackEvent, isSingleEvent, isTextMessage } from './types';
 import { LineBotErrorMessage } from './errors';
+import { WebhookEvent, SKIP } from './handler';
+
+export function createFilter<R>(callback: (event: WebhookEvent) => R | boolean) {
+  return function (event: WebhookEvent) {
+    const res = callback(event);
+    if (res === false) throw SKIP;
+    if (res === true) return SKIP;
+    return res as Exclude<R, boolean>;
+  };
+}
 
 export const Group = createFilter(event => (isGroupEvent(event) ? event : false));
 export const MemberJoin = createFilter(event => event.type === 'memberJoined');

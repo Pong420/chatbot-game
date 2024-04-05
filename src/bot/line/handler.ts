@@ -29,15 +29,6 @@ export type { WebhookEvent };
 
 export const SKIP = Symbol('SKIP');
 
-export function createFilter<R>(callback: (event: WebhookEvent) => R | boolean) {
-  return function (event: WebhookEvent) {
-    const res = callback(event);
-    if (res === false) throw SKIP;
-    if (res === true) return SKIP;
-    return res as Exclude<R, boolean>;
-  };
-}
-
 export function createHandler<AnyFunctions extends AnyFunctionArray>(
   ...payload: [...AnyFunctions, Callback<AnyFunctions>]
 ) {

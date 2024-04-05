@@ -6,11 +6,11 @@ export class Death {
   }
 }
 
-export class KillBy extends Death {
+export class Killed extends Death {
   userId: string;
 }
 
-export class VoteResult extends Death {
+export class Voted extends Death {
   votes: string[] = [];
   total: number;
 
@@ -21,5 +21,5 @@ export class VoteResult extends Death {
 
 export type CauseOfDeath = InstanceType<(typeof types)[number]>;
 
-const types = [KillBy, VoteResult];
+const types = [Killed, Voted];
 export const deathSubTypes = types.map(value => ({ value, name: value.name }));

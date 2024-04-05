@@ -1,7 +1,7 @@
 import { Character } from './_character';
 import { Action } from '../decorators';
 import { errors } from '../error';
-import { KillBy } from '../death';
+import { Killed } from '../death';
 import { Night } from '../stage';
 
 export class Werewolf extends Character {
@@ -13,7 +13,7 @@ export class Werewolf extends Character {
   kill(character: Character) {
     if (character.isDead) throw errors('TARGET_IS_DEAD');
     const suicide = this.id === character.id;
-    character.dead(KillBy, { userId: this.id });
+    character.dead(Killed, { userId: this.id });
     this.killed.push(character.id);
     this.hungry = !suicide;
     return { suicide };

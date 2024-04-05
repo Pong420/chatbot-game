@@ -1,4 +1,4 @@
-import { VoteResult } from '../death';
+import { Voted } from '../death';
 import { errors } from '../error';
 import { Stage } from './_stage';
 import { Night } from './night';
@@ -46,7 +46,7 @@ export class Daytime extends Stage {
         results.players.forEach(id => {
           const player = this.players.get(id)!;
           if (!player) throw errors('SYSTEM_ERROR');
-          player.dead(VoteResult, { votes: this.votesResults[id], total: results.total });
+          player.dead(Voted, { votes: this.votesResults[id], total: results.total });
         });
       }
     } else {

@@ -3,7 +3,7 @@ import { Game } from './game';
 import { Character, Villager, Werewolf } from './character';
 import { Init, Start, Night, Daytime, Stage } from './stage';
 import { errors } from './error';
-import { VoteResult } from './death';
+import { Voted } from './death';
 
 const testSerialisation = (game: Game) => {
   const serialized = Game.create(game.serialize());
@@ -121,6 +121,6 @@ test('flow', () => {
   // --------------------------------------------------------------------------------
 
   next(Night);
-  expect(villagers[1].causeOfDeath[0]).toBeInstanceOf(VoteResult);
+  expect(villagers[1].causeOfDeath[0]).toBeInstanceOf(Voted);
   expect(survivors).toHaveLength(stage.numOfPlayers - 2);
 });

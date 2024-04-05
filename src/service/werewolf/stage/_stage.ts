@@ -1,5 +1,5 @@
-import 'reflect-metadata';
 import { Transform, TransformationType, instanceToPlain, plainToInstance } from 'class-transformer';
+import { Constructable } from '@/types';
 import { Character, characters } from '../character';
 import { errors } from '../error';
 
@@ -47,11 +47,14 @@ export class Stage {
     return this as InstanceType<C>;
   }
 
-  getCharacters<C extends typeof Character>(CharacterContructor: C) {
-    const targets: InstanceType<C>[] = [];
-    this.players.forEach(c => {
+  getCharacters<C extends Character>(
+    CharacterContructor: Constructable<C>,
+    from: Array<Character> | Map<string, Character> = this.players
+  ) {
+    const targets: C[] = [];
+    from.forEach(c => {
       if (c instanceof CharacterContructor) {
-        targets.push(c as InstanceType<C>);
+        targets.push(c as C);
       }
     });
     return targets;

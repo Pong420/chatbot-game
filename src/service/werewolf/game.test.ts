@@ -6,7 +6,7 @@ import { errors } from './error';
 import { Voted } from './death';
 
 const testSerialisation = (game: Game) => {
-  const serialized = Game.create(game.serialize());
+  const serialized = Game.create(Game.serialize(game));
   expect(game).toMatchObject(serialized);
 };
 

@@ -1,7 +1,8 @@
 import { Type, DiscriminatorDescriptor, plainToInstance, instanceToPlain } from 'class-transformer';
+import { Constructable } from '@/types';
 import { stages, Init, Stage, End } from './stage';
 import { errors } from './error';
-import { Character } from './character';
+import { Character, Werewolf } from './character';
 
 const subTypes: DiscriminatorDescriptor['subTypes'] = [];
 
@@ -22,6 +23,10 @@ export class Game {
     return plainToInstance(Game, payload, { exposeUnsetFields: false }) as Game;
   }
 
+  static serialize(payload: Game) {
+    return instanceToPlain(payload);
+  }
+
   id: string;
 
   @Type(() => Stage, {
@@ -36,12 +41,29 @@ export class Game {
     return this.stage.players;
   }
 
-  getCharacters<C extends typeof Character>(CharacterContructor: C) {
-    return this.stage.getCharacters(CharacterContructor);
+  getCharacters<C extends Character>(
+    CharacterContructor: Constructable<C>,
+    from?: Array<Character> | Map<string, Character>
+  ) {
+    return this.stage.getCharacters(CharacterContructor, from);
   }
 
-  serialize() {
-    return instanceToPlain(this) as Game;
+  shouldEndGame() {
+    if (this.stage instanceof Init) return;
+
+    const survivors = this.stage.survivors;
+    const werewolfs = this.getCharacters(Werewolf, survivors);
+    const allDead = survivors.length === 0;
+    const werewolfWin =
+      werewolfs.length > 1
+        ? survivors.length <= werewolfs.length // remaining werewolfs
+        : werewolfs.length === 1 && survivors.length <= 2; // remaining 1 werewolf and 1 good guy;
+    const allWerewolfsDead = !werewolfs.length;
+    const ended = allDead || allWerewolfsDead || werewolfWin;
+
+    if (ended) {
+      return { allDead, allWerewolfsDead, werewolfWin };
+    }
   }
 
   next() {
@@ -49,7 +71,7 @@ export class Game {
     if (!this.stage.ended()) throw errors('STAGE_NOT_ENDED');
     this.stage.onEnd();
 
-    let NextStage = this.players.size > 0 && this.stage.survivors.length === 0 ? End : this.stage.next();
+    let NextStage = this.shouldEndGame() ? End : this.stage.next();
     this.stage = plainToInstance(NextStage, instanceToPlain(this.stage)) as Stage;
     this.stage.onStart();
     return this.stage;

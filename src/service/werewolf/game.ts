@@ -71,7 +71,7 @@ export class Game {
     if (!this.stage.ended()) throw errors('STAGE_NOT_ENDED');
     this.stage.onEnd();
 
-    let NextStage = this.shouldEndGame() ? End : this.stage.next();
+    const NextStage = this.shouldEndGame() ? End : this.stage.next();
     this.stage = plainToInstance(NextStage, instanceToPlain(this.stage)) as Stage;
     this.stage.onStart();
     return this.stage;

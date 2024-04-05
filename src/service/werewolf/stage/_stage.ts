@@ -23,6 +23,7 @@ export class Stage {
     return type === TransformationType.CLASS_TO_PLAIN
       ? Array.from(value, ([k, v]) => [k, { ...instanceToPlain(v, options), __type: v.constructor.name }])
       : new Map(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           value.map(([k, v]: [any, any]) => {
             const instance = plainToInstance(characterMap[v['__type']], v, options);
             return [k, instance];

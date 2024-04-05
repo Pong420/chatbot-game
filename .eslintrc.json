@@ -1,13 +1,27 @@
 {
-  "extends": "next",
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react-hooks/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "react-refresh"],
   "rules": {
-    "no-unused-vars": ["warn", { "ignoreRestSiblings": true, "argsIgnorePattern": "^_" }]
+    "react-refresh/only-export-components": "warn",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-unused-vars": ["warn", { "ignoreRestSiblings": true, "argsIgnorePattern": "^_" }],
+    "@typescript-eslint/ban-ts-comment": ["error", { "ts-ignore": "allow-with-description" }],
+    "@typescript-eslint/no-unsafe-enum-comparison": "off",
+    "@typescript-eslint/no-unsafe-declaration-merging": "off",
+    "@typescript-eslint/unbound-method": "off",
+    "@typescript-eslint/no-var-requires": "off"
   },
   "overrides": [
     {
-      "files": ["src/utils/database.types.ts", "src/types/**/*"],
+      "files": ["src/utils/database.types.ts"],
       "rules": {
-        "no-unused-vars": 0
+        "@typescript-eslint/no-unused-vars": 0
       }
     }
   ]

@@ -82,15 +82,16 @@ test('flow', () => {
     expect(survivor.vote(survivor)).toMatchObject({ self: true });
   });
   survivors.forEach(survivor => {
-    expect(daytime.votesResults[survivor.id]).toHaveLength(1);
+    expect(daytime.candidates.get(survivor.id)).toHaveLength(1);
   });
+  expect(daytime.countResults()).toMatchObject({ numberOfVotes: survivors.length, count: 1 });
 
   // --------------------------------------------------------------------------------
 
-  // every one gets one vote in previous round, so vote again
+  // everyone gets one vote in previous round, so vote again
   next(Daytime);
   daytime = stage.as(Daytime);
-  expect(daytime.candidates).toEqual(survivors.map(p => p.id));
+  expect(daytime.candidates.size).toBe(survivors.length);
   expect(() => game.next()).toThrowError(errors('STAGE_NOT_ENDED'));
   expect(() => villagers[2].vote(villagers[0])).toThrowError(errors('TARGET_IS_DEAD')); // expecet not to VOTE_OUT_OF_RANGE
 
@@ -98,12 +99,14 @@ test('flow', () => {
   werewolfs[0].vote(villagers[1]);
   survivors.forEach(survivor => !survivor.endTurn && survivor.waive());
 
+  expect(daytime.countResults()).toMatchObject({ numberOfVotes: 2, count: 1 });
+
   // --------------------------------------------------------------------------------
 
   // two players gets one vote, others player wavied, so vote again
   next(Daytime);
   daytime = stage.as(Daytime);
-  expect(daytime.candidates).toHaveLength(2);
+  expect(daytime.candidates.size).toBe(2);
   expect(() => villagers[2].vote(villagers[2])).toThrowError(errors('VOTE_OUT_OF_RANGE'));
   expect(() => villagers[2].vote(villagers[3])).toThrowError(errors('VOTE_OUT_OF_RANGE'));
 
@@ -111,16 +114,23 @@ test('flow', () => {
   werewolfs[0].vote(villagers[1]);
   survivors.forEach(survivor => !survivor.endTurn && survivor.waive());
 
+  expect(daytime.countResults()).toMatchObject({ numberOfVotes: 2, count: 1 });
+
   // --------------------------------------------------------------------------------
 
   // two players gets one vote, others player wavied, so vote again
   next(Daytime);
   daytime = stage.as(Daytime);
-  survivors.forEach(survivor => survivor.vote(villagers[1]));
+  survivors.forEach(survivor => (survivor.id === villagers[1].id ? survivor.waive() : survivor.vote(villagers[1])));
+
+  expect(daytime.countResults()).toMatchObject({ numberOfVotes: survivors.length - 1, count: survivors.length - 1 });
 
   // --------------------------------------------------------------------------------
 
+  // villagers[1] is dead as all players voted
+
   next(Night);
   expect(villagers[1].causeOfDeath[0]).toBeInstanceOf(Voted);
+  expect(villagers[1].causeOfDeath[0] as Voted).toHaveProperty('total', survivors.length);
   expect(survivors).toHaveLength(stage.numOfPlayers - 2);
 });

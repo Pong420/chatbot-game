@@ -1,53 +1,73 @@
+import { Transform, TransformationType } from 'class-transformer';
 import { Voted } from '../death';
 import { errors } from '../error';
 import { Stage } from './_stage';
 import { Night } from './night';
 
+const intialResults = { numberOfVotes: 0, count: 0, players: [] as string[] };
+
 export class Daytime extends Stage {
   voted: string[];
-  waived: string[];
-  candidates?: string[];
-  votesResults: Record<string, string[]>;
-  finalResults = { total: 0, players: [] as string[] };
+
+  @Transform(({ type, value }) => (type === TransformationType.CLASS_TO_PLAIN ? Array.from(value) : new Map(value)))
+  candidates = new Map<string, string[]>();
+
+  results: typeof intialResults;
+
+  countResults() {
+    const results = { ...this.results };
+
+    this.candidates.forEach((votes, id) => {
+      if (votes.length && votes.length >= results.count) {
+        if (results.count !== votes.length) {
+          results.players = [];
+        }
+        results.count = votes.length;
+        results.players.push(id);
+      }
+      results.numberOfVotes += votes.length;
+    });
+
+    return results;
+  }
 
   onStart(): void {
     super.onStart();
-
     this.voted = [];
-    this.waived = [];
-    this.votesResults = {};
-    this.finalResults = { total: 0, players: [] as string[] };
+    this.results = { ...intialResults };
+
+    /**
+     * this.candidates.size > 0 if previous round multiple players have the some votes
+     */
+    if (!this.candidates.size) {
+      this.survivors.forEach(survivor => {
+        this.candidates.set(survivor.id, []);
+      });
+    }
 
     this.survivors.forEach(character => {
       character.endTurn = false;
-      this.votesResults[character.id] = [];
     });
   }
 
   onEnd(): void {
-    const results = this.finalResults;
+    const results = this.countResults();
+    this.results = results;
 
-    for (const id in this.votesResults) {
-      const votes = this.votesResults[id];
-      if (votes.length && votes.length >= results.total) {
-        if (results.total !== votes.length) {
-          results.players = [];
-        }
-        results.total = votes.length;
-        results.players.push(id);
-      }
-    }
-
-    if (results.total) {
+    if (results.count) {
+      // true if more than 1 players have the same votes
       if (results.players.length > 1) {
-        this.candidates = [...results.players];
-      } else {
-        this.candidates = undefined;
+        // update the candidates for next round
+        this.candidates.clear();
         results.players.forEach(id => {
-          const player = this.players.get(id)!;
-          if (!player) throw errors('SYSTEM_ERROR');
-          player.dead(Voted, { votes: this.votesResults[id], total: results.total });
+          this.candidates.set(id, []);
         });
+      } else {
+        const [id] = results.players;
+        const player = this.players.get(id);
+        if (!player) throw errors('SYSTEM_ERROR');
+        player.dead(Voted, { votes: this.candidates.get(id), total: results.numberOfVotes });
+        this.candidates.clear();
       }
     } else {
       // all wavied
@@ -57,6 +77,6 @@ export class Daytime extends Stage {
   }
 
   next(): typeof Stage {
-    return this.candidates?.length ? Daytime : Night;
+    return this.candidates.size ? Daytime : Night;
   }
 }

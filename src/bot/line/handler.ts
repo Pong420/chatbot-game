@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Message, WebhookEvent } from '@line/bot-sdk';
-import { AnyFunction } from '@/types';
 import { client } from './client';
 import { textMessage } from './utils/createMessage';
 
@@ -11,16 +10,17 @@ export interface Handler {
 }
 
 type FilterArg<T> = Exclude<T, undefined | null | typeof SKIP>;
+type WebhookFunction = (event: WebhookEvent) => any;
 
 type ExtractReturnType<T extends readonly unknown[]> = T extends [infer F, ...infer R]
-  ? F extends AnyFunction
+  ? F extends WebhookFunction
     ? FilterArg<ReturnType<F>> extends never
       ? [...ExtractReturnType<R>]
       : [FilterArg<ReturnType<F>>, ...ExtractReturnType<R>]
     : ExtractReturnType<R>
   : [];
 
-export type AnyFunctionArray = ReadonlyArray<AnyFunction>;
+export type AnyFunctionArray = ReadonlyArray<WebhookFunction>;
 type Callback<AnyFunctions extends AnyFunctionArray> = (
   ...args: [...ExtractReturnType<AnyFunctions>, WebhookEvent]
 ) => ReturnType<Handler>;

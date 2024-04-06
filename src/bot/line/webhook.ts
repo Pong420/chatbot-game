@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { WebhookRequestBody } from '@line/bot-sdk';
 import { runMiddleware } from './client';
 import { Handler, createEventHandler } from './handler';
-import { testHandlers } from './service/test';
+import { debugHandlers } from './service/debug';
+import './messages';
 
 export async function POST(req: NextRequest, res: NextResponse) {
   await runMiddleware(req, res);
@@ -15,6 +16,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
   }
 }
 
-const handlers: Handler[] = [...testHandlers];
+const handlers: Handler[] = [...debugHandlers];
 
 const handleEvent = createEventHandler(handlers);

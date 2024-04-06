@@ -22,7 +22,7 @@ export const UserId = ({ warning = true } = {}) =>
   createFilter(event => {
     const userId = event.source.userId;
     if (userId) return userId;
-    if (warning) throw new LineBotErrorMessage('CANNOT_GET_USER_ID');
+    if (warning) throw new LineBotErrorMessage('CANNOT_GetUserID');
   });
 
 export const TextEqual = (options: string | string[], { shouldReturn = true, postbackOnly = false } = {}) => {

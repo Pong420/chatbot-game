@@ -68,7 +68,7 @@ export class Stage {
   }
 
   next(): typeof Stage {
-    throw t('SYSTEM_ERROR');
+    throw t('SystemError');
   }
 
   onStart() {

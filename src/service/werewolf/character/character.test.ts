@@ -19,5 +19,5 @@ test('Werewolf', async () => {
   expect(villager.isKilledBy(werewolf)).toBeTruthy();
 
   werewolf.endTurn = false;
-  expect(() => werewolf.kill(villager)).toThrowError(t('DUPLICATE_KILL'));
+  expect(() => werewolf.kill(villager)).toThrowError(t('DuplicatedKill'));
 });

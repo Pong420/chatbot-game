@@ -1,7 +1,7 @@
 import { Message } from '@line/bot-sdk';
 import { textMessage } from './utils/createMessage';
 
-const keys = ['CANNOT_GET_USER_ID'] as const;
+const keys = ['CANNOT_GetUserID'] as const;
 
 export type LineBotErrorKey = (typeof keys)[number];
 

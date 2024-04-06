@@ -68,7 +68,7 @@ export class Game {
 
   next() {
     // TODO:
-    if (!this.stage.ended()) throw t('STAGE_NOT_ENDED');
+    if (!this.stage.ended()) throw t('StageNotEnded');
     this.stage.onEnd();
 
     const NextStage = this.shouldEndGame() ? End : this.stage.next();

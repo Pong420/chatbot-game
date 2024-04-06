@@ -34,16 +34,16 @@ const createGame = ({ numOfPlayers = 13 } = {}) => {
   testSerialisation();
 
   next(Start);
-  expect(() => game.next()).toThrowError(t('NOT_ENOUGH_PLAYERS'));
+  expect(() => game.next()).toThrowError(t('NoEnoughPlayers'));
 
   for (let i = 0; i < numOfPlayers; i++) {
     const join = () => stage.as(Start).join({ id: `${i}`, name: `player_${i}` });
 
     if (i >= 12) {
-      expect(join).toThrowError(t('GAME_FULL')); // full
+      expect(join).toThrowError(t('GameIsFull')); // full
     } else {
       join();
-      expect(join).toThrowError(t('DUPLICATED_JOIN')); // duplicated join
+      expect(join).toThrowError(t('Joined')); // duplicated join
     }
   }
   expect(game.players.size).toEqual(Math.min(numOfPlayers, 12));
@@ -57,7 +57,7 @@ test('flow', () => {
   expect(stage.turn).toBe(1);
   expect(werewolfs.length).toBeGreaterThanOrEqual(1);
   expect(villagers.length).toBeGreaterThanOrEqual(1);
-  expect(() => game.next()).toThrowError(t('STAGE_NOT_ENDED'));
+  expect(() => game.next()).toThrowError(t('StageNotEnded'));
 
   werewolfs[0].kill(villagers[0]);
   werewolfs.forEach(w => !w.endTurn && w.idle());
@@ -69,17 +69,17 @@ test('flow', () => {
   next(Daytime);
   expect(survivors).toHaveLength(stage.players.size - 1);
   expect(survivors).not.toContainEqual(villagers[0]);
-  expect(() => werewolfs[0].kill(villagers[1])).toThrowError(t('NOT_YOUR_TURN'));
+  expect(() => werewolfs[0].kill(villagers[1])).toThrowError(t('NotYourTurn'));
 
   let daytime = stage.as(Daytime);
-  expect(() => villagers[0].vote(villagers[0])).toThrowError(t('YOU_DEAD'));
-  expect(() => villagers[0].vote(villagers[1])).toThrowError(t('YOU_DEAD'));
-  expect(() => villagers[2].vote(villagers[0])).toThrowError(t('TARGET_IS_DEAD'));
+  expect(() => villagers[0].vote(villagers[0])).toThrowError(t('YouDead'));
+  expect(() => villagers[0].vote(villagers[1])).toThrowError(t('YouDead'));
+  expect(() => villagers[2].vote(villagers[0])).toThrowError(t('TargetIsDead'));
 
   villagers[1].vote(werewolfs[0]);
   werewolfs[0].vote(villagers[1]);
 
-  expect(() => game.next()).toThrowError(t('STAGE_NOT_ENDED'));
+  expect(() => game.next()).toThrowError(t('StageNotEnded'));
   survivors.forEach(survivor => {
     if (survivor.endTurn) return;
     expect(survivor.vote(survivor)).toMatchObject({ self: true });
@@ -102,8 +102,8 @@ test('flow', () => {
       expect(daytime.candidates.size).toBe(2);
     }
 
-    expect(() => game.next()).toThrowError(t('STAGE_NOT_ENDED'));
-    expect(() => villagers[2].vote(villagers[0])).toThrowError(t('TARGET_IS_DEAD')); // expecet not to VOTE_OUT_OF_RANGE
+    expect(() => game.next()).toThrowError(t('StageNotEnded'));
+    expect(() => villagers[2].vote(villagers[0])).toThrowError(t('TargetIsDead')); // expecet not to VoteOutOfRange
 
     villagers[1].vote(werewolfs[0]);
     werewolfs[0].vote(villagers[1]);
@@ -130,7 +130,7 @@ test('flow', () => {
   expect(villagers[1].causeOfDeath[0] as Voted).toHaveProperty('total', survivors.length);
   expect(survivors).toHaveLength(stage.players.size - 2);
 
-  expect(() => werewolfs[0].kill(villagers[1])).toThrowError(t('TARGET_IS_DEAD')); // expecet not to VOTE_OUT_OF_RANGE
+  expect(() => werewolfs[0].kill(villagers[1])).toThrowError(t('TargetIsDead')); // expecet not to VoteOutOfRange
   werewolfs[0].kill(villagers[2]);
 
   // --------------------------------------------------------------------------------

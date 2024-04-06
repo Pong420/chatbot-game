@@ -7,7 +7,7 @@ import { Night } from './night';
 const intialResults = { numberOfVotes: 0, count: 0, players: [] as string[] };
 
 export class Daytime extends Stage {
-  voted: string[];
+  Voted: string[];
 
   @Transform(({ type, value }) => (type === TransformationType.CLASS_TO_PLAIN ? Array.from(value) : new Map(value)))
   candidates = new Map<string, string[]>();
@@ -33,7 +33,7 @@ export class Daytime extends Stage {
 
   onStart(): void {
     super.onStart();
-    this.voted = [];
+    this.Voted = [];
     this.results = { ...intialResults };
 
     /**
@@ -65,7 +65,7 @@ export class Daytime extends Stage {
       } else {
         const [id] = results.players;
         const player = this.players.get(id);
-        if (!player) throw t('SYSTEM_ERROR');
+        if (!player) throw t('SystemError');
         player.dead(Voted, { votes: this.candidates.get(id), total: results.numberOfVotes });
         this.candidates.clear();
       }

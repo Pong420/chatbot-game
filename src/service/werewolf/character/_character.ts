@@ -52,10 +52,10 @@ export class Character {
   @Action(() => Daytime)
   vote(character: Character) {
     const stage = this.stage.as(Daytime);
-    if (character.isDead) throw t('TARGET_IS_DEAD');
-    if (stage.voted.includes(this.id)) throw t('VOTED');
-    if (!stage.candidates.has(character.id)) throw t('VOTE_OUT_OF_RANGE');
-    stage.voted.push(this.id);
+    if (character.isDead) throw t('TargetIsDead');
+    if (stage.Voted.includes(this.id)) throw t('Voted');
+    if (!stage.candidates.has(character.id)) throw t('VoteOutOfRange');
+    stage.Voted.push(this.id);
     stage.candidates.get(character.id)!.push(this.id);
     return { self: this.id === character.id };
   }
@@ -63,7 +63,7 @@ export class Character {
   @Action(() => Daytime)
   waive() {
     const stage = this.stage.as(Daytime);
-    stage.voted.push(this.id);
+    stage.Voted.push(this.id);
   }
 
   isKilledBy(character: Character) {

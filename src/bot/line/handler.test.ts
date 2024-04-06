@@ -23,12 +23,10 @@ test('handleEvent', async () => {
   expect(handleEvent(user.singleMessage('ping'))).resolves.toMatchObject(textMessage('pong'));
   expect(handleEvent(user.groupMessage('ping'))).resolves.toBeUndefined();
 
-  expect(handleEvent(user.singleMessage(t('GET_GROUP_ID')))).resolves.toBeUndefined();
-  expect(handleEvent(user.groupMessage(t('GET_GROUP_ID')))).resolves.toEqual(
-    textMessage(t('GET_GROUP_ID_RESP', 'group'))
-  );
+  expect(handleEvent(user.singleMessage(t('GetGroupID')))).resolves.toBeUndefined();
+  expect(handleEvent(user.groupMessage(t('GetGroupID')))).resolves.toEqual(textMessage(t('GetGroupIDResp', 'group')));
 
-  const userIdMsg = textMessage(t('GET_USER_ID_RESP', user.userId));
-  expect(handleEvent(user.singleMessage(t('GET_USER_ID')))).resolves.toEqual(userIdMsg);
-  expect(handleEvent(user.groupMessage(t('GET_USER_ID')))).resolves.toEqual(userIdMsg);
+  const userIdMsg = textMessage(t('GetUserIDResp', user.userId));
+  expect(handleEvent(user.singleMessage(t('GetUserID')))).resolves.toEqual(userIdMsg);
+  expect(handleEvent(user.groupMessage(t('GetUserID')))).resolves.toEqual(userIdMsg);
 });

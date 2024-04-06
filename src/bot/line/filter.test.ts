@@ -1,11 +1,11 @@
 import { expect, test } from 'vitest';
 import { createHandler, WebhookEvent } from './handler';
 import { Group, Single, TextEqual, TextMatch, UserId } from './filter';
-import { User } from './test/mockUser';
+import { LineUser } from './test/mockLineUser';
 
-const user = new User(`${Math.random()}`, 'group');
-const singleMessage = user.singleMessage('Hello');
-const groupMessage = user.groupMessage('Hello');
+const client = new LineUser(`${Math.random()}`, 'group');
+const singleMessage = client.singleMessage('Hello');
+const groupMessage = client.groupMessage('Hello');
 
 test('Single & Group', () => {
   const callback = (event: WebhookEvent) => {
@@ -25,17 +25,19 @@ test('UserId', () => {
   const singleHandler = createHandler(Single, UserId(), userId => userId);
   const groupHandler = createHandler(Group, UserId(), (_event, userId) => userId);
 
-  expect(singleHandler(singleMessage)).resolves.toEqual(user.userId);
-  expect(groupHandler(groupMessage)).resolves.toEqual(user.userId);
+  expect(singleHandler(singleMessage)).resolves.toEqual(client.userId);
+  expect(groupHandler(groupMessage)).resolves.toEqual(client.userId);
 });
 
 test('TextEqual', () => {
   const singleHandler = createHandler(Single, TextEqual('Hello'), () => 'World');
-  expect(singleHandler(user.singleMessage('Hello'))).resolves.toEqual('World');
-  expect(singleHandler(user.singleMessage(`${Math.random()}`))).resolves.toBeUndefined();
+  const singleHandler2 = createHandler(Single, TextEqual('Hello', { shouldReturn: true }), text => text);
+  expect(singleHandler(client.singleMessage('Hello'))).resolves.toEqual('World');
+  expect(singleHandler(client.singleMessage(`${Math.random()}`))).resolves.toBeUndefined();
+  expect(singleHandler2(client.singleMessage('Hello'))).resolves.toEqual('Hello');
 });
 
 test('TextMatch', () => {
   const singleHandler = createHandler(Single, TextMatch(/Hello (.*)/), matches => matches[1]);
-  expect(singleHandler(user.singleMessage('Hello World'))).resolves.toEqual('World');
+  expect(singleHandler(client.singleMessage('Hello World'))).resolves.toEqual('World');
 });

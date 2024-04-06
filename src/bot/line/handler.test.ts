@@ -1,32 +1,30 @@
-import { expect, test, vi } from 'vitest';
+import { expect, test } from 'vitest';
+import { nanoid } from 'nanoid';
 import { createEventHandler, createHandler } from './handler';
 import { Single, TextEqual } from './filter';
-import { User } from './test/mockUser';
+import { LineUser } from './test/mockLineUser';
 import { textMessage } from './utils/createMessage';
-import { client } from './client';
-import { t } from './messages';
 import { debugHandlers } from './service/debug';
+import { t } from './messages';
 
-const user = new User(`${Math.random()}`, 'group');
+const userId = nanoid();
+const groupdId = nanoid();
+const client = new LineUser(userId, groupdId);
 
 const handlers = [createHandler(Single, TextEqual('ping'), () => 'pong'), ...debugHandlers];
 
 const handleEvent = createEventHandler(handlers);
 
-client.replyMessage = vi.fn().mockImplementation(async function ({
-  messages
-}: Parameters<(typeof client)['replyMessage']>[0]) {
-  return messages[0];
-});
-
 test('handleEvent', async () => {
-  expect(handleEvent(user.singleMessage('ping'))).resolves.toMatchObject(textMessage('pong'));
-  expect(handleEvent(user.groupMessage('ping'))).resolves.toBeUndefined();
+  expect(handleEvent(client.singleMessage('ping'))).resolves.toMatchObject(textMessage('pong'));
+  expect(handleEvent(client.groupMessage('ping'))).resolves.toBeUndefined();
 
-  expect(handleEvent(user.singleMessage(t('GetGroupID')))).resolves.toBeUndefined();
-  expect(handleEvent(user.groupMessage(t('GetGroupID')))).resolves.toEqual(textMessage(t('GetGroupIDResp', 'group')));
+  expect(handleEvent(client.singleMessage(t('GetGroupID')))).resolves.toBeUndefined();
+  expect(handleEvent(client.groupMessage(t('GetGroupID')))).resolves.toEqual(
+    textMessage(t('GetGroupIDResp', groupdId))
+  );
 
-  const userIdMsg = textMessage(t('GetUserIDResp', user.userId));
-  expect(handleEvent(user.singleMessage(t('GetUserID')))).resolves.toEqual(userIdMsg);
-  expect(handleEvent(user.groupMessage(t('GetUserID')))).resolves.toEqual(userIdMsg);
+  const userIdMsg = textMessage(t('GetUserIDResp', client.userId));
+  expect(handleEvent(client.singleMessage(t('GetUserID')))).resolves.toEqual(userIdMsg);
+  expect(handleEvent(client.groupMessage(t('GetUserID')))).resolves.toEqual(userIdMsg);
 });

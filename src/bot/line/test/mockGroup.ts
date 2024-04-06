@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 import { GroupSummaryResponse, MembersCountResponse } from '@line/bot-sdk';
-import { client } from '../client';
-import { User } from './mockUser';
+import { LineUser } from './mockLineUser';
+import { client } from './mockClient';
 
 export type GroupStats = GroupSummaryResponse & MembersCountResponse;
 
@@ -12,7 +12,7 @@ export class Group {
 
   groupId: string;
 
-  members: User[] = [];
+  members: LineUser[] = [];
 
   constructor(groupId: string, name: string) {
     this.name = name;
@@ -33,25 +33,23 @@ export class Group {
     };
   }
 
-  join(user: User) {
+  join(user: LineUser) {
     user.groupId = this.groupId;
     this.members.push(user);
   }
 
-  leave(user: User) {
+  leave(user: LineUser) {
     this.members = this.members.filter(u => u.userId === user.userId);
   }
 }
 
-client.getGroupMemberCount = vi.fn().mockImplementation(async function (
-  groupId: string
-): Promise<MembersCountResponse> {
+vi.spyOn(client, 'getGroupMemberCount').mockImplementation(async (groupId: string): Promise<MembersCountResponse> => {
   const group = groups.get(groupId);
   if (!group) throw new Error(`group not found`);
   return group.stats();
 });
 
-client.getGroupSummary = vi.fn().mockImplementation(async function (groupId: string): Promise<GroupSummaryResponse> {
+vi.spyOn(client, 'getGroupSummary').mockImplementation(async (groupId: string): Promise<GroupSummaryResponse> => {
   const group = groups.get(groupId);
   if (!group) throw new Error(`group not found`);
   return group.stats();

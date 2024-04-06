@@ -9,7 +9,7 @@ export interface Handler {
   (event: WebhookEvent): Output | Promise<Output>;
 }
 
-type FilterArg<T> = Exclude<T, undefined | null | typeof PASS | typeof SKIP>;
+type FilterArg<T> = Exclude<Awaited<T>, undefined | null | typeof PASS | typeof SKIP>;
 type WebhookFunction = (event: WebhookEvent) => any;
 
 type ExtractReturnType<T extends readonly unknown[]> = T extends [infer F, ...infer R]
@@ -20,8 +20,8 @@ type ExtractReturnType<T extends readonly unknown[]> = T extends [infer F, ...in
     : ExtractReturnType<R>
   : [];
 
-export type AnyFunctionArray = ReadonlyArray<WebhookFunction>;
-type Callback<WebhookFunctions extends AnyFunctionArray> = (
+export type WebhookFunctionsArray = ReadonlyArray<WebhookFunction>;
+type Callback<WebhookFunctions extends WebhookFunctionsArray> = (
   ...args: [...ExtractReturnType<WebhookFunctions>, WebhookEvent]
 ) => ReturnType<Handler>;
 
@@ -30,7 +30,7 @@ export type { WebhookEvent };
 export const PASS = Symbol('PASS');
 export const SKIP = Symbol('SKIP'); // skip error
 
-export function createHandler<WebhookFunctions extends AnyFunctionArray>(
+export function createHandler<WebhookFunctions extends WebhookFunctionsArray>(
   ...payload: [...WebhookFunctions, Callback<WebhookFunctions>]
 ) {
   return async (event: WebhookEvent): Promise<Output> => {

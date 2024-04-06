@@ -1,7 +1,7 @@
-import { getUser } from '@/service/users';
 import { getPostBackText, isGroupEvent, isPostBackEvent, isSingleEvent, isTextMessage } from './types';
 import { LineBotErrorMessage } from './error';
 import { WebhookEvent, SKIP, PASS } from './handler';
+import { getUser } from './utils/user';
 
 interface TextOptions {
   postbackOnly?: boolean;
@@ -21,12 +21,16 @@ interface TextEqual {
   (except: string | string[], options?: TextEqualOptions): (event: WebhookEvent) => string | undefined | typeof PASS | typeof SKIP;
 }
 
-export function createFilter<R>(callback: (event: WebhookEvent) => R | boolean) {
-  return function (event: WebhookEvent) {
-    const res = callback(event);
+export function createFilter<R>(callback: (event: WebhookEvent) => R) {
+  const handle = (res: R | boolean) => {
     if (res === false) throw SKIP;
     if (res === true) return PASS;
     return res as Exclude<R, boolean>;
+  };
+
+  return function (event: WebhookEvent) {
+    const promise = callback(event);
+    return promise instanceof Promise ? promise.then(handle) : handle(promise);
   };
 }
 
@@ -44,15 +48,11 @@ export const UserId = ({ warning = true } = {}) =>
     if (warning) throw new LineBotErrorMessage('CANNOT_GET_UER_ID');
   });
 
-export const User = ({ warning = true } = {}) =>
+export const User = () =>
   createFilter(async event => {
     const userId = event.source.userId;
-    if (userId) {
-      const { data, error } = await getUser(userId);
-      if (error) throw new LineBotErrorMessage('SYSTEM_ERROR');
-      return data;
-    }
-    if (warning) throw new LineBotErrorMessage('CANNOT_GET_UER_ID');
+    const user = await getUser(event, userId);
+    return user;
   });
 
 export const TextEqual = ((
@@ -81,7 +81,7 @@ export const TextEqual = ((
   });
 }) as TextEqual;
 
-export const TextMatch = (regex: RegExp, { postbackOnly = false }: TextOptions = {}) => {
+export const TextMatch = (regex: RegExp | string, { postbackOnly = false }: TextOptions = {}) => {
   return createFilter(event => {
     let text = '';
 

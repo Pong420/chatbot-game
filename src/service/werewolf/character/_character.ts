@@ -1,9 +1,9 @@
 import { Exclude, plainToInstance, Type } from 'class-transformer';
 import { Constructable } from '@/types';
-import { Voted, CauseOfDeath, Death, deathSubTypes } from '../death';
+import { Voted, CauseOfDeath, Death, deathSubTypes, Killed } from '../death';
 import { Daytime, type Stage } from '../stage';
 import { Action } from '../decorators';
-import { errors } from '../error';
+import { t } from '../messages';
 
 export class Character {
   id: string; // user id
@@ -52,9 +52,9 @@ export class Character {
   @Action(() => Daytime)
   vote(character: Character) {
     const stage = this.stage.as(Daytime);
-    if (character.isDead) throw errors('TARGET_IS_DEAD');
-    if (stage.voted.includes(this.id)) throw errors('VOTED');
-    if (!stage.candidates.has(character.id)) throw errors('VOTE_OUT_OF_RANGE');
+    if (character.isDead) throw t('TARGET_IS_DEAD');
+    if (stage.voted.includes(this.id)) throw t('VOTED');
+    if (!stage.candidates.has(character.id)) throw t('VOTE_OUT_OF_RANGE');
     stage.voted.push(this.id);
     stage.candidates.get(character.id)!.push(this.id);
     return { self: this.id === character.id };
@@ -67,7 +67,7 @@ export class Character {
   }
 
   isKilledBy(character: Character) {
-    return this.causeOfDeath.some(c => c instanceof Character && c.id === character.id);
+    return this.causeOfDeath.some(c => c instanceof Killed && c.userId === character.id);
   }
 
   isKillByVoted() {

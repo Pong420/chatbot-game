@@ -1,5 +1,3 @@
-import { Messages as WerewolfMessages } from '@/service/werewolf/messages';
-
 export const Commands = {
   GET_GROUP_ID: 'Group ID',
   GET_USER_ID: 'My User ID'
@@ -11,8 +9,7 @@ export const Replies = {
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export const Messages = {
+export default {
   ...Commands,
-  ...Replies,
-  ...WerewolfMessages
+  ...Replies
 };

@@ -1,8 +1,8 @@
 import { Type, DiscriminatorDescriptor, plainToInstance, instanceToPlain } from 'class-transformer';
 import { Constructable } from '@/types';
 import { stages, Init, Stage, End } from './stage';
-import { errors } from './error';
 import { Character, Werewolf } from './character';
+import { t } from './messages';
 
 const subTypes: DiscriminatorDescriptor['subTypes'] = [];
 
@@ -68,7 +68,7 @@ export class Game {
 
   next() {
     // TODO:
-    if (!this.stage.ended()) throw errors('STAGE_NOT_ENDED');
+    if (!this.stage.ended()) throw t('STAGE_NOT_ENDED');
     this.stage.onEnd();
 
     const NextStage = this.shouldEndGame() ? End : this.stage.next();

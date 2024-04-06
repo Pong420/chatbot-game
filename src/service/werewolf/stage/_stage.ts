@@ -1,7 +1,7 @@
 import { Transform, TransformationType, instanceToPlain, plainToInstance } from 'class-transformer';
 import { Constructable } from '@/types';
 import { Character, characters } from '../character';
-import { errors } from '../error';
+import { t } from '../messages';
 
 const characterMap: Record<string, typeof Character> = {};
 
@@ -68,7 +68,7 @@ export class Stage {
   }
 
   next(): typeof Stage {
-    throw errors('SYSTEM_ERROR');
+    throw t('SYSTEM_ERROR');
   }
 
   onStart() {

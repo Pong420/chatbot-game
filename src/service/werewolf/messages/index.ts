@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-type iMessages = (typeof import('./zh-tw'))['Messages'];
+import { locale, createTranslateFunction } from '@/utils/locale';
 
-const locale = process.env.LOCALE;
+export type WerewolfMessages = (typeof import('./zh-tw'))['default'];
+export type WerewolfMessageKey = keyof WerewolfMessages;
 
-const { Messages }: { Messages: iMessages } = await import(`./${locale}`);
+const { messages, t } = createTranslateFunction<WerewolfMessages>(await import(`./${locale}`));
 
-export { Messages };
+export { messages, t };

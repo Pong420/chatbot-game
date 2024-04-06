@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Constructable } from '@/types';
 import { Character } from './character';
-import { errors } from './error';
+import { t } from './messages';
 import type { Stage } from './stage';
 
 export function Action(get?: () => Constructable<Stage>) {
@@ -10,10 +10,9 @@ export function Action(get?: () => Constructable<Stage>) {
 
     descriptor.value = function (this: Character, ...args: any) {
       const StageConstructor = get?.();
-      if (this.isDead) throw errors('YOU_DEAD');
-      if (!!this.stage && !!StageConstructor && !(this.stage instanceof StageConstructor))
-        throw errors('NOT_YOUR_TURN');
-      if (this.endTurn) throw errors('TURN_ENDED');
+      if (this.isDead) throw t('YOU_DEAD');
+      if (!!this.stage && !!StageConstructor && !(this.stage instanceof StageConstructor)) throw t('NOT_YOUR_TURN');
+      if (this.endTurn) throw t('TURN_ENDED');
 
       const res = method.apply(this, args);
       this.endTurn = true;

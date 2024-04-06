@@ -1,27 +1,28 @@
 import { Character } from './_character';
 import { Action } from '../decorators';
-import { errors } from '../error';
+import { t } from '../messages';
 import { Killed } from '../death';
 import { Night } from '../stage';
 
 export class Werewolf extends Character {
   hungry = false;
 
-  killed: string[] = [];
-
   @Action(() => Night)
   kill(character: Character) {
-    if (character.isDead) throw errors('TARGET_IS_DEAD');
     const suicide = this.id === character.id;
+
+    if (character.isDead) throw t('TARGET_IS_DEAD');
+    if (character.isKilledBy(this)) throw t(suicide ? 'DUPLICATE_SUICIDE' : 'DUPLICATE_KILL');
+
     character.dead(Killed, { userId: this.id });
-    this.killed.push(character.id);
     this.hungry = !suicide;
+
     return { suicide };
   }
 
   @Action(() => Night)
   idle() {
-    if (this.hungry) throw errors('HUNGRY');
+    if (this.hungry) throw t('HUNGRY');
     this.hungry = true;
   }
 

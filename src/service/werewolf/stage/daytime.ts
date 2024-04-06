@@ -1,6 +1,6 @@
 import { Transform, TransformationType } from 'class-transformer';
 import { Voted } from '../death';
-import { errors } from '../error';
+import { t } from '../messages';
 import { Stage } from './_stage';
 import { Night } from './night';
 
@@ -65,7 +65,7 @@ export class Daytime extends Stage {
       } else {
         const [id] = results.players;
         const player = this.players.get(id);
-        if (!player) throw errors('SYSTEM_ERROR');
+        if (!player) throw t('SYSTEM_ERROR');
         player.dead(Voted, { votes: this.candidates.get(id), total: results.numberOfVotes });
         this.candidates.clear();
       }

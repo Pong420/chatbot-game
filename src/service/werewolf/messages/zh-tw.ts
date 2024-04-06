@@ -1,6 +1,4 @@
-import { WerewolfErrorKey } from '../error';
-
-export const Messages: Record<WerewolfErrorKey, string | string[]> = {
+export default {
   SYSTEM_ERROR: '系統錯誤',
   GAME_FULL: '人數已滿，「{0}」下次請早',
   DUPLICATED_JOIN: '{0}你已經參加遊戲，我明白你很想要，但不要急',
@@ -11,10 +9,12 @@ export const Messages: Record<WerewolfErrorKey, string | string[]> = {
   NOT_YOUR_TURN: '目前不是你的行動回合',
   VOTED: '我感受到{0}你對投票的渴望，但每人只有一票！',
   VOTE_OUT_OF_RANGE: '{0}不在投票範圍',
-  TARGET_IS_DEAD: ['{0}已經死了，你到底有多恨!?', '{0}已經死了，原諒他吧'],
+  TARGET_IS_DEAD: ['{0}已經死了，你是有多大仇!?', '{0}已經死了，原諒他吧'],
 
   /**
    * Werewolf
    */
-  HUNGRY: '平安夜？不，你餓了，快點選一個晚餐吧'
-};
+  HUNGRY: ['平安夜？不，你餓了，快選一個晚餐吧', '什麼都能忍，餓不能！快選一個晚餐吧'],
+  DUPLICATE_KILL: '知道了，你們是有多大仇!?',
+  DUPLICATE_SUICIDE: '知道了，你就這麼想死嗎?'
+} satisfies Record<string, string | string[]>;

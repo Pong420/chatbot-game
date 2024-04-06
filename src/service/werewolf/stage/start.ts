@@ -4,7 +4,7 @@ import { Character, Villager, Werewolf } from '../character';
 import { Stage } from './_stage';
 import { Night } from './night';
 import type { Init } from './init';
-import { errors } from '../error';
+import { t } from '../messages';
 
 /**
  * For extends configuration from Init
@@ -13,8 +13,8 @@ export interface Start extends Init {}
 
 export class Start extends Stage {
   join(player: Pick<Character, 'id' | 'name'>) {
-    if (this.players.has(player.id)) throw errors('DUPLICATED_JOIN');
-    if (this.players.size >= 12) throw errors('GAME_FULL');
+    if (this.players.has(player.id)) throw t('DUPLICATED_JOIN');
+    if (this.players.size >= 12) throw t('GAME_FULL');
 
     this.players.set(player.id, plainToInstance(Character, player));
   }
@@ -24,7 +24,7 @@ export class Start extends Stage {
   }
 
   onEnd(): void {
-    if (this.players.size < 6) throw errors('NOT_ENOUGH_PLAYERS');
+    if (this.players.size < 6) throw t('NOT_ENOUGH_PLAYERS');
 
     const characters: (typeof Character)[] = [Werewolf];
     while (characters.length < this.players.size) {

@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { randomOption } from '@/utils/random';
 
 export const locale = process.env.LOCALE;
 
 export function createTranslateFunction<O extends Record<string, string | string[]>>(...payload: { default: O }[]) {
   const messages = payload.reduce((messages, o) => ({ ...messages, ...o.default }), {}) as O;
-  const t = (key: keyof O, ...args: any[]) => {
+  const t = (key: keyof O, ...args: (string | number)[]) => {
     const payload: string | string[] = messages[key];
     let text = Array.isArray(payload)
       ? payload.length === 1 || process.env.NODE_ENV === 'test'
@@ -14,13 +13,13 @@ export function createTranslateFunction<O extends Record<string, string | string
       : payload;
 
     args.forEach((a, i) => {
-      text = text.replace(`{${i}}`, a);
+      text = text.replaceAll(`{${i}}`, String(a));
     });
 
     return text;
   };
 
-  t.paragraph = function (key: keyof O, ...args: any[]) {
+  t.paragraph = function (key: keyof O, ...args: (string | number)[]) {
     const content = t(key, ...args);
     return content
       .trim()

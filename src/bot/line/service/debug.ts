@@ -1,12 +1,10 @@
-import { createHandler } from '../handler';
+import { createHandler, WebhookEvent } from '../handler';
 import { Group, TextEqual } from '../filter';
 import { t } from '../messages';
 
+const getUserId = (event: WebhookEvent) => event.source.userId || '???';
+
 export const debugHandlers = [
   createHandler(Group, TextEqual(t('GetGroupID')), event => t(`GetGroupIDResp`, event.source.groupId)),
-  createHandler(
-    event => event.source.userId || '???',
-    TextEqual(t('GetUserID')),
-    userId => t(`GetUserIDResp`, userId)
-  )
+  createHandler(getUserId, TextEqual(t('GetUserID')), userId => t(`GetUserIDResp`, userId))
 ];

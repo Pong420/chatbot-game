@@ -1,4 +1,5 @@
 import { WebhookEvent } from '@line/bot-sdk';
+import { ERROR_CODE_EMPTY } from '@/utils/supabase';
 import { getUserProfile } from './getUserProfile';
 import { t } from '../messages';
 import * as api from '@/service/user';
@@ -8,16 +9,15 @@ export const maxLength = 15;
 export async function getUser(event: WebhookEvent | null, userId = event?.source.userId || '') {
   if (!userId) throw t('SystemError');
 
-  let user = await api.getUser(userId);
-  if (!user.error && !user.data) {
+  let resp = await api.getUser(userId);
+  if (!resp.data && resp.error.code === ERROR_CODE_EMPTY) {
     const profile = await getUserProfile(event, userId);
     if (profile) {
-      user = await api.createUser(userId, profile.displayName);
+      resp = await api.createUser(userId, profile.displayName);
     }
   }
-  if (user.error) throw t('SystemError');
-
-  return user.data;
+  if (resp.error) throw t('SystemError');
+  return resp.data;
 }
 
 export async function setNickname(event: WebhookEvent, name: string) {
@@ -36,6 +36,7 @@ export async function setNickname(event: WebhookEvent, name: string) {
   }
 
   const user = await getUser(event);
+
   if (name === user.nickname) return t(`NickNameUsing`, name);
 
   try {

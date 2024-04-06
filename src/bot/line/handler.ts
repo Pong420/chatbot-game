@@ -9,7 +9,7 @@ export interface Handler {
   (event: WebhookEvent): Output | Promise<Output>;
 }
 
-type FilterArg<T> = Exclude<T, undefined | null | typeof SKIP>;
+type FilterArg<T> = Exclude<T, undefined | null | typeof PASS | typeof SKIP>;
 type WebhookFunction = (event: WebhookEvent) => any;
 
 type ExtractReturnType<T extends readonly unknown[]> = T extends [infer F, ...infer R]
@@ -21,30 +21,31 @@ type ExtractReturnType<T extends readonly unknown[]> = T extends [infer F, ...in
   : [];
 
 export type AnyFunctionArray = ReadonlyArray<WebhookFunction>;
-type Callback<AnyFunctions extends AnyFunctionArray> = (
-  ...args: [...ExtractReturnType<AnyFunctions>, WebhookEvent]
+type Callback<WebhookFunctions extends AnyFunctionArray> = (
+  ...args: [...ExtractReturnType<WebhookFunctions>, WebhookEvent]
 ) => ReturnType<Handler>;
 
 export type { WebhookEvent };
 
-export const SKIP = Symbol('SKIP');
+export const PASS = Symbol('PASS');
+export const SKIP = Symbol('SKIP'); // skip error
 
-export function createHandler<AnyFunctions extends AnyFunctionArray>(
-  ...payload: [...AnyFunctions, Callback<AnyFunctions>]
+export function createHandler<WebhookFunctions extends AnyFunctionArray>(
+  ...payload: [...WebhookFunctions, Callback<WebhookFunctions>]
 ) {
   return async (event: WebhookEvent): Promise<Output> => {
-    const callback = payload.slice(-1)[0] as Callback<AnyFunctions>;
-    const selectors = payload.slice(0, -1) as unknown as AnyFunctions;
+    const callback = payload.slice(-1)[0] as Callback<WebhookFunctions>;
+    const selectors = payload.slice(0, -1) as unknown as WebhookFunctions;
     const res = await Promise.all(
       selectors.map(async selector => {
         const arg = await selector(event);
-        if (typeof arg === 'undefined') throw SKIP;
+        if (typeof arg === 'undefined' || arg === null) throw SKIP;
         return arg;
       })
     )
       .then(args => {
-        args = args.filter(a => !!a && a !== SKIP);
-        return callback(...(args as ExtractReturnType<AnyFunctions>), event);
+        args = args.filter(a => !!a && a !== PASS && a !== SKIP);
+        return callback(...(args as ExtractReturnType<WebhookFunctions>), event);
       })
       .catch(_error => {
         // TODO: error instanceof LineMessageError

@@ -8,7 +8,7 @@ import {
 } from '@line/bot-sdk';
 
 // FIXME:
-type FlexText = Exclude<_FlexText, { text?: never }>;
+export type FlexText = Exclude<_FlexText, { text?: never }>;
 
 export type Payload = string | FlexText;
 

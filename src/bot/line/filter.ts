@@ -57,7 +57,7 @@ export const User = () =>
 
 export const TextEqual = ((
   except: string | string[],
-  { shouldReturn = false, postbackOnly = false }: TextEqualOptions
+  { shouldReturn = false, postbackOnly = false }: TextEqualOptions = {}
 ) => {
   const validate =
     typeof except === 'string'

@@ -10,5 +10,3 @@ export const debugHandlers = [
     userId => t(`GetUserIDResp`, userId)
   )
 ];
-
-export default debugHandlers;

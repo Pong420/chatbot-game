@@ -3,7 +3,7 @@ import { WebhookRequestBody } from '@line/bot-sdk';
 import { runMiddleware } from './client';
 import { Handler, createEventHandler } from './handler';
 import { debugHandlers } from './service/debug';
-import './messages';
+import { nicknameHandlers } from './service/nickname';
 
 export async function POST(req: NextRequest, res: NextResponse) {
   await runMiddleware(req, res);
@@ -16,6 +16,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
   }
 }
 
-const handlers: Handler[] = [...debugHandlers];
+const concat = (...handlers: Handler[][]) => handlers.flat();
+const handlers = concat(debugHandlers, nicknameHandlers);
 
 const handleEvent = createEventHandler(handlers);

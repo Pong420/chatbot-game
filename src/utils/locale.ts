@@ -19,5 +19,13 @@ export function createTranslateFunction<O extends Record<string, string | string
     return text;
   };
 
+  t.paragraph = function (key: keyof O, ...args: any[]) {
+    const content = t(key, ...args);
+    return content
+      .trim()
+      .split('\n')
+      .map(t => t.trim());
+  };
+
   return { t, messages };
 }

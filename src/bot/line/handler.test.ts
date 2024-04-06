@@ -5,7 +5,7 @@ import { User } from './test/mockUser';
 import { textMessage } from './utils/createMessage';
 import { client } from './client';
 import { t } from './messages';
-import debugHandlers from './service/debug';
+import { debugHandlers } from './service/debug';
 
 const user = new User(`${Math.random()}`, 'group');
 

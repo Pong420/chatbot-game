@@ -26,33 +26,32 @@ const next = (StageConstructor: typeof Stage) => {
   villagers = game.getCharacters(Villager);
 };
 
-const createGame = ({ numOfPlayers = 10 } = {}) => {
+const createGame = ({ numOfPlayers = 13 } = {}) => {
   game = Game.create({ id: '1' });
   stage = game.stage;
 
   expect(stage).toBeInstanceOf(Init);
-  stage.numOfPlayers = numOfPlayers;
   testSerialisation();
 
   next(Start);
   expect(() => game.next()).toThrowError(errors('NOT_ENOUGH_PLAYERS'));
 
-  for (let i = 0; i <= stage.numOfPlayers; i++) {
+  for (let i = 0; i < numOfPlayers; i++) {
     const join = () => stage.as(Start).join({ id: `${i}`, name: `player_${i}` });
 
-    if (i >= stage.numOfPlayers) {
+    if (i >= 12) {
       expect(join).toThrowError(errors('GAME_FULL')); // full
     } else {
       join();
       expect(join).toThrowError(errors('DUPLICATED_JOIN')); // duplicated join
     }
   }
-  expect(game.players.size).toEqual(game.stage.numOfPlayers);
+  expect(game.players.size).toEqual(Math.min(numOfPlayers, 12));
 };
 
 test('flow', () => {
   createGame({ numOfPlayers: 6 });
-  expect(game.stage.numOfPlayers).toBe(6);
+  expect(game.players.size).toBe(6);
 
   next(Night);
   expect(stage.turn).toBe(1);
@@ -68,7 +67,7 @@ test('flow', () => {
 
   // test vote and vote to self
   next(Daytime);
-  expect(survivors).toHaveLength(stage.numOfPlayers - 1);
+  expect(survivors).toHaveLength(stage.players.size - 1);
   expect(survivors).not.toContainEqual(villagers[0]);
   expect(() => werewolfs[0].kill(villagers[1])).toThrowError(errors('NOT_YOUR_TURN'));
 
@@ -129,7 +128,7 @@ test('flow', () => {
   next(Night);
   expect(villagers[1].causeOfDeath[0]).toBeInstanceOf(Voted);
   expect(villagers[1].causeOfDeath[0] as Voted).toHaveProperty('total', survivors.length);
-  expect(survivors).toHaveLength(stage.numOfPlayers - 2);
+  expect(survivors).toHaveLength(stage.players.size - 2);
 
   expect(() => werewolfs[0].kill(villagers[1])).toThrowError(errors('TARGET_IS_DEAD')); // expecet not to VOTE_OUT_OF_RANGE
   werewolfs[0].kill(villagers[2]);

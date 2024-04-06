@@ -17,8 +17,6 @@ export class Stage {
 
   turn = 0;
 
-  numOfPlayers = 6;
-
   @Transform(({ value, options, type }) => {
     return type === TransformationType.CLASS_TO_PLAIN
       ? Array.from(value, ([k, v]) => [k, { ...instanceToPlain(v, options), __type: v.constructor.name }])

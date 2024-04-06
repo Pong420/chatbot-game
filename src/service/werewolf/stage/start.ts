@@ -14,7 +14,7 @@ export interface Start extends Init {}
 export class Start extends Stage {
   join(player: Pick<Character, 'id' | 'name'>) {
     if (this.players.has(player.id)) throw errors('DUPLICATED_JOIN');
-    if (this.players.size === this.numOfPlayers) throw errors('GAME_FULL');
+    if (this.players.size >= 12) throw errors('GAME_FULL');
 
     this.players.set(player.id, plainToInstance(Character, player));
   }
@@ -24,10 +24,10 @@ export class Start extends Stage {
   }
 
   onEnd(): void {
-    if (this.players.size < this.numOfPlayers) throw errors('NOT_ENOUGH_PLAYERS');
+    if (this.players.size < 6) throw errors('NOT_ENOUGH_PLAYERS');
 
     const characters: (typeof Character)[] = [Werewolf];
-    while (characters.length < this.numOfPlayers) {
+    while (characters.length < this.players.size) {
       characters.push(Villager);
     }
 

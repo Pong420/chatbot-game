@@ -5,6 +5,9 @@ export default defineConfig({
   test: {
     setupFiles: ['reflect-metadata']
   },
+  define: {
+    'process.env.LOCALE': JSON.stringify('zh-tw')
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src')

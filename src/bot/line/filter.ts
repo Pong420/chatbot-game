@@ -1,5 +1,5 @@
 import { getPostBackText, isGroupEvent, isPostBackEvent, isSingleEvent, isTextMessage } from './types';
-import { LineBotErrorMessage } from './errors';
+import { LineBotErrorMessage } from './error';
 import { WebhookEvent, SKIP } from './handler';
 
 export function createFilter<R>(callback: (event: WebhookEvent) => R | boolean) {

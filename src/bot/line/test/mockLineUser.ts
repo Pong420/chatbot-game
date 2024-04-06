@@ -4,6 +4,7 @@ import { vi } from 'vitest';
 import { nanoid } from 'nanoid';
 import { Profile, WebhookEvent } from '@line/bot-sdk';
 import { createGroupTextMessage, createSingleTextMessage } from './mockEvent';
+import { userDB, genMockUserData } from '@/service/user.mock';
 
 vi.mock('../utils/getUserProfile', () => {
   return {
@@ -42,6 +43,7 @@ export class LineUser {
       statusMessage: ''
     };
     users.set(this.profile.userId, this);
+    this.addToDatabase();
   }
 
   get userId() {
@@ -63,5 +65,11 @@ export class LineUser {
       groupId: this.groupId,
       postback
     });
+  }
+
+  addToDatabase() {
+    const user = genMockUserData({ userId: this.userId, nickname: this.name });
+    userDB.set(user.userId, user);
+    return user;
   }
 }

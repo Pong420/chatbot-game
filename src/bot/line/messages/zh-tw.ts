@@ -16,7 +16,7 @@ export const Replies = {
   NickNameMaxLength: '暱稱不能多於{0}',
   NickNameEmpty: '暱稱不能為空',
   NickNameContainBracket: '暱稱不能擁有 "「 " 和 " 」"',
-  NickNameUsing: '你已經在使用「{0}',
+  NickNameUsing: '你已經在使用「{0}」',
   NickNameFailed: '設定暱稱失敗，請嘗試別的暱稱或聯絡管理員',
   NickNameSuccess: '暱稱設定成功',
   NickNameIntroResp: `

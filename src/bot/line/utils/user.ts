@@ -1,8 +1,7 @@
 import { WebhookEvent } from '@line/bot-sdk';
-import * as api from '@/service/user';
 import { getUserProfile } from './getUserProfile';
-import { textMessage } from './createMessage';
 import { t } from '../messages';
+import * as api from '@/service/user';
 
 export const maxLength = 15;
 
@@ -25,23 +24,25 @@ export async function setNickname(event: WebhookEvent, name: string) {
   name = name.trim();
 
   if (name.length > maxLength) {
-    return textMessage(t('NickNameMaxLength', maxLength));
+    return t('NickNameMaxLength', maxLength);
   }
 
   if (name.length === 0) {
-    return textMessage(t('NickNameEmpty'));
+    return t('NickNameEmpty');
   }
 
   if (/「.*」/.test(name)) {
-    return textMessage(t(`NickNameContainBracket`));
+    return t(`NickNameContainBracket`);
   }
 
   const user = await getUser(event);
-  if (name === user.nickname) throw t(`NickNameUsing`, name);
+  if (name === user.nickname) return t(`NickNameUsing`, name);
+
   try {
-    await api.updateUser(user.userId, { nickname: name });
+    const { error } = await api.updateUser(user.userId, { nickname: name });
+    if (error) throw error;
     return t(`NickNameSuccess`);
   } catch (error) {
-    throw t('NickNameFailed');
+    return t('NickNameFailed');
   }
 }

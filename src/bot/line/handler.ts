@@ -47,15 +47,20 @@ export function createHandler<WebhookFunctions extends WebhookFunctionsArray>(
         args = args.filter(a => !!a && a !== PASS && a !== SKIP);
         return callback(...(args as ExtractReturnType<WebhookFunctions>), event);
       })
-      .catch(_error => {
-        // TODO: error instanceof LineMessageError
+      .catch(error => {
+        if (error === SKIP) return;
+        if (typeof error === 'string') return error; // as error message will reply to user
+        // ignore other type of error
+        process.env.NODE_ENV === 'production' && console.warn('Except error to be string but receive', error);
       });
 
     return res;
   };
 }
 
-export function createEventHandler(handlers: Handler[]) {
+export function createEventHandler(...payload: Handler[][]) {
+  const handlers = payload.flat();
+
   return async function (event: WebhookEvent) {
     for (const handler of handlers) {
       if ('replyToken' in event) {

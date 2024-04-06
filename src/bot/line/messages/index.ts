@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-namespace */
-type iMessages = typeof import('./zh-tw');
-export type i18nKey = keyof iMessages['default'];
+type iMessages = (typeof import('./zh-tw'))['Messages'];
+export type i18nKey = keyof iMessages;
 
 const locale = 'zh-tw';
 
-const { default: Messages } = (await import(`./${locale}`)) as iMessages;
+const { Messages }: { Messages: iMessages } = await import(`./${locale}`);
+
 const t = (key: i18nKey, ...args: any[]) => {
   let text = Messages[key];
   args.forEach((a, i) => {

@@ -19,6 +19,8 @@ export interface CreateGame {
 }
 
 export class Game {
+  static type = t('GameName');
+
   static create(payload: object) {
     return plainToInstance(Game, payload, { exposeUnsetFields: false }) as Game;
   }
@@ -77,3 +79,5 @@ export class Game {
     return this.stage;
   }
 }
+
+export { Game as Werewolf };

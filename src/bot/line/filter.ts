@@ -1,3 +1,6 @@
+import { Constructable } from '@/types';
+import { ERROR_CODE_EMPTY } from '@/supabase';
+import { getGame } from '@/supabase/game';
 import { getPostBackText, isGroupEvent, isPostBackEvent, isSingleEvent, isTextMessage } from './types';
 import { WebhookEvent, SKIP, PASS } from './handler';
 import { getUser } from './utils/userService';
@@ -90,5 +93,24 @@ export const TextMatch = (regex: RegExp | string, { postbackOnly = false }: Text
     }
 
     return !!text && text.match(regex);
+  });
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const Game = <G>(GameContructor: Constructable<G> & { create: (payload: any) => G }) => {
+  return createFilter(async event => {
+    if (!isGroupEvent(event)) return;
+    const { data } = await getGame(event.source.groupId);
+    if (data && data.type !== GameContructor.name) throw t('OtherGameRuning', data.type);
+    return GameContructor.create({ id: data?.groupId });
+  });
+};
+
+export const CanStartGame = () => {
+  return createFilter(async event => {
+    if (!isGroupEvent(event)) return;
+    const resp = await getGame(event.source.groupId);
+    if (resp.data) throw t('OtherGameRuning', resp.data.type);
+    return resp.error && resp.error.code !== ERROR_CODE_EMPTY ? null : PASS;
   });
 };

@@ -34,6 +34,7 @@ export type Database = {
           data: Json | null;
           groupId: string;
           id: number;
+          type: string;
           updated_at: string | null;
         };
         Insert: {
@@ -41,6 +42,7 @@ export type Database = {
           data?: Json | null;
           groupId: string;
           id?: number;
+          type: string;
           updated_at?: string | null;
         };
         Update: {
@@ -48,6 +50,7 @@ export type Database = {
           data?: Json | null;
           groupId?: string;
           id?: number;
+          type?: string;
           updated_at?: string | null;
         };
         Relationships: [];

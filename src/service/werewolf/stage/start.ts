@@ -16,6 +16,10 @@ export class Start extends Stage {
     if (this.players.has(player.id)) throw t('Joined');
     if (this.players.size >= 12) throw t('GameIsFull');
 
+    for (const [, c] of this.players.entries()) {
+      if (player.name === c.name) throw t(`NicknameUsed`, player.name);
+    }
+
     this.players.set(player.id, plainToInstance(Character, player));
   }
 

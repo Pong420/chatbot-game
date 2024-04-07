@@ -8,11 +8,11 @@ export const Commands = {
 };
 
 export const Replies = {
+  SystemError: '系統錯誤',
+
   GroupIdResp: 'The group id is {0}',
   GetUserIdResp: 'Your user id is {0}',
   GetUserIdFailed: '無法取得UserId',
-
-  SystemError: '系統錯誤',
 
   NickNameMaxLength: '暱稱不能多於{0}',
   NickNameEmpty: '暱稱不能為空',
@@ -26,7 +26,10 @@ export const Replies = {
     輸入「{0} 新的暱稱」可以新增或修改暱稱，最多{1}個字
     輸入「{0}」可以查詢你目前的暱稱，
     如果暱稱顯示「???」請稍後再試，本機器人也愛莫能助...
-  `
+  `,
+
+  JoinedOtherGroupGame: `{0}已參加了其他群組的遊戲`,
+  OtherGameRuning: '{0}進行中，請先結束遊戲'
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export

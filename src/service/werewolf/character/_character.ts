@@ -52,7 +52,7 @@ export class Character {
   @Action(() => Daytime)
   vote(character: Character) {
     const stage = this.stage.as(Daytime);
-    if (character.isDead) throw t('TargetIsDead');
+    if (character.isDead) throw t('TargetIsDead', character.id === this.id ? t('Self') : character.name);
     if (stage.Voted.includes(this.id)) throw t('Voted');
     if (!stage.candidates.has(character.id)) throw t('VoteOutOfRange');
     stage.Voted.push(this.id);

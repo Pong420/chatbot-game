@@ -16,6 +16,11 @@ export function createTranslateFunction<O extends Record<string, string | string
       text = text.replaceAll(`{${i}}`, String(a));
     });
 
+    if (process.env.NODE_ENV === 'test') {
+      const matches = text.match(/{\d+}/g);
+      matches && console.warn('Translation missing data:', text);
+    }
+
     return text;
   };
 

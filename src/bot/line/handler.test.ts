@@ -34,6 +34,6 @@ test('handleEvent - throwError', async () => {
     })
   ]);
 
-  await expect(handleEvent(client.singleMessage('ping'))).resolves.toMatchObject(textMessage('pong'));
-  await expect(handleEvent(client.singleMessage('Error'))).resolves.toBeUndefined();
+  await expect(handleEvent(client.singleMessage('ping'))).resolves.toEqual(textMessage('pong'));
+  await expect(handleEvent(client.singleMessage('Error'))).resolves.toEqual(textMessage('Test'));
 });

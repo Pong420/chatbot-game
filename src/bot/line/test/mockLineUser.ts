@@ -33,7 +33,7 @@ export class LineUser {
 
   profile: Profile;
 
-  constructor(name = nanoid(), groupId = nanoid()) {
+  constructor({ name = nanoid(), groupId = nanoid() } = {}) {
     this.name = name;
     this.groupId = groupId;
     this.profile = {

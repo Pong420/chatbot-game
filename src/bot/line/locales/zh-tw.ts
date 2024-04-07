@@ -28,7 +28,7 @@ export const Replies = {
     如果暱稱顯示「???」請稍後再試，本機器人也愛莫能助...
   `,
 
-  JoinedOtherGroupGame: `{0}已參加了其他群組的遊戲`,
+  JoinedOtherGroupsGame: `{0}已參加了其他群組的遊戲`,
   OtherGameRuning: '{0}進行中，請先結束遊戲'
 };
 

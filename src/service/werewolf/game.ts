@@ -21,15 +21,23 @@ export interface CreateGame {
 export class Game {
   static type = t('GameName');
 
-  static create(payload: object) {
-    return plainToInstance(Game, payload, { exposeUnsetFields: false }) as Game;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static create({ data, ...payload }: { groupId: string; data?: any }) {
+    return plainToInstance(
+      Game,
+      {
+        ...payload,
+        // not require data will be modiflied, `{ ...data }` is required
+        stage: data && { ...data }
+      },
+      {
+        // for initial value of stage
+        exposeUnsetFields: false
+      }
+    ) as Game;
   }
 
-  static serialize(payload: Game) {
-    return instanceToPlain(payload);
-  }
-
-  id: string;
+  groupId: string;
 
   @Type(() => Stage, {
     discriminator: {
@@ -41,6 +49,11 @@ export class Game {
 
   get players() {
     return this.stage.players;
+  }
+
+  serialize() {
+    const { groupId, stage } = instanceToPlain(this);
+    return { groupId, data: stage };
   }
 
   getCharacters<C extends Character>(

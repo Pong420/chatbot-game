@@ -50,8 +50,12 @@ export function createHandler<WebhookFunctions extends WebhookFunctionsArray>(
       .catch(error => {
         if (error === SKIP) return;
         if (typeof error === 'string') return error; // as error message will reply to user
+        if (error instanceof Error) {
+          if (process.env.NODE_ENV !== 'test') console.error(error);
+          return error.message;
+        }
         // ignore other type of error
-        process.env.NODE_ENV === 'production' && console.warn('Except error to be string but receive', error);
+        process.env.NODE_ENV !== 'test' && console.warn('Except error to be string but receive', error);
       });
 
     return res;

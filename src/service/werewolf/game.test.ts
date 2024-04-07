@@ -5,15 +5,17 @@ import { Init, Start, Night, Daytime, Stage, End } from './stage';
 import { t } from './locales';
 import { Voted } from './death';
 
-let game: Game = Game.create({ id: '1' });
+let game: Game = Game.create({ groupId: '1' });
 let stage: Stage = game.stage;
 let survivors: Character[] = [];
 let werewolfs: Werewolf[] = [];
 let villagers: Villager[] = [];
 
 const testSerialisation = () => {
-  const serialized = Game.create(Game.serialize(game));
-  expect(game).toMatchObject(serialized);
+  const serialized = game.serialize();
+  let newGame = Game.create(serialized);
+  newGame = Game.create(serialized); // this check serialized is not updated
+  expect(game).toMatchObject(newGame);
 };
 
 const next = (StageConstructor: typeof Stage) => {
@@ -27,7 +29,7 @@ const next = (StageConstructor: typeof Stage) => {
 };
 
 const createGame = ({ numOfPlayers = 13 } = {}) => {
-  game = Game.create({ id: '1' });
+  game = Game.create({ groupId: '1' });
   stage = game.stage;
 
   expect(stage).toBeInstanceOf(Init);
@@ -37,13 +39,14 @@ const createGame = ({ numOfPlayers = 13 } = {}) => {
   expect(() => game.next()).toThrowError(t('NoEnoughPlayers'));
 
   for (let i = 0; i < numOfPlayers; i++) {
+    const name = `player_${i}`;
     const join = () => stage.as(Start).join({ id: `${i}`, name: `player_${i}` });
 
     if (i >= 12) {
       expect(join).toThrowError(t('GameIsFull')); // full
     } else {
       join();
-      expect(join).toThrowError(t('Joined')); // duplicated join
+      expect(join).toThrowError(t('Joined', name)); // duplicated join
     }
   }
   expect(game.players.size).toEqual(Math.min(numOfPlayers, 12));
@@ -74,7 +77,7 @@ test('flow', () => {
   let daytime = stage.as(Daytime);
   expect(() => villagers[0].vote(villagers[0])).toThrowError(t('YouDead'));
   expect(() => villagers[0].vote(villagers[1])).toThrowError(t('YouDead'));
-  expect(() => villagers[2].vote(villagers[0])).toThrowError(t('TargetIsDead'));
+  expect(() => villagers[2].vote(villagers[0])).toThrowError(t('TargetIsDead', villagers[0].name));
 
   villagers[1].vote(werewolfs[0]);
   werewolfs[0].vote(villagers[1]);
@@ -103,7 +106,7 @@ test('flow', () => {
     }
 
     expect(() => game.next()).toThrowError(t('StageNotEnded'));
-    expect(() => villagers[2].vote(villagers[0])).toThrowError(t('TargetIsDead')); // expecet not to VoteOutOfRange
+    expect(() => villagers[2].vote(villagers[0])).toThrowError(t('TargetIsDead', villagers[0].name)); // expecet not to VoteOutOfRange
 
     villagers[1].vote(werewolfs[0]);
     werewolfs[0].vote(villagers[1]);
@@ -130,7 +133,7 @@ test('flow', () => {
   expect(villagers[1].causeOfDeath[0] as Voted).toHaveProperty('total', survivors.length);
   expect(survivors).toHaveLength(stage.players.size - 2);
 
-  expect(() => werewolfs[0].kill(villagers[1])).toThrowError(t('TargetIsDead')); // expecet not to VoteOutOfRange
+  expect(() => werewolfs[0].kill(villagers[1])).toThrowError(t('TargetIsDead', villagers[1].name)); // expecet not to VoteOutOfRange
   werewolfs[0].kill(villagers[2]);
 
   // --------------------------------------------------------------------------------

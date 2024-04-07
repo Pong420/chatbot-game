@@ -1,6 +1,5 @@
-import { Constructable } from '@/types';
 import { ERROR_CODE_EMPTY } from '@/supabase';
-import { getGame } from '@/supabase/game';
+import { getGame, Game as GameData } from '@/supabase/game';
 import { getPostBackText, isGroupEvent, isPostBackEvent, isSingleEvent, isTextMessage } from './types';
 import { WebhookEvent, SKIP, PASS } from './handler';
 import { getUser } from './utils/userService';
@@ -96,21 +95,38 @@ export const TextMatch = (regex: RegExp | string, { postbackOnly = false }: Text
   });
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const Game = <G>(GameContructor: Constructable<G> & { create: (payload: any) => G }) => {
+interface GameContructor<G> {
+  type: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  create: (options: { groupId: string; data?: any }) => G;
+}
+
+export const createGameFilter = <R>(callback: (data: GameData | null) => R) => {
   return createFilter(async event => {
-    if (!isGroupEvent(event)) return;
-    const { data } = await getGame(event.source.groupId);
-    if (data && data.type !== GameContructor.name) throw t('OtherGameRuning', data.type);
-    return GameContructor.create({ id: data?.groupId });
+    let groupId = '';
+    if (isGroupEvent(event)) groupId = event.source.groupId;
+    if (isSingleEvent(event)) {
+      const user = await getUser(event);
+      groupId = user.game || '';
+    }
+    if (!groupId) return;
+    const resp = await getGame(groupId);
+    return !resp.error || resp.error.code === ERROR_CODE_EMPTY ? callback(resp.data) : null;
+  });
+};
+
+export const Game = <G>(GameContructor: GameContructor<G>) => {
+  return createGameFilter(data => {
+    if (!data) return;
+    return data.type === GameContructor.type
+      ? GameContructor.create(JSON.parse(JSON.stringify({ groupId: data.groupId, data: data.data })))
+      : null;
   });
 };
 
 export const CanStartGame = () => {
-  return createFilter(async event => {
-    if (!isGroupEvent(event)) return;
-    const resp = await getGame(event.source.groupId);
-    if (resp.data) throw t('OtherGameRuning', resp.data.type);
-    return resp.error && resp.error.code !== ERROR_CODE_EMPTY ? null : PASS;
+  return createGameFilter(async data => {
+    if (data) throw t('OtherGameRuning', data.type);
+    return PASS;
   });
 };

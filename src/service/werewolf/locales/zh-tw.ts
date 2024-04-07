@@ -38,6 +38,7 @@ export default {
   NoEnoughPlayers: '遊戲人數不能少於6人',
   NicknameUsed: `「{0}」已有參賽者使用，請更換暱稱再參加`,
 
+  Self: '自己',
   TurnEnded: '你已作出了選擇！',
   StageNotEnded: '仍有玩家未完成行動，無法進入下回合',
   YouDead: '安息吧，你已經死了！',

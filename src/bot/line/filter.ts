@@ -14,13 +14,6 @@ interface TextEqualOptions extends TextOptions {
   shouldReturn?: boolean;
 }
 
-// prettier-ignore
-interface TextEqual {
-  (except: string | string[]): (event: WebhookEvent) => undefined | typeof PASS;
-  (except: string | string[], options: TextEqualOptions & { shouldReturn: true }): (event: WebhookEvent) => string | undefined | typeof PASS;
-  (except: string | string[], options?: TextEqualOptions): (event: WebhookEvent) => string | undefined | typeof PASS | typeof SKIP;
-}
-
 export function createFilter<R>(callback: (event: WebhookEvent) => R) {
   const handle = (res: R | boolean) => {
     if (res === false) throw SKIP;
@@ -55,10 +48,13 @@ export const User = () =>
     return user;
   });
 
-export const TextEqual = ((
+type TER<T = string | undefined | typeof PASS> = (event: WebhookEvent) => T | Promise<T>;
+export function TextEqual(except: string | string[]): TER<undefined | typeof PASS>;
+export function TextEqual(except: string | string[], options: TextEqualOptions & { shouldReturn: true }): TER<string | undefined | typeof PASS> // prettier-ignore
+export function TextEqual(
   except: string | string[],
   { shouldReturn = false, postbackOnly = false }: TextEqualOptions = {}
-) => {
+): TER<string | undefined | typeof PASS> {
   const validate =
     typeof except === 'string'
       ? (payload: string) => except === payload
@@ -79,7 +75,7 @@ export const TextEqual = ((
       return shouldReturn ? text : PASS;
     }
   });
-}) as TextEqual;
+}
 
 export const TextMatch = (regex: RegExp | string, { postbackOnly = false }: TextOptions = {}) => {
   return createFilter(event => {

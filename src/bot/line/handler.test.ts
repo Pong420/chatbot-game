@@ -3,7 +3,7 @@ import { createEventHandler, createHandler } from './handler';
 import { Single, TextEqual } from './filter';
 import { LineUser } from './test';
 import { textMessage } from './utils/createMessage';
-import { debugHandlers } from './service/debug';
+import { debugHandlers } from './handlers/debug';
 import { t } from './messages';
 
 const client = new LineUser();

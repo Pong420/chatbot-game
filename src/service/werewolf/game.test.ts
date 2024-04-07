@@ -43,7 +43,7 @@ const createGame = ({ numOfPlayers = 13 } = {}) => {
     const join = () => stage.as(Start).join({ id: `${i}`, name: `player_${i}` });
 
     if (i >= 12) {
-      expect(join).toThrowError(t('GameIsFull')); // full
+      expect(join).toThrowError(t('GameIsFull', name)); // full
     } else {
       join();
       expect(join).toThrowError(t('Joined', name)); // duplicated join

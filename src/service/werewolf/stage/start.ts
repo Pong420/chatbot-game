@@ -14,7 +14,7 @@ export interface Start extends Init {}
 export class Start extends Stage {
   join(player: Pick<Character, 'id' | 'name'>) {
     if (this.players.has(player.id)) throw t('Joined', player.name);
-    if (this.players.size >= 12) throw t('GameIsFull');
+    if (this.players.size >= 12) throw t('GameIsFull', player.name);
 
     for (const [, c] of this.players.entries()) {
       if (player.name === c.name) throw t(`NicknameUsed`, player.name);

@@ -36,7 +36,7 @@ export default {
   GameIsFull: '人數已滿，「{0}」下次請早',
   Joined: '{0}你已經參加遊戲，我明白你很想要，但不要急',
   NoEnoughPlayers: '遊戲人數不能少於6人',
-  NicknameUsed: `「{0}」已有參賽者使用，請更換暱稱再參加`,
+  NicknameUsed: `暱稱「{0}」已被使用，請更換後再參加`,
 
   Self: '自己',
   TurnEnded: '你已作出了選擇！',

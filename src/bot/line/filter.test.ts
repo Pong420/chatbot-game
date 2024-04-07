@@ -3,7 +3,7 @@ import { createHandler, WebhookEvent } from './handler';
 import { Group, Single, TextEqual, TextMatch, UserId } from './filter';
 import { LineUser } from './test';
 
-const client = new LineUser(`${Math.random()}`, 'group');
+const client = new LineUser();
 const singleMessage = client.singleMessage('Hello');
 const groupMessage = client.groupMessage('Hello');
 

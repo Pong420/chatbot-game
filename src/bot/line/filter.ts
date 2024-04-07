@@ -1,7 +1,7 @@
 import { getPostBackText, isGroupEvent, isPostBackEvent, isSingleEvent, isTextMessage } from './types';
-import { LineBotErrorMessage } from './error';
 import { WebhookEvent, SKIP, PASS } from './handler';
 import { getUser } from './utils/user';
+import { t } from './locales';
 
 interface TextOptions {
   postbackOnly?: boolean;
@@ -38,7 +38,7 @@ export const UserId = ({ warning = true } = {}) =>
   createFilter(event => {
     const userId = event.source.userId;
     if (userId) return userId;
-    if (warning) throw new LineBotErrorMessage('CANNOT_GET_UER_ID');
+    if (warning) return t('GetUserIdFailed');
   });
 
 export const User = () =>

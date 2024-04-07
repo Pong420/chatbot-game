@@ -1,6 +1,6 @@
 export const Commands = {
-  GetGroupID: 'Group ID',
-  GetUserID: 'My User ID',
+  GroupId: 'Group ID',
+  GetUserId: 'My User ID',
 
   NickNameIntro: '暱稱系統介紹',
   MyNickName: '/我的暱稱',
@@ -8,8 +8,9 @@ export const Commands = {
 };
 
 export const Replies = {
-  GetGroupIDResp: 'The group id is {0}',
-  GetUserIDResp: 'Your user id is {0}',
+  GroupIdResp: 'The group id is {0}',
+  GetUserIdResp: 'Your user id is {0}',
+  GetUserIdFailed: '無法取得UserId',
 
   SystemError: '系統錯誤',
 

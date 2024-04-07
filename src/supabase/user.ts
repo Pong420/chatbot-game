@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import { Tables } from '@/supabase/database.types';
+import { Tables, TablesInsert, TablesUpdate } from './database.types';
 
 export type User = Tables<'users'>;
 
@@ -7,14 +7,10 @@ export function getUser(userId: string) {
   return supabase.from('users').select('*').eq('userId', userId).single();
 }
 
-export function createUser(userId: string, nickname: string) {
-  return supabase
-    .from('users')
-    .insert([{ userId, nickname, updated_at: new Date().toISOString() }])
-    .select()
-    .single();
+export function createUser(data: TablesInsert<'users'>) {
+  return supabase.from('users').insert([data]).select().single();
 }
 
-export function updateUser(userId: string, data: Partial<User>) {
+export function updateUser(userId: string, data: TablesUpdate<'users'>) {
   return supabase.from('users').update(data).eq('userId', userId).select().single();
 }

@@ -13,7 +13,7 @@ export async function getUser(event: WebhookEvent | null, userId = event?.source
   if (!resp.data && resp.error.code === ERROR_CODE_EMPTY) {
     const profile = await getUserProfile(event, userId);
     if (profile) {
-      resp = await api.createUser(userId, profile.displayName);
+      resp = await api.createUser({ userId, nickname: profile.displayName });
     }
   }
   if (resp.error) throw t('SystemError');

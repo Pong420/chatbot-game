@@ -6,9 +6,15 @@ import { Action } from '../decorators';
 import { t } from '../locales';
 
 export class Character {
-  id: string; // user id
+  static readonly type: string = 'Character';
 
-  nickname: string;
+  readonly type: string = 'Character'; // the actual value will be assigned in @Transform
+
+  readonly name: string;
+
+  readonly id: string; // user id
+
+  readonly nickname: string;
 
   turn = 1;
   endTurn = true;
@@ -54,9 +60,9 @@ export class Character {
   vote(character: Character) {
     const stage = this.stage.as(Daytime);
     if (character.isDead) throw t('TargetIsDead', character.id === this.id ? t('Self') : character.nickname);
-    if (stage.Voted.includes(this.id)) throw t('Voted');
+    if (stage.voted.includes(this.id)) throw t('Voted');
     if (!stage.candidates.has(character.id)) throw t('VoteOutOfRange');
-    stage.Voted.push(this.id);
+    stage.voted.push(this.id);
     stage.candidates.get(character.id)!.push(this.id);
     return { self: this.id === character.id };
   }
@@ -64,7 +70,7 @@ export class Character {
   @Action(() => Daytime)
   waive() {
     const stage = this.stage.as(Daytime);
-    stage.Voted.push(this.id);
+    stage.voted.push(this.id);
   }
 
   isKilledBy(character: Character) {

@@ -7,7 +7,9 @@ import { Night } from './night';
 const intialResults = { numberOfVotes: 0, count: 0, players: [] as string[] };
 
 export class Daytime extends Stage {
-  Voted: string[];
+  readonly name = 'Daytime';
+
+  voted: string[];
 
   @Transform(({ type, value }) => (type === TransformationType.CLASS_TO_PLAIN ? Array.from(value) : new Map(value)))
   candidates = new Map<string, string[]>();
@@ -33,7 +35,7 @@ export class Daytime extends Stage {
 
   onStart(): void {
     super.onStart();
-    this.Voted = [];
+    this.voted = [];
     this.results = { ...intialResults };
 
     /**

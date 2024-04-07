@@ -9,9 +9,11 @@ import { t } from '../locales';
 /**
  * For extends configuration from Init
  */
-export interface Start extends Init {}
+export interface Start extends Omit<Init, 'name'> {}
 
 export class Start extends Stage {
+  readonly name = 'Start';
+
   join(player: Pick<Character, 'id' | 'nickname'>) {
     if (this.players.has(player.id)) throw t('Joined', player.nickname);
     if (this.players.size >= 12) throw t('GameIsFull', player.nickname);

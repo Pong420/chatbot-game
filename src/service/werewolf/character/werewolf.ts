@@ -5,6 +5,9 @@ import { Killed } from '../death';
 import { Night } from '../stage';
 
 export class Werewolf extends Character {
+  static readonly type = 'Werewolf';
+  readonly name = t('Werewolf');
+
   hungry = false;
 
   @Action(() => Night)

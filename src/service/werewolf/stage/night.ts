@@ -3,6 +3,8 @@ import { Stage } from './_stage';
 import { Daytime } from './daytime';
 
 export class Night extends Stage {
+  readonly name = 'Night';
+
   onStart(): void {
     super.onStart();
     this.turn += 1;

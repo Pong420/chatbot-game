@@ -1,16 +1,16 @@
 export class Death {
-  __type: string;
-
-  constructor() {
-    this['__type'] = this['constructor'].name;
-  }
+  static readonly type: string;
 }
 
 export class Killed extends Death {
+  static readonly type = 'Killed';
+
   userId: string;
 }
 
 export class Voted extends Death {
+  static readonly type = 'Voted';
+
   votes: string[] = [];
   total: number;
 
@@ -22,4 +22,4 @@ export class Voted extends Death {
 export type CauseOfDeath = InstanceType<(typeof types)[number]>;
 
 const types = [Killed, Voted];
-export const deathSubTypes = types.map(value => ({ value, name: value.name }));
+export const deathSubTypes = types.map(constructor => ({ value: constructor, name: constructor.type as string }));

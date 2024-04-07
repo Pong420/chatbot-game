@@ -19,7 +19,9 @@ export interface CreateGame {
 }
 
 export class Game {
-  static type = t('GameName');
+  static readonly type: string = 'Werewolf';
+
+  readonly name = t('GameName');
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static create({ data, ...payload }: { groupId: string; data?: any }) {
@@ -40,8 +42,9 @@ export class Game {
   groupId: string;
 
   @Type(() => Stage, {
+    keepDiscriminatorProperty: true,
     discriminator: {
-      property: '__type',
+      property: 'name',
       subTypes
     }
   })

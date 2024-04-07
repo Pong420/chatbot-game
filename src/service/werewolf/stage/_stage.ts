@@ -6,24 +6,24 @@ import { t } from '../locales';
 const characterMap: Record<string, typeof Character> = {};
 
 for (const k in characters) {
-  const value = characters[k as keyof typeof characters];
-  if (Object.prototype.isPrototypeOf.call(Character, value)) {
-    characterMap[value.name] = value;
+  const constructor = characters[k as keyof typeof characters];
+  if (Object.prototype.isPrototypeOf.call(Character, constructor)) {
+    characterMap[constructor.name] = constructor;
   }
 }
 
 export class Stage {
-  __type: string;
+  readonly name: string;
 
   turn = 0;
 
   @Transform(({ value, options, type }) => {
     return type === TransformationType.CLASS_TO_PLAIN
-      ? Array.from(value, ([k, v]) => [k, { ...instanceToPlain(v, options), __type: v.constructor.name }])
+      ? Array.from(value, ([k, v]) => [k, { ...instanceToPlain(v, options), type: v.constructor.type }])
       : new Map(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           value.map(([k, v]: [any, any]) => {
-            const instance = plainToInstance(characterMap[v['__type']], v, options);
+            const instance = plainToInstance(characterMap[v['type']] || Character, v, options);
             return [k, instance];
           })
         );
@@ -31,10 +31,6 @@ export class Stage {
   players = new Map<string, Character>();
 
   survivors: Character[] = [];
-
-  constructor() {
-    this['__type'] = this['constructor'].name;
-  }
 
   /**
    * TODO: remove it

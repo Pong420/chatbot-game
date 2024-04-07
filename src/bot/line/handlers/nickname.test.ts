@@ -3,7 +3,7 @@ import { expect, test } from 'vitest';
 import { createEventHandler } from '@line/handler';
 import { LineUser } from '@line/test';
 import { textMessage } from '@line/utils/createMessage';
-import { maxLength } from '@line/utils/user';
+import { maxLength } from '@line/utils/userService';
 import { t } from '@line/locales';
 import { nicknameHandlers, crearteIntroContent } from './nickname';
 

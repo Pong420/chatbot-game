@@ -1,6 +1,6 @@
 import { createHandler } from '@line/handler';
 import { TextEqual, TextMatch, User, UserId } from '@line/filter';
-import { setNickname, maxLength } from '@line/utils/user';
+import { setNickname, maxLength } from '@line/utils/userService';
 import { orderList, centeredText, createTableMessage } from '@line/utils/createMessage';
 import { t } from '@line/locales';
 

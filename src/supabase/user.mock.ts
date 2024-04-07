@@ -21,7 +21,7 @@ export const genMockUserData = (override?: Partial<User>) => {
 
 vi.spyOn(module, 'getUser').mockImplementation(userId => {
   const data = userDB.get(userId);
-  return Promise.resolve({ data, error: data ? null : { code: 0 } }) as unknown as ReturnType<
+  return Promise.resolve({ data, error: data ? null : { code: '0' } }) as unknown as ReturnType<
     (typeof module)['getUser']
   >;
 });
@@ -38,7 +38,7 @@ vi.spyOn(module, 'updateUser').mockImplementation((userId, payload) => {
     data = { ...data, ...payload };
     userDB.set(userId, data);
   }
-  return Promise.resolve({ data, error: data ? null : { code: 0 } }) as unknown as ReturnType<
+  return Promise.resolve({ data, error: data ? null : { code: '0' } }) as unknown as ReturnType<
     (typeof module)['updateUser']
   >;
 });

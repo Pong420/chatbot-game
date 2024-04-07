@@ -1,6 +1,6 @@
 import { getPostBackText, isGroupEvent, isPostBackEvent, isSingleEvent, isTextMessage } from './types';
 import { WebhookEvent, SKIP, PASS } from './handler';
-import { getUser } from './utils/user';
+import { getUser } from './utils/userService';
 import { t } from './locales';
 
 interface TextOptions {

@@ -22,8 +22,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
-      "@line/*": ["./src/bot/line/*"]
+      "@line/*": ["./src/bot/line/*"],
+      "@/*": ["./src/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

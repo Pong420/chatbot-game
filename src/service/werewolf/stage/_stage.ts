@@ -15,6 +15,8 @@ for (const k in characters) {
 export class Stage {
   readonly name: string;
 
+  host: string; // host userId
+
   turn = 0;
 
   @Transform(({ value, options, type }) => {

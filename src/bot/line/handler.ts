@@ -62,21 +62,28 @@ export function createHandler<WebhookFunctions extends WebhookFunctionsArray>(
   };
 }
 
+// export function mergeHandlers(handlers: Handler[]) {
+//   return async function runHandler(event: WebhookEvent) {
+//     for (const handler of handlers) {
+//       const message = await handler(event);
+//       if (message) return message;
+//     }
+//   };
+// }
+
 export function createEventHandler(...payload: Handler[][]) {
   const handlers = payload.flat();
 
   return async function (event: WebhookEvent) {
+    if (!('replyToken' in event)) return;
     for (const handler of handlers) {
-      if ('replyToken' in event) {
-        const message = await handler(event);
-        if (message) {
-          return client.replyMessage({
-            replyToken: event.replyToken,
-            messages:
-              typeof message === 'string' ? [textMessage(message)] : Array.isArray(message) ? message : [message],
-            notificationDisabled: true
-          });
-        }
+      const message = await handler(event);
+      if (message) {
+        return client.replyMessage({
+          replyToken: event.replyToken,
+          messages: typeof message === 'string' ? [textMessage(message)] : Array.isArray(message) ? message : [message],
+          notificationDisabled: true
+        });
       }
     }
   };

@@ -90,7 +90,9 @@ export class Game {
     this.stage.onEnd();
 
     const NextStage = this.shouldEndGame() ? End : this.stage.next();
-    this.stage = plainToInstance(NextStage, instanceToPlain(this.stage)) as Stage;
+    // FIXME: make this better
+    const { name, ...stage } = instanceToPlain(this.stage);
+    this.stage = plainToInstance(NextStage, stage) as Stage;
     this.stage.onStart();
     return this.stage;
   }

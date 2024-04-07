@@ -1,7 +1,6 @@
 import { defineMessages } from '@/utils/locale';
 
 export const WerewolfCharacter = {
-  All: `狼人殺角色`,
   Villager: `村民`,
   Werewolf: `狼人`,
   Witcher: `女巫`,
@@ -10,8 +9,31 @@ export const WerewolfCharacter = {
   Predictor: `預言家`
 };
 
+export const WerewolfIamCommand = (() => {
+  const Iam = '我是{0}';
+  return {
+    Iam,
+    ...Object.entries(WerewolfCharacter).reduce(
+      (res, [key, value]) => ({ ...res, [`Iam${key}`]: Iam.replace('{0}', value) }),
+      {} as Record<`Iam${keyof typeof WerewolfCharacter}`, string>
+    )
+  };
+})();
+
+export const WerewolfCharacterIntroCommand = (() => {
+  const CharacterIntro = '{0}簡介';
+  return {
+    CharacterIntro,
+    ...Object.entries(WerewolfCharacter).reduce(
+      (res, [key, value]) => ({ ...res, [`${key}Intro`]: CharacterIntro.replace('{0}', value) }),
+      {} as Record<`${keyof typeof WerewolfCharacter}Intro`, string>
+    )
+  };
+})();
+
 export const WerewolfHostCommand = {
   Initiate: `開啟狼人殺`,
+  Open: `狼人殺設定完畢`,
   Start: `狼人殺開始`,
   End: `狼人殺結束`,
   Survivor: `狼人殺倖存者`,
@@ -19,17 +41,17 @@ export const WerewolfHostCommand = {
   HostCommands: `主持指令`
 };
 
+export const WerewolfStageCommand = {
+  // PlayerReport = `^(.*)的報告`,
+  NextShort: 'n',
+  Next: '/next',
+  Skip: '/skip'
+};
+
 export const WerewolfKillerCommand = {
-  IamWerewolf: `我是狼人`,
   Kill: `^我要殺(.*)`,
   Suicide: `我要自殺`,
   NoKill: `今晚是平安夜`
-};
-
-export const WerewolfKillerReplies = {
-  Hungry: ['平安夜？不，你餓了，快選一個晚餐吧', '什麼都能忍，餓不能！快選一個晚餐吧'],
-  DuplicatedKill: '知道了，你們是有多大仇!?',
-  DuplicatedSuicide: '知道了，你就這麼想死嗎?'
 };
 
 export const WerewolfCommonCommand = {
@@ -37,9 +59,7 @@ export const WerewolfCommonCommand = {
   MyCharacter: `我的狼人殺角色`,
   Vote: `^我投(.*)`,
   Waive: `棄權`,
-  WhoNotVoted: `誰未投票`,
-  IamVillager: `我是村民`
-  // Titles: `狼人殺稱號`
+  WhoNotVoted: `誰未投票`
 };
 
 export default defineMessages(
@@ -67,20 +87,34 @@ export default defineMessages(
     Tips: `遊戲提示`,
 
     ShortIntro: `
-    遊戲人數最少6人，最多12人,
-    主持人可以輸入「{0}」查詢指令,
-    謹記！友誼第一，這只是遊戲，不要太認真
-  `,
+      遊戲人數最少6人，最多12人,
+      主持人可以輸入「{0}」查詢指令,
+      謹記！友誼第一，這只是遊戲，不要太認真
+    `,
 
-    NotStarted: `狼人殺未開始`
+    Players: '參賽者',
+
+    NotStarted: `狼人殺未開始`,
+    NotJoined: `你未參加狼人殺`,
+
+    YourCharacter: '你的角色',
+    YourAreCharacter: '你是「{0}」留意群組訊息，到你的回合後，請按指示輸入指令或點擊按鈕',
+    YouAreVillager: `你是「${WerewolfCharacter.Villager}」，請努力活下去！`,
+    CharacterIntroButton: '角色簡介',
+
+    Hungry: ['平安夜？不，你餓了，快選一個晚餐吧', '什麼都能忍，餓不能！快選一個晚餐吧'],
+    DuplicatedKill: '知道了，你們是有多大仇!?',
+    DuplicatedSuicide: '知道了，你就這麼想死嗎?'
 
     // TODO:
     // 遇到錯誤時，請主持人輸入「${WerewolfCommand}」,
     // 參與狼人殺，累積成就能夠獲得稱號，輸入「${WerewolfCommand.Titles}」了解
   },
   WerewolfCharacter,
+  WerewolfIamCommand,
+  WerewolfCharacterIntroCommand,
   WerewolfCommonCommand,
   WerewolfHostCommand,
-  WerewolfKillerCommand,
-  WerewolfKillerReplies
+  WerewolfStageCommand,
+  WerewolfKillerCommand
 );

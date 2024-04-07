@@ -20,10 +20,15 @@ const CreateGame = async (c = client) => {
 };
 
 const Initiate = (c = client) => handleEvent(c.groupMessage(t(`Initiate`)));
+const Open = (c = client) => handleEvent(c.groupMessage(t(`Open`)));
 const Join = (c = client) => handleEvent(c.groupMessage(t(`Join`)));
+const Next = (c = client) => handleEvent(c.groupMessage(t(`Next`)));
 
 test('main', async () => {
   await CreateGame(client);
+
+  await expect(Join(client)).resolves.toEqual(textMessage(t(`NotStarted`)));
+  await expect(Open(client)).resolves.toMatchObject({ type: 'flex' });
 
   await expect(Join(client)).resolves.toMatchObject({ type: 'flex' });
   await expect(Join(client)).resolves.toEqual(textMessage(t(`Joined`, client.name)));
@@ -43,4 +48,6 @@ test('main', async () => {
   clientInOthersGroup.profile.userId = client.userId;
   await CreateGame(clientInOthersGroup);
   await expect(Join(clientInOthersGroup)).resolves.toEqual(textMessage(lt('JoinedOtherGroupsGame', client.name)));
+
+  await expect(Next()).resolves.not.toBeUndefined();
 });

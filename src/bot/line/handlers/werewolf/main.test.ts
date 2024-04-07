@@ -27,7 +27,8 @@ const Next = (c = client) => handleEvent(c.groupMessage(t(`Next`)));
 test('main', async () => {
   await CreateGame(client);
 
-  await expect(Join(client)).resolves.toEqual(textMessage(t(`NotStarted`)));
+  await expect(Join(client)).resolves.toEqual(textMessage(t(`WaitFotHostSetup`)));
+
   await expect(Open(client)).resolves.toMatchObject({ type: 'flex' });
 
   await expect(Join(client)).resolves.toMatchObject({ type: 'flex' });

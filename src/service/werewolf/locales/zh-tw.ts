@@ -67,7 +67,7 @@ export default defineMessages(
     SystemError: '系統錯誤',
 
     GameIsFull: '人數已滿，「{0}」下次請早',
-    Joined: '{0}你已經參加遊戲，我明白你很想要，但不要急',
+    Joined: '{0}你已經參加遊戲',
     NoEnoughPlayers: '遊戲人數不能少於6人',
     NicknameUsed: `暱稱「{0}」已被使用，請更換後再參加`,
 
@@ -94,8 +94,10 @@ export default defineMessages(
 
     Players: '參賽者',
 
+    Started: `狼人殺已開始`,
     NotStarted: `狼人殺未開始`,
     NotJoined: `你未參加狼人殺`,
+    WaitFotHostSetup: `請等待主持完成配置`,
 
     YourCharacter: '你的角色',
     YourAreCharacter: '你是「{0}」留意群組訊息，到你的回合後，請按指示輸入指令或點擊按鈕',

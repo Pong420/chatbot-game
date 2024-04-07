@@ -23,9 +23,11 @@ test('nickname', async () => {
 
   await expect(handleEvent(setNicknameMsg(nickname))).resolves.toEqual(textMessage(t('NickNameUsing', nickname)));
 
-  expect(handleEvent(setNicknameMsg(''))).resolves.toEqual(textMessage(t('NickNameEmpty')));
-  expect(handleEvent(setNicknameMsg(nanoid()))).resolves.toEqual(textMessage(t('NickNameMaxLength', maxLength)));
-  expect(handleEvent(setNicknameMsg('「${nickname}」'))).resolves.toEqual(textMessage(t('NickNameContainBracket')));
+  await expect(handleEvent(setNicknameMsg(''))).resolves.toEqual(textMessage(t('NickNameEmpty')));
+  await expect(handleEvent(setNicknameMsg(nanoid()))).resolves.toEqual(textMessage(t('NickNameMaxLength', maxLength)));
+  await expect(handleEvent(setNicknameMsg('「${nickname}」'))).resolves.toEqual(
+    textMessage(t('NickNameContainBracket'))
+  );
 });
 
 test('nickname intro content', async () => {

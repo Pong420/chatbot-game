@@ -1,6 +1,6 @@
 import { t as lt } from '@line/locales';
 import { createHandler } from '@line/handler';
-import { CanStartGame, Game, Group, Single, TextEqual, User, UserId } from '@line/filter';
+import { CanStartGame, createFilter, Game, Group, Single, TextEqual, User, UserId } from '@line/filter';
 import { createGame, updateGame } from '@/supabase/game';
 import { updateUser } from '@/supabase/user';
 import { Character } from '@werewolf/character';
@@ -10,6 +10,11 @@ import { t } from '@werewolf/locales';
 import * as board from './board';
 
 const WerewolfGame = Game(Werewolf);
+const IsHost = createFilter(UserId(), WerewolfGame, (userId, game) => {
+  if (userId && game.stage.host === userId) {
+    return { userId, game };
+  }
+});
 
 function getStageMessage(stage: Stage) {
   if (stage instanceof Init) return board.start();
@@ -19,7 +24,7 @@ function getStageMessage(stage: Stage) {
 }
 
 export const werewolfMainHandlers = [
-  createHandler(Group, TextEqual(t('Initiate')), UserId(), CanStartGame(), async (event, userId) => {
+  createHandler(Group, UserId(), TextEqual(t('Initiate')), CanStartGame(), async (event, userId) => {
     const groupId = event.source.groupId;
     const game = Werewolf.create({ groupId });
     game.stage.host = userId;
@@ -36,19 +41,18 @@ export const werewolfMainHandlers = [
       return getStageMessage(stage);
     }
   }),
-  createHandler(Group, TextEqual([t('Next'), t('NextShort')]), UserId(), WerewolfGame, async (event, userId, game) => {
-    if (userId && game.stage.host === userId) {
-      const stage = game.next();
-      await updateGame(game.groupId, game.serialize());
-      return getStageMessage(stage);
-    }
+  createHandler(Group, TextEqual([t('Next'), t('NextShort')]), IsHost, async (event, { game }) => {
+    const stage = game.next();
+    await updateGame(game.groupId, game.serialize());
+    return getStageMessage(stage);
   }),
   createHandler(Group, TextEqual(t('Join')), User(), WerewolfGame, async (event, user, game) => {
     if (user.game && user.game !== game.groupId) return lt(`JoinedOtherGroupsGame`, user.nickname);
 
-    if (game.stage instanceof Init) return t('NotStarted');
+    if (game.stage instanceof Init) return t('WaitFotHostSetup');
+    else if (!(game.stage instanceof Start)) return t(`Started`);
 
-    game.stage.as(Start).join({ id: user.userId, nickname: user.nickname });
+    game.stage.join({ id: user.userId, nickname: user.nickname });
 
     await Promise.all([
       //

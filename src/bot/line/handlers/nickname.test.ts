@@ -4,7 +4,7 @@ import { createEventHandler } from '@line/handler';
 import { LineUser } from '@line/test';
 import { textMessage } from '@line/utils/createMessage';
 import { maxLength } from '@line/utils/user';
-import { t } from '@line/messages';
+import { t } from '@/bot/line/locales';
 import { nicknameHandlers, crearteIntroContent } from './nickname';
 
 const client = new LineUser();

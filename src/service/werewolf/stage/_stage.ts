@@ -1,7 +1,7 @@
 import { Transform, TransformationType, instanceToPlain, plainToInstance } from 'class-transformer';
 import { Constructable } from '@/types';
 import { Character, characters } from '../character';
-import { t } from '../messages';
+import { t } from '../locales';
 
 const characterMap: Record<string, typeof Character> = {};
 

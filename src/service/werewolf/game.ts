@@ -2,7 +2,7 @@ import { Type, DiscriminatorDescriptor, plainToInstance, instanceToPlain } from 
 import { Constructable } from '@/types';
 import { stages, Init, Stage, End } from './stage';
 import { Character, Werewolf } from './character';
-import { t } from './messages';
+import { t } from './locales';
 
 const subTypes: DiscriminatorDescriptor['subTypes'] = [];
 

@@ -4,7 +4,7 @@ import { Single, TextEqual } from './filter';
 import { LineUser } from './test';
 import { textMessage } from './utils/createMessage';
 import { debugHandlers } from './handlers/debug';
-import { t } from './messages';
+import { t } from './locales';
 
 const client = new LineUser();
 

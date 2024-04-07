@@ -3,7 +3,7 @@ import { Constructable } from '@/types';
 import { Voted, CauseOfDeath, Death, deathSubTypes, Killed } from '../death';
 import { Daytime, type Stage } from '../stage';
 import { Action } from '../decorators';
-import { t } from '../messages';
+import { t } from '../locales';
 
 export class Character {
   id: string; // user id

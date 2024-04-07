@@ -4,7 +4,7 @@ import { Character, Villager, Werewolf } from '../character';
 import { Stage } from './_stage';
 import { Night } from './night';
 import type { Init } from './init';
-import { t } from '../messages';
+import { t } from '../locales';
 
 /**
  * For extends configuration from Init

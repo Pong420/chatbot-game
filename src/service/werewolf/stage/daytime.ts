@@ -1,6 +1,6 @@
 import { Transform, TransformationType } from 'class-transformer';
 import { Voted } from '../death';
-import { t } from '../messages';
+import { t } from '../locales';
 import { Stage } from './_stage';
 import { Night } from './night';
 

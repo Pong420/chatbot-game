@@ -1,6 +1,6 @@
 import { Character } from './_character';
 import { Action } from '../decorators';
-import { t } from '../messages';
+import { t } from '../locales';
 import { Killed } from '../death';
 import { Night } from '../stage';
 

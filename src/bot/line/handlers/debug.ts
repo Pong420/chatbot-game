@@ -1,6 +1,6 @@
 import { createHandler, WebhookEvent } from '../handler';
 import { Group, TextEqual } from '../filter';
-import { t } from '../messages';
+import { t } from '../locales';
 
 const getUserId = (event: WebhookEvent) => event.source.userId || '???';
 

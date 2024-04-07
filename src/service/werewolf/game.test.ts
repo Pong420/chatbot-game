@@ -2,7 +2,7 @@ import { test, expect } from 'vitest';
 import { Game } from './game';
 import { Character, Villager, Werewolf } from './character';
 import { Init, Start, Night, Daytime, Stage, End } from './stage';
-import { t } from './messages';
+import { t } from './locales';
 import { Voted } from './death';
 
 let game: Game = Game.create({ id: '1' });

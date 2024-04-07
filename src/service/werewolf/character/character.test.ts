@@ -4,7 +4,7 @@ import { plainToInstance } from 'class-transformer';
 import { Constructable } from '@/types';
 import { Character } from './_character';
 import { Villager, Werewolf } from './_characters';
-import { t } from '../messages';
+import { t } from '../locales';
 
 const create = <C extends Character>(CharacterConstructor: Constructable<C>) =>
   plainToInstance(CharacterConstructor, { id: nanoid(), name: nanoid() });

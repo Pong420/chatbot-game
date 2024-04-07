@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Constructable } from '@/types';
 import { Character } from './character';
-import { t } from './messages';
+import { t } from './locales';
 import type { Stage } from './stage';
 
 export function Action(get?: () => Constructable<Stage>) {

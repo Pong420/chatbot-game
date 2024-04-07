@@ -14,5 +14,5 @@ export const crearteIntroContent = () =>
 export const nicknameHandlers = [
   createHandler(TextEqual(t('NickNameIntro')), crearteIntroContent),
   createHandler(TextEqual(t('MyNickName')), User(), user => user.nickname),
-  createHandler(UserId(), TextMatch(t('SetNickName')), (_userId, [, nickname], event) => setNickname(event, nickname))
+  createHandler(UserId, TextMatch(t('SetNickName')), (_userId, [, nickname], event) => setNickname(event, nickname))
 ];

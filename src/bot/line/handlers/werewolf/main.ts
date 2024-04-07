@@ -10,7 +10,7 @@ import { t } from '@werewolf/locales';
 import * as board from './board';
 
 const WerewolfGame = Game(Werewolf);
-const IsHost = createFilter(UserId(), WerewolfGame, (userId, game) => {
+const IsHost = createFilter(UserId, WerewolfGame, (userId, game) => {
   if (userId && game.stage.host === userId) {
     return { userId, game };
   }
@@ -24,7 +24,7 @@ function getStageMessage(stage: Stage) {
 }
 
 export const werewolfMainHandlers = [
-  createHandler(Group, UserId(), TextEqual(t('Initiate')), CanStartGame(), async (event, userId) => {
+  createHandler(Group, UserId, TextEqual(t('Initiate')), CanStartGame(), async (event, userId) => {
     const groupId = event.source.groupId;
     const game = Werewolf.create({ groupId });
     game.stage.host = userId;

@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { WebhookEvent } from '@line/bot-sdk';
 import { expect, test } from 'vitest';
 import { createHandler } from './handler';
-import { createFilter, Group, Single, TextEqual, TextMatch, UserId } from './filter';
+import { createFilter, Group, GroupId, Single, TextEqual, TextMatch, UserId } from './filter';
 import { LineUser } from './test';
 
 const client = new LineUser();
@@ -30,22 +29,31 @@ test('rule', async () => {
 });
 
 test('Single & Group', async () => {
-  const callback = (event: WebhookEvent) => {
+  const singleHandler = createHandler(Single, event => {
     expect(event).toMatchObject({ type: 'message' });
     return `World`;
-  };
-  const singleHandler = createHandler(Single, callback);
-  const groupHandler = createHandler(Group, callback);
+  });
+  const groupHandler = createHandler(Group, event => {
+    expect(event).toMatchObject({ type: 'message' });
+    return `World`;
+  });
+  const groupEventHandler = createHandler(GroupId, (groupId, event) => {
+    expect(groupId).toBe(client.groupId);
+    expect(event).toMatchObject({ type: 'message' });
+    return `World`;
+  });
 
   await expect(singleHandler(singleMessage)).resolves.toEqual('World');
   await expect(singleHandler(groupMessage)).resolves.toBeUndefined();
   await expect(groupHandler(singleMessage)).resolves.toBeUndefined();
   await expect(groupHandler(groupMessage)).resolves.toEqual('World');
+  await expect(groupEventHandler(singleMessage)).resolves.toBeUndefined();
+  await expect(groupEventHandler(groupMessage)).resolves.toEqual('World');
 });
 
 test('UserId', async () => {
   const singleHandler = createHandler(Single, UserId, userId => userId);
-  const groupHandler = createHandler(Group, UserId, (_event, userId) => userId);
+  const groupHandler = createHandler(Group, UserId, userId => userId);
   await expect(singleHandler(singleMessage)).resolves.toEqual(client.userId);
   await expect(groupHandler(groupMessage)).resolves.toEqual(client.userId);
 });

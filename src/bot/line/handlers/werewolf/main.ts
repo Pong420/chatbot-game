@@ -1,6 +1,6 @@
 import { t as lt } from '@line/locales';
 import { createHandler } from '@line/handler';
-import { CanStartGame, createFilter, Game, Group, Single, TextEqual, User, UserId } from '@line/filter';
+import { CanStartGame, createFilter, Game, Group, GroupId, Single, TextEqual, User, UserId } from '@line/filter';
 import { createGame, updateGame } from '@/supabase/game';
 import { updateUser } from '@/supabase/user';
 import { Character } from '@werewolf/character';
@@ -10,10 +10,18 @@ import { t } from '@werewolf/locales';
 import * as board from './board';
 
 const WerewolfGame = Game(Werewolf);
+
 const IsHost = createFilter(UserId, WerewolfGame, (userId, game) => {
   if (userId && game.stage.host === userId) {
     return { userId, game };
   }
+});
+
+const IsPlayer = createFilter(User, WerewolfGame, async (user, game) => {
+  const character = game.players.get(user.userId);
+  if (!character) throw t(`NotJoined`);
+  if (character.name === Character.type) throw t(`NotStarted`);
+  return { user, game, character };
 });
 
 function getStageMessage(stage: Stage) {
@@ -24,9 +32,10 @@ function getStageMessage(stage: Stage) {
 }
 
 export const werewolfMainHandlers = [
-  createHandler(Group, UserId, TextEqual(t('Initiate')), CanStartGame, async (event, userId) => {
-    const groupId = event.source.groupId;
+  createHandler(GroupId, UserId, TextEqual(t('Initiate')), CanStartGame, async (groupId, userId) => {
     const game = Werewolf.create({ groupId });
+
+    // FIXME:
     game.stage.host = userId;
 
     const resp = await createGame({ type: Werewolf.type, ...game.serialize() });
@@ -34,19 +43,19 @@ export const werewolfMainHandlers = [
 
     return getStageMessage(game.stage);
   }),
-  createHandler(Group, TextEqual(t('Open')), WerewolfGame, async (event, game) => {
+  createHandler(Group, TextEqual(t('Open')), WerewolfGame, async game => {
     if (game.stage instanceof Init) {
       const stage = game.next();
       await updateGame(game.groupId, game.serialize());
       return getStageMessage(stage);
     }
   }),
-  createHandler(Group, TextEqual([t('Next'), t('NextShort')]), IsHost, async (event, { game }) => {
+  createHandler(Group, TextEqual([t('Next'), t('NextShort')]), IsHost, async ({ game }) => {
     const stage = game.next();
     await updateGame(game.groupId, game.serialize());
     return getStageMessage(stage);
   }),
-  createHandler(Group, TextEqual(t('Join')), User, WerewolfGame, async (event, user, game) => {
+  createHandler(Group, TextEqual(t('Join')), User, WerewolfGame, async (user, game) => {
     if (user.game && user.game !== game.groupId) return lt(`JoinedOtherGroupsGame`, user.nickname);
 
     if (game.stage instanceof Init) return t('WaitFotHostSetup');
@@ -66,10 +75,7 @@ export const werewolfMainHandlers = [
       return getStageMessage(game.next());
     }
   }),
-  createHandler(Single, TextEqual(t('MyCharacter')), User, WerewolfGame, async (user, game) => {
-    const character = game.players.get(user.userId);
-    if (!character) return t(`NotJoined`);
-    if (character.name === Character.type) return t(`NotStarted`);
+  createHandler(Single, TextEqual(t('MyCharacter')), IsPlayer, async ({ character }) => {
     return board.myCharacter(character);
   })
 ];

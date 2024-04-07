@@ -40,7 +40,7 @@ const createGame = ({ numOfPlayers = 13 } = {}) => {
 
   for (let i = 0; i < numOfPlayers; i++) {
     const name = `player_${i}`;
-    const join = () => stage.as(Start).join({ id: `${i}`, name: `player_${i}` });
+    const join = () => stage.as(Start).join({ id: `${i}`, nickname: `player_${i}` });
 
     if (i >= 12) {
       expect(join).toThrowError(t('GameIsFull', name)); // full
@@ -77,7 +77,7 @@ test('flow', () => {
   let daytime = stage.as(Daytime);
   expect(() => villagers[0].vote(villagers[0])).toThrowError(t('YouDead'));
   expect(() => villagers[0].vote(villagers[1])).toThrowError(t('YouDead'));
-  expect(() => villagers[2].vote(villagers[0])).toThrowError(t('TargetIsDead', villagers[0].name));
+  expect(() => villagers[2].vote(villagers[0])).toThrowError(t('TargetIsDead', villagers[0].nickname));
 
   villagers[1].vote(werewolfs[0]);
   werewolfs[0].vote(villagers[1]);
@@ -106,7 +106,7 @@ test('flow', () => {
     }
 
     expect(() => game.next()).toThrowError(t('StageNotEnded'));
-    expect(() => villagers[2].vote(villagers[0])).toThrowError(t('TargetIsDead', villagers[0].name)); // expecet not to VoteOutOfRange
+    expect(() => villagers[2].vote(villagers[0])).toThrowError(t('TargetIsDead', villagers[0].nickname)); // expecet not to VoteOutOfRange
 
     villagers[1].vote(werewolfs[0]);
     werewolfs[0].vote(villagers[1]);
@@ -133,7 +133,7 @@ test('flow', () => {
   expect(villagers[1].causeOfDeath[0] as Voted).toHaveProperty('total', survivors.length);
   expect(survivors).toHaveLength(stage.players.size - 2);
 
-  expect(() => werewolfs[0].kill(villagers[1])).toThrowError(t('TargetIsDead', villagers[1].name)); // expecet not to VoteOutOfRange
+  expect(() => werewolfs[0].kill(villagers[1])).toThrowError(t('TargetIsDead', villagers[1].nickname)); // expecet not to VoteOutOfRange
   werewolfs[0].kill(villagers[2]);
 
   // --------------------------------------------------------------------------------

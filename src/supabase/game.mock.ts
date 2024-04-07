@@ -19,8 +19,8 @@ export const genMockGameData = (override?: Partial<Game>): Game => {
   };
 };
 
-vi.spyOn(module, 'getGame').mockImplementation(userId => {
-  const data = gameDB.get(userId);
+vi.spyOn(module, 'getGame').mockImplementation(groupId => {
+  const data = gameDB.get(groupId);
   return Promise.resolve({ data, error: data ? null : { code: ERROR_CODE_EMPTY } }) as unknown as ReturnType<
     (typeof module)['getGame']
   >;

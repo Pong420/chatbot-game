@@ -23,13 +23,14 @@ export const werewolfMainHandlers = [
     return board.start();
   }),
   createHandler(Group, TextEqual(t('Join')), User(), WerewolfGame, async (event, user, game) => {
-    if (user.game && user.game !== game.groupId) return lt(`JoinedOtherGroupsGame`);
+    if (user.game && user.game !== game.groupId) return lt(`JoinedOtherGroupsGame`, user.nickname);
 
-    game.stage.as(Start).join({ id: user.userId, name: user.nickname });
+    game.stage.as(Start).join({ id: user.userId, nickname: user.nickname });
 
     await Promise.all([
+      //
       updateUser(user.userId, { game: game.groupId }),
-      updateGame(game.groupId, { ...game.serialize() })
+      updateGame(game.groupId, game.serialize())
     ]);
 
     return board.players(game.players.values());
@@ -37,7 +38,7 @@ export const werewolfMainHandlers = [
   createHandler(Single, TextEqual(t('MyCharacter')), User(), WerewolfGame, async (user, game) => {
     const character = game.players.get(user.userId);
     // TODO:
-    return character?.name;
+    return character?.nickname;
   })
 ];
 

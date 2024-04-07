@@ -44,9 +44,9 @@ export function players(players: Iterable<Character>) {
     rows: Array.from(players, (user, idx) => {
       return [
         wrapedText(`${idx + 1}.`, { flex: 0, align: 'start' }),
-        wrapedText(user.name, {
+        wrapedText(user.nickname, {
           align: 'start',
-          margin: !!user.name ? 'none' : 'md'
+          margin: !!user.nickname ? 'none' : 'md'
         })
       ];
     }),

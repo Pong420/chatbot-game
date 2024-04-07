@@ -1,3 +1,13 @@
+export const WerewolfCharacter = {
+  All: `狼人殺角色`,
+  Villager: `村民`,
+  Werewolf: `狼人`,
+  Witcher: `女巫`,
+  Guard: `守衛`,
+  Hunter: `獵人`,
+  Predictor: `預言家`
+};
+
 export const WerewolfHostCommand = {
   Initiate: `開啟狼人殺`,
   Start: `狼人殺開始`,
@@ -59,12 +69,13 @@ export default {
     謹記！友誼第一，這只是遊戲，不要太認真
   `,
 
-  // TODO:
-  // 遇到錯誤時，請主持人輸入「${WereWolfCommand}」,
-  // 參與狼人殺，累積成就能夠獲得稱號，輸入「${WereWolfCommand.Titles}」了解
-
   NotStarted: `狼人殺未開始`,
 
+  // TODO:
+  // 遇到錯誤時，請主持人輸入「${WerewolfCommand}」,
+  // 參與狼人殺，累積成就能夠獲得稱號，輸入「${WerewolfCommand.Titles}」了解
+
+  ...WerewolfCharacter,
   ...WerewolfCommonCommand,
   ...WerewolfHostCommand,
   ...WerewolfKillerCommand,

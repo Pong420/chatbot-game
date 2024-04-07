@@ -38,7 +38,7 @@ export class LineUser {
     this.groupId = groupId;
     this.profile = {
       displayName: name,
-      userId: `id_${name}`,
+      userId: nanoid(),
       pictureUrl: '',
       statusMessage: ''
     };

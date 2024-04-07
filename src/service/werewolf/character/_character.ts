@@ -7,7 +7,8 @@ import { t } from '../locales';
 
 export class Character {
   id: string; // user id
-  name: string; // nick name
+
+  nickname: string;
 
   turn = 1;
   endTurn = true;
@@ -52,7 +53,7 @@ export class Character {
   @Action(() => Daytime)
   vote(character: Character) {
     const stage = this.stage.as(Daytime);
-    if (character.isDead) throw t('TargetIsDead', character.id === this.id ? t('Self') : character.name);
+    if (character.isDead) throw t('TargetIsDead', character.id === this.id ? t('Self') : character.nickname);
     if (stage.Voted.includes(this.id)) throw t('Voted');
     if (!stage.candidates.has(character.id)) throw t('VoteOutOfRange');
     stage.Voted.push(this.id);

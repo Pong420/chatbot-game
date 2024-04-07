@@ -12,12 +12,12 @@ import { t } from '../locales';
 export interface Start extends Init {}
 
 export class Start extends Stage {
-  join(player: Pick<Character, 'id' | 'name'>) {
-    if (this.players.has(player.id)) throw t('Joined', player.name);
-    if (this.players.size >= 12) throw t('GameIsFull', player.name);
+  join(player: Pick<Character, 'id' | 'nickname'>) {
+    if (this.players.has(player.id)) throw t('Joined', player.nickname);
+    if (this.players.size >= 12) throw t('GameIsFull', player.nickname);
 
     for (const [, c] of this.players.entries()) {
-      if (player.name === c.name) throw t(`NicknameUsed`, player.name);
+      if (player.nickname === c.nickname) throw t(`NicknameUsed`, player.nickname);
     }
 
     this.players.set(player.id, plainToInstance(Character, player));

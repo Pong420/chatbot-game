@@ -14,18 +14,33 @@ const client = new LineUser({ groupId });
 const clients = Array.from({ length: 11 }, () => new LineUser({ groupId }));
 const handleEvent = createEventHandler(werewolfMainHandlers);
 
+const CreateGame = async (c = client) => {
+  await expect(Initiate(c)).resolves.toEqual(board.start());
+  await expect(Initiate(c)).resolves.toMatchObject(textMessage(lt(`OtherGameRuning`, Werewolf.type)));
+};
+
 const Initiate = (c = client) => handleEvent(c.groupMessage(t(`Initiate`)));
 const Join = (c = client) => handleEvent(c.groupMessage(t(`Join`)));
 
 test('main', async () => {
-  await expect(Initiate()).resolves.toEqual(board.start());
-  await expect(Initiate()).resolves.toMatchObject(textMessage(lt(`OtherGameRuning`, Werewolf.type)));
+  await CreateGame(client);
 
-  await expect(Join()).resolves.toMatchObject({ type: 'flex' });
-  await expect(Join()).resolves.toEqual(textMessage(t(`Joined`, client.name)));
+  await expect(Join(client)).resolves.toMatchObject({ type: 'flex' });
+  await expect(Join(client)).resolves.toEqual(textMessage(t(`Joined`, client.name)));
+
+  const dupClient = new LineUser({ name: client.name, groupId });
+  await expect(Join(dupClient)).resolves.toEqual(textMessage(t('NicknameUsed', dupClient.name)));
 
   for (const client of clients) {
     await expect(Join(client)).resolves.toMatchObject({ type: 'flex' });
     await expect(Join(client)).resolves.toEqual(textMessage(t(`Joined`, client.name)));
   }
+
+  const extraClient = new LineUser({ groupId });
+  await expect(Join(extraClient)).resolves.toEqual(textMessage(t('GameIsFull', extraClient.name)));
+
+  const clientInOthersGroup = new LineUser({ name: client.name });
+  clientInOthersGroup.profile.userId = client.userId;
+  await CreateGame(clientInOthersGroup);
+  await expect(Join(clientInOthersGroup)).resolves.toEqual(textMessage(lt('JoinedOtherGroupsGame', client.name)));
 });

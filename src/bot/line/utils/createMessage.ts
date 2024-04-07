@@ -1,6 +1,8 @@
 import { Action, FlexButton, MessageAction, PostbackAction, TextMessage } from '@line/bot-sdk';
 import { wrapedText, FlexText } from './createTableMessage';
 
+export * from './createTableMessage';
+
 export const textMessage = (text: string) => ({ type: 'text', text }) satisfies TextMessage;
 
 export function messageAction(label: string, text = label): MessageAction & { label: string } {

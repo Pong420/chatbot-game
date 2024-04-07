@@ -1,5 +1,5 @@
-import { client } from '../client';
 import { WebhookEvent } from '@line/bot-sdk';
+import { client } from '@line/client';
 
 export async function getUserProfile(event: WebhookEvent | null, userId = event?.source.userId) {
   if (userId) {

@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { client } from '../client';
+import { client } from '@line/client';
 
 vi.spyOn(client, 'replyMessage').mockImplementation(({ messages }: Parameters<(typeof client)['replyMessage']>[0]) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

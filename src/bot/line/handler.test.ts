@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest';
 import { createEventHandler, createHandler } from './handler';
 import { Single, TextEqual } from './filter';
-import { LineUser } from './test/mockLineUser';
+import { LineUser } from './test';
 import { textMessage } from './utils/createMessage';
 import { debugHandlers } from './service/debug';
 import { t } from './messages';

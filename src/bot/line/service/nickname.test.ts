@@ -1,11 +1,11 @@
 import { nanoid } from 'nanoid';
 import { expect, test } from 'vitest';
-import { createEventHandler } from '../handler';
-import { LineUser } from '../test/mockLineUser';
-import { textMessage } from '../utils/createMessage';
-import { t } from '../messages';
+import { createEventHandler } from '@line/handler';
+import { LineUser } from '@line/test';
+import { textMessage } from '@line/utils/createMessage';
+import { maxLength } from '@line/utils/user';
+import { t } from '@line/messages';
 import { nicknameHandlers, crearteIntroContent } from './nickname';
-import { maxLength } from '../utils/user';
 
 const client = new LineUser();
 const handleEvent = createEventHandler(nicknameHandlers);

@@ -1,8 +1,8 @@
 import { WebhookEvent } from '@line/bot-sdk';
+import { t } from '@line/messages';
+import * as api from '@/service/user';
 import { ERROR_CODE_EMPTY } from '@/utils/supabase';
 import { getUserProfile } from './getUserProfile';
-import { t } from '../messages';
-import * as api from '@/service/user';
 
 export const maxLength = 15;
 

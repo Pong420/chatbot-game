@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest';
 import { createHandler, WebhookEvent } from './handler';
 import { Group, Single, TextEqual, TextMatch, UserId } from './filter';
-import { LineUser } from './test/mockLineUser';
+import { LineUser } from './test';
 
 const client = new LineUser(`${Math.random()}`, 'group');
 const singleMessage = client.singleMessage('Hello');

@@ -1,9 +1,8 @@
-import { createHandler } from '../handler';
-import { TextEqual, TextMatch, User, UserId } from '../filter';
-import { t } from '../messages';
-import { setNickname, maxLength } from '../utils/user';
-import { centeredText, createTableMessage } from '../utils/createTableMessage';
-import { orderList } from '../utils/createMessage';
+import { createHandler } from '@line/handler';
+import { TextEqual, TextMatch, User, UserId } from '@line/filter';
+import { setNickname, maxLength } from '@line/utils/user';
+import { orderList, centeredText, createTableMessage } from '@line/utils/createMessage';
+import { t } from '@line/messages';
 
 export const crearteIntroContent = () =>
   createTableMessage({

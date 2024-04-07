@@ -27,10 +27,8 @@ export const Game = <G>(GameContructor: GameContructor<G>) => {
   });
 };
 
-export const CanStartGame = () => {
-  return createFilter(GroupId, async groupId => {
-    const { data } = await getGame(groupId);
-    if (data) throw t('OtherGameRuning', data.type);
-    return true;
-  });
-};
+export const CanStartGame = createFilter(GroupId, async groupId => {
+  const { data } = await getGame(groupId);
+  if (data) throw t('OtherGameRuning', data.type);
+  return true;
+});

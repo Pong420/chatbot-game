@@ -8,4 +8,4 @@ export const UserId = createFilter(event => {
   return userId;
 });
 
-export const User = () => createFilter(UserId, async (userId, event) => getUser(event, userId));
+export const User = createFilter(UserId, async (userId, event) => getUser(event, userId));

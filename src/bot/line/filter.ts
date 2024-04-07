@@ -21,7 +21,7 @@ export type ExtractReturnType<T extends readonly unknown[]> = T extends [infer F
  * To stop the following filters or output function
  *  1. return false, no message will return to user
  *  2. return a string / Message / Message[] will reply to user ( handled by handler.ts )
- *  3. throw a string or Error will reply to user ( handled by handler.ts )
+ *  3. throw a false or string or Error will reply to user ( handled by handler.ts )
  *
  * `undefined`, `null`, `true` will not appield to the argument of output function, see the type `Filtered`
  */
@@ -35,7 +35,7 @@ export function createFilter<FilterFunctions extends FilterFunction[], R>(
 
     for (const filter of filters) {
       const arg = await filter(event);
-      if (arg === false) return;
+      if (arg === false) throw void 0;
       if (arg !== null && typeof arg !== 'undefined' && arg !== true) args.push(arg);
     }
 

@@ -26,7 +26,7 @@ test('rule', async () => {
   await expect(run(Undefined)).resolves.toEqual(1);
   await expect(run(Null)).resolves.toEqual(1);
 
-  await expect(run(Falsy)).resolves.toBeUndefined();
+  await expect(run(Falsy)).rejects.toBeFalsy();
 });
 
 test('Single & Group', async () => {
@@ -44,8 +44,8 @@ test('Single & Group', async () => {
 });
 
 test('UserId', async () => {
-  const singleHandler = createHandler(Single, UserId(), userId => userId);
-  const groupHandler = createHandler(Group, UserId(), (_event, userId) => userId);
+  const singleHandler = createHandler(Single, UserId, userId => userId);
+  const groupHandler = createHandler(Group, UserId, (_event, userId) => userId);
   await expect(singleHandler(singleMessage)).resolves.toEqual(client.userId);
   await expect(groupHandler(groupMessage)).resolves.toEqual(client.userId);
 });

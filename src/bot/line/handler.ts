@@ -13,14 +13,14 @@ export function createHandler<FilterFunctions extends FilterFunction[]>(
   return async (event: WebhookEvent) => {
     const output = createFilter(...filters);
     return output(event).catch(error => {
-      if (error === false) return;
+      if (!error) return;
       if (typeof error === 'string') return error; // as error message will reply to user
       if (error instanceof Error) {
         if (process.env.NODE_ENV !== 'test') console.error(error);
         return error.message;
       }
       // ignore other type of error
-      process.env.NODE_ENV !== 'test' && console.warn('Except error to be string but receive', error);
+      process.env.NODE_ENV !== 'test' && console.warn('Except error to be string or Error, but receive', error);
     });
   };
 }

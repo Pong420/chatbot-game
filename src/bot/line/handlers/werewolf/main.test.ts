@@ -4,10 +4,12 @@ import { createEventHandler } from '@line/handler';
 import { LineUser } from '@line/test';
 import { t as lt } from '@line/locales';
 import { textMessage } from '@line/utils/createMessage';
-import { Werewolf } from '@werewolf/game';
+import { Werewolf as WerewolfGame } from '@werewolf/game';
 import { t } from '@werewolf/locales';
+import { getGame } from '@/supabase/game';
 import { werewolfMainHandlers } from './main';
-import * as board from './board';
+import { getCharacters } from './utils/test';
+import * as board from './utils/board';
 
 const groupId = nanoid();
 const client = new LineUser({ groupId });
@@ -16,7 +18,7 @@ const handleEvent = createEventHandler(werewolfMainHandlers);
 
 const CreateGame = async (c = client) => {
   await expect(Initiate(c)).resolves.toEqual(board.start());
-  await expect(Initiate(c)).resolves.toMatchObject(textMessage(lt(`OtherGameRuning`, Werewolf.type)));
+  await expect(Initiate(c)).resolves.toMatchObject(textMessage(lt(`OtherGameRuning`, WerewolfGame.type)));
 };
 
 const Initiate = (c = client) => handleEvent(c.groupMessage(t(`Initiate`)));
@@ -50,5 +52,13 @@ test('main', async () => {
   await CreateGame(clientInOthersGroup);
   await expect(Join(clientInOthersGroup)).resolves.toEqual(textMessage(lt('JoinedOtherGroupsGame', client.name)));
 
-  await expect(Next()).resolves.not.toBeUndefined();
+  await expect(Next()).resolves.toMatchObject({ type: 'flex' });
+
+  const resp = await getGame(client.groupId);
+  const game = WerewolfGame.create(resp.data!);
+
+  const { werewolfs, villagers } = getCharacters(game, [client, ...clients]);
+
+  expect(werewolfs.length).toBeGreaterThanOrEqual(1);
+  expect(villagers.length).toBeGreaterThanOrEqual(1);
 });

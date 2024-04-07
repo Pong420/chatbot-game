@@ -1,28 +1,13 @@
 import { t as lt } from '@line/locales';
 import { createHandler } from '@line/handler';
-import { CanStartGame, createFilter, Game, Group, GroupId, Single, TextEqual, User, UserId } from '@line/filter';
+import { CanStartGame, Group, GroupId, Single, TextEqual, User, UserId } from '@line/filter';
 import { createGame, updateGame } from '@/supabase/game';
 import { updateUser } from '@/supabase/user';
-import { Character } from '@werewolf/character';
 import { Werewolf } from '@werewolf/game';
-import { Daytime, Init, Night, Stage, Start } from '@werewolf/stage';
 import { t } from '@werewolf/locales';
-import * as board from './board';
-
-const WerewolfGame = Game(Werewolf);
-
-const IsHost = createFilter(UserId, WerewolfGame, (userId, game) => {
-  if (userId && game.stage.host === userId) {
-    return { userId, game };
-  }
-});
-
-const IsPlayer = createFilter(User, WerewolfGame, async (user, game) => {
-  const character = game.players.get(user.userId);
-  if (!character) throw t(`NotJoined`);
-  if (character.name === Character.type) throw t(`NotStarted`);
-  return { user, game, character };
-});
+import { Daytime, Init, Night, Stage, Start } from '@werewolf/stage';
+import { GetWerewolfGame, IsHost, IsPlayer } from './utils/filter';
+import * as board from './utils/board';
 
 function getStageMessage(stage: Stage) {
   if (stage instanceof Init) return board.start();
@@ -43,7 +28,7 @@ export const werewolfMainHandlers = [
 
     return getStageMessage(game.stage);
   }),
-  createHandler(Group, TextEqual(t('Open')), WerewolfGame, async game => {
+  createHandler(Group, TextEqual(t('Open')), GetWerewolfGame, async game => {
     if (game.stage instanceof Init) {
       const stage = game.next();
       await updateGame(game.groupId, game.serialize());
@@ -55,7 +40,7 @@ export const werewolfMainHandlers = [
     await updateGame(game.groupId, game.serialize());
     return getStageMessage(stage);
   }),
-  createHandler(Group, TextEqual(t('Join')), User, WerewolfGame, async (user, game) => {
+  createHandler(Group, TextEqual(t('Join')), User, GetWerewolfGame, async (user, game) => {
     if (user.game && user.game !== game.groupId) return lt(`JoinedOtherGroupsGame`, user.nickname);
 
     if (game.stage instanceof Init) return t('WaitFotHostSetup');

@@ -1,6 +1,3 @@
 import werewolfMainHandlers from './main';
 
-export const werewolfHanlders = [
-  //
-  ...werewolfMainHandlers
-];
+export const werewolfHanlders = [...werewolfMainHandlers];

@@ -1,6 +1,18 @@
-import { randomOption } from '@/utils/random';
+import { UnionToIntercetion } from '@/types';
+import { randomOption } from './random';
 
 export const locale = process.env.LOCALE;
+
+export function defineMessages<O extends Record<string, string | string[]>[]>(...payload: [...O]) {
+  const result = {} as Record<string, string | string[]>;
+  for (const obj of payload) {
+    for (const k in obj) {
+      const value = obj[k];
+      result[k as keyof typeof result] = process.env.VSCODE_PID && Array.isArray(value) ? value[0] : value;
+    }
+  }
+  return result as UnionToIntercetion<O[number]>;
+}
 
 export function createTranslateFunction<O extends Record<string, string | string[]>>(...payload: { default: O }[]) {
   const messages = payload.reduce((messages, o) => ({ ...messages, ...o.default }), {}) as O;

@@ -1,3 +1,5 @@
+import { defineMessages } from '@/utils/locale';
+
 export const Commands = {
   GroupId: 'Group ID',
   GetUserId: 'My User ID',
@@ -33,7 +35,4 @@ export const Replies = {
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default {
-  ...Commands,
-  ...Replies
-};
+export default defineMessages(Commands, Replies);

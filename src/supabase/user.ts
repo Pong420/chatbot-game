@@ -1,5 +1,5 @@
-import { supabase } from '@/utils/supabase';
-import { Tables } from '@/utils/database.types';
+import { supabase } from './supabase';
+import { Tables } from '@/supabase/database.types';
 
 export type User = Tables<'users'>;
 

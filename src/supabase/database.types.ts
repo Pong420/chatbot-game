@@ -28,6 +28,30 @@ export type Database = {
   };
   public: {
     Tables: {
+      games: {
+        Row: {
+          created_at: string;
+          data: Json | null;
+          groupId: string;
+          id: number;
+          updated_at: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          data?: Json | null;
+          groupId: string;
+          id?: number;
+          updated_at?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          data?: Json | null;
+          groupId?: string;
+          id?: number;
+          updated_at?: string | null;
+        };
+        Relationships: [];
+      };
       users: {
         Row: {
           created_at: string;
@@ -44,7 +68,7 @@ export type Database = {
           id?: number;
           nickname: string;
           title?: string | null;
-          updated_at: string;
+          updated_at?: string;
           userId: string;
         };
         Update: {

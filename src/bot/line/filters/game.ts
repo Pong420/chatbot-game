@@ -4,7 +4,7 @@ import { createFilter } from '@line/filter';
 import { getUser } from '@line/utils/userService';
 import { t } from '@line/locales';
 
-interface GameContructor<G> {
+interface GameConstructor<G> {
   type: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   create: (options: { groupId: string; data?: any }) => G;
@@ -18,11 +18,11 @@ const GroupId = createFilter(async event => {
   }
 });
 
-export const Game = <G>(GameContructor: GameContructor<G>) => {
+export const Game = <G>(GameConstructor: GameConstructor<G>) => {
   return createFilter(GroupId, async groupId => {
     const { data } = await getGame(groupId);
-    return data?.type === GameContructor.type
-      ? GameContructor.create({ groupId: data.groupId, data: data.data })
+    return data?.type === GameConstructor.type
+      ? GameConstructor.create({ groupId: data.groupId, data: data.data })
       : null;
   });
 };

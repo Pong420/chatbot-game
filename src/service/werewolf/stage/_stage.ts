@@ -45,12 +45,12 @@ export class Stage {
   }
 
   getCharacters<C extends Character>(
-    CharacterContructor: Constructable<C>,
+    CharacterConstructor: Constructable<C>,
     from: Array<Character> | Map<string, Character> = this.players
   ) {
     const targets: C[] = [];
     from.forEach(c => {
-      if (c instanceof CharacterContructor) {
+      if (c instanceof CharacterConstructor) {
         targets.push(c as C);
       }
     });

@@ -3,7 +3,7 @@
 import { vi } from 'vitest';
 import { nanoid } from 'nanoid';
 import { Profile, WebhookEvent } from '@line/bot-sdk';
-import { userDB, genMockUserData } from '@/service/user.mock';
+import { userDB, genMockUserData } from '@/utils/user.mock';
 import { createGroupTextMessage, createSingleTextMessage } from './mockEvent';
 
 vi.mock('../utils/getUserProfile', () => {

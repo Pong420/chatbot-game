@@ -1,5 +1,5 @@
 import { WebhookEvent } from '@line/bot-sdk';
-import { t } from '@/bot/line/locales';
+import { t } from '@line/locales';
 import * as api from '@/utils/user';
 import { ERROR_CODE_EMPTY } from '@/utils/supabase';
 import { getUserProfile } from './getUserProfile';

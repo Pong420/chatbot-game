@@ -1,1 +1,1 @@
-export * from '@/bot/line/webhook';
+export * from '@line/webhook';

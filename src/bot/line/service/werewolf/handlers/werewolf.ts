@@ -3,8 +3,8 @@ import { createHandler } from '@line/handler';
 import { Group, Single, TextEqual, TextMatch } from '@line/filter';
 import { Werewolf } from '@werewolf/character';
 import { t } from '@werewolf/locales';
-import { IsCharacter, IsPlayer } from './utils/filter';
-import * as board from './utils/board';
+import { IsCharacter, IsPlayer } from '../filter';
+import * as board from '../board';
 
 const IsWerewolf = IsCharacter(Werewolf);
 

@@ -7,9 +7,9 @@ import { textMessage } from '@line/utils/createMessage';
 import { Werewolf as WerewolfGame } from '@werewolf/game';
 import { t } from '@werewolf/locales';
 import { getGame } from '@/supabase/game';
-import { werewolfGameHandlers } from './index';
-import { getCharacters } from './utils/test';
-import * as board from './utils/board';
+import { werewolfGameHandlers } from '../handler';
+import { getCharacters } from '../test';
+import * as board from '../board';
 
 const groupId = nanoid();
 const client = new LineUser({ groupId });

@@ -1,37 +1,38 @@
 import { defineMessages } from '@/utils/locale';
+import { characters } from '@werewolf/character';
 
-export const WerewolfCharacter = {
+export const Character: Record<keyof typeof characters, string> = {
   Villager: `村民`,
-  Werewolf: `狼人`,
-  Witcher: `女巫`,
-  Guard: `守衛`,
-  Hunter: `獵人`,
-  Predictor: `預言家`
+  Werewolf: `狼人`
+  // Witcher: `女巫`,
+  // Guard: `守衛`,
+  // Hunter: `獵人`,
+  // Predictor: `預言家`
 };
 
-export const WerewolfIamCommand = (() => {
+export const IamCommand = (() => {
   const Iam = '我是{0}';
   return {
     Iam,
-    ...Object.entries(WerewolfCharacter).reduce(
+    ...Object.entries(Character).reduce(
       (res, [key, value]) => ({ ...res, [`Iam${key}`]: Iam.replace('{0}', value) }),
-      {} as Record<`Iam${keyof typeof WerewolfCharacter}`, string>
+      {} as Record<`Iam${keyof typeof Character}`, string>
     )
   };
 })();
 
-export const WerewolfCharacterIntroCommand = (() => {
+export const CharacterIntroCommand = (() => {
   const CharacterIntro = '{0}簡介';
   return {
     CharacterIntro,
-    ...Object.entries(WerewolfCharacter).reduce(
+    ...Object.entries(Character).reduce(
       (res, [key, value]) => ({ ...res, [`${key}Intro`]: CharacterIntro.replace('{0}', value) }),
-      {} as Record<`${keyof typeof WerewolfCharacter}Intro`, string>
+      {} as Record<`${keyof typeof Character}Intro`, string>
     )
   };
 })();
 
-export const WerewolfHostCommand = {
+export const HostCommand = {
   Initiate: `開啟狼人殺`,
   Open: `狼人殺設定完畢`,
   Start: `狼人殺開始`,
@@ -41,20 +42,20 @@ export const WerewolfHostCommand = {
   HostCommands: `主持指令`
 };
 
-export const WerewolfStageCommand = {
+export const StageCommand = {
   // PlayerReport = `^(.*)的報告`,
   NextShort: 'n',
   Next: '/next',
   Skip: '/skip'
 };
 
-export const WerewolfKillerCommand = {
+export const KillerCommand = {
   Kill: `^我要殺(.*)`,
   Suicide: `我要自殺`,
   NoKill: `今晚是平安夜`
 };
 
-export const WerewolfCommonCommand = {
+export const CommonCommand = {
   Intro: '狼人殺介紹',
   MyCharacter: `我的狼人殺角色`,
   Vote: `^我投(.*)`,
@@ -101,7 +102,7 @@ export default defineMessages(
 
     YourCharacter: '你的角色',
     YourAreCharacter: '你是「{0}」留意群組訊息，到你的回合後，請按指示輸入指令或點擊按鈕',
-    YouAreVillager: `你是「${WerewolfCharacter.Villager}」，請努力活下去！`,
+    YouAreVillager: `你是「${Character.Villager}」，請努力活下去！`,
     CharacterIntroButton: '角色簡介',
 
     KillSuccss: '好',
@@ -110,14 +111,14 @@ export default defineMessages(
     DuplicatedSuicide: '知道了，你就這麼想死嗎?'
 
     // TODO:
-    // 遇到錯誤時，請主持人輸入「${WerewolfCommand}」,
-    // 參與狼人殺，累積成就能夠獲得稱號，輸入「${WerewolfCommand.Titles}」了解
+    // 遇到錯誤時，請主持人輸入「${Command}」,
+    // 參與狼人殺，累積成就能夠獲得稱號，輸入「${Command.Titles}」了解
   },
-  WerewolfCharacter,
-  WerewolfIamCommand,
-  WerewolfCharacterIntroCommand,
-  WerewolfCommonCommand,
-  WerewolfHostCommand,
-  WerewolfStageCommand,
-  WerewolfKillerCommand
+  Character,
+  IamCommand,
+  CharacterIntroCommand,
+  CommonCommand,
+  HostCommand,
+  StageCommand,
+  KillerCommand
 );

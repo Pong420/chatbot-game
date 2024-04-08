@@ -4,15 +4,15 @@ import { Werewolf } from '@werewolf/game';
 import { Character } from '@werewolf/character';
 import { t } from '@werewolf/locales';
 
-export const GetWerewolfGame = Game(Werewolf);
+export const WerewolfGame = Game(Werewolf);
 
-export const IsHost = createFilter(UserId, GetWerewolfGame, (userId, game) => {
+export const IsHost = createFilter(UserId, WerewolfGame, (userId, game) => {
   if (userId && game.stage.host === userId) {
     return { userId, game };
   }
 });
 
-export const IsPlayer = createFilter(UserId, GetWerewolfGame, async (userId, game) => {
+export const IsPlayer = createFilter(UserId, WerewolfGame, async (userId, game) => {
   const character = game.players.get(userId);
   if (!character) throw t(`NotJoined`);
   if (character.constructor === Character) throw t(`NotStarted`);

@@ -6,8 +6,8 @@ import { updateUser } from '@/supabase/user';
 import { Werewolf } from '@werewolf/game';
 import { t } from '@werewolf/locales';
 import { Daytime, Init, Night, Stage, Start } from '@werewolf/stage';
-import { GetWerewolfGame, IsHost, IsPlayer } from './utils/filter';
-import * as board from './utils/board';
+import { WerewolfGame, IsHost, IsPlayer } from '../filter';
+import * as board from '../board';
 
 function getStageMessage(stage: Stage) {
   if (stage instanceof Init) return board.start();
@@ -28,7 +28,7 @@ export const mainHandlers = [
 
     return getStageMessage(game.stage);
   }),
-  createHandler(Group, TextEqual(t('Open')), GetWerewolfGame, async game => {
+  createHandler(Group, TextEqual(t('Open')), WerewolfGame, async game => {
     if (game.stage instanceof Init) {
       const stage = game.next();
       await updateGame(game.groupId, game.serialize());
@@ -40,7 +40,7 @@ export const mainHandlers = [
     await updateGame(game.groupId, game.serialize());
     return getStageMessage(stage);
   }),
-  createHandler(Group, TextEqual(t('Join')), User, GetWerewolfGame, async (user, game) => {
+  createHandler(Group, TextEqual(t('Join')), User, WerewolfGame, async (user, game) => {
     if (user.game && user.game !== game.groupId) return lt(`JoinedOtherGroupsGame`, user.nickname);
 
     if (game.stage instanceof Init) return t('WaitFotHostSetup');

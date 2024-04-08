@@ -4,7 +4,7 @@ import { runMiddleware } from './client';
 import { createEventHandler } from './handler';
 import { debugHandlers } from './handlers/debug';
 import { nicknameHandlers } from './handlers/nickname';
-import { werewolfGameHandlers } from './handlers/werewolf';
+import { werewolfGameHandlers } from './service/werewolf/handler';
 
 export async function POST(req: NextRequest, res: NextResponse) {
   await runMiddleware(req, res);

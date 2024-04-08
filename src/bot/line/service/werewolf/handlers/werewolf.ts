@@ -19,8 +19,7 @@ export const werewolfHandlers = [
   ),
   createHandler(Single, TextMatch(t('Kill')), IsWerewolf, async ([, name], { game, character }) => {
     const target = game.stage.playersByName[name];
-    if (!target) return; // FIXME: error message
-    character.kill(game.players.get(target.id)!);
+    character.kill(game.players.get(target.id)!, name);
     return t(`KillSuccss`);
   })
 ];

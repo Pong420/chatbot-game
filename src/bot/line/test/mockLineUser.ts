@@ -43,7 +43,9 @@ export class LineUser {
       statusMessage: ''
     };
     users.set(this.profile.userId, this);
-    this.addToDatabase();
+
+    const user = genMockUserData({ userId: this.userId, nickname: this.name });
+    userDB.set(user.userId, user);
   }
 
   get userId() {
@@ -65,11 +67,5 @@ export class LineUser {
       groupId: this.groupId,
       postback
     });
-  }
-
-  addToDatabase() {
-    const user = genMockUserData({ userId: this.userId, nickname: this.name });
-    userDB.set(user.userId, user);
-    return user;
   }
 }

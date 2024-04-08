@@ -80,6 +80,7 @@ export default defineMessages(
     Voted: '我感受到{0}你對投票的渴望，但每人只有一票！',
     VoteOutOfRange: '{0}不在投票範圍',
     TargetIsDead: ['{0}已經死了，你是有多大仇!?', '{0}已經死了，原諒他吧'],
+    TargetNoExists: ['{0}不存在'],
 
     GameName: `狼人殺`,
     JoinButton: `參加`,

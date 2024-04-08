@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { TextMessage, TextEventMessage, MessageEvent, EventSource, Group, User, PostbackEvent } from '@line/bot-sdk';
 import './mockClient';
 
-export function createText(text: string) {
+function createText(text: string) {
   return { text, type: 'text' } satisfies TextMessage;
 }
 

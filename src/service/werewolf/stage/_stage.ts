@@ -52,16 +52,6 @@ export class Stage {
     });
   }
 
-  /**
-   * TODO: remove it
-   */
-  as<C extends typeof Stage>(StageConstructor: C) {
-    if (!(this instanceof StageConstructor)) {
-      throw new Error(`expect ${StageConstructor.name} but it is ${this['name']}`);
-    }
-    return this as InstanceType<C>;
-  }
-
   getCharacters<C extends Character>(
     CharacterConstructor: Constructable<C>,
     from: Array<Character> | Map<string, Character> = this.players

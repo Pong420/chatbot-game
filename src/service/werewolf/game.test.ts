@@ -55,7 +55,7 @@ const createGame = ({ numOfPlayers = 13 } = {}) => {
 
   for (let i = 0; i < numOfPlayers; i++) {
     const name = `player_${i}`;
-    const join = () => stage.as(Start).join({ id: `${i}`, nickname: `player_${i}` });
+    const join = () => (stage as Start).join({ id: `${i}`, nickname: `player_${i}` });
 
     if (i >= 12) {
       expect(join).toThrowError(t('GameIsFull', name)); // full
@@ -79,7 +79,9 @@ test('flow', () => {
 
   werewolfs[0].kill(villagers[0]);
   werewolfs.forEach(w => !w.endTurn && w.idle());
-  expect(() => werewolfs[0].kill(villagers[0])).toThrowError();
+  expect(() => werewolfs[0].kill(villagers[0])).toThrowError(t(`TurnEnded`));
+
+  expect(() => werewolfs[0].vote(villagers[0])).toThrowError(t('VoteNotStarted'));
 
   // --------------------------------------------------------------------------------
 
@@ -89,7 +91,7 @@ test('flow', () => {
   expect(survivors).not.toContainEqual(villagers[0]);
   expect(() => werewolfs[0].kill(villagers[1])).toThrowError(t('NotYourTurn'));
 
-  let daytime = stage.as(Daytime);
+  let daytime = stage as Daytime;
   expect(() => villagers[0].vote(villagers[0])).toThrowError(t('YouDead'));
   expect(() => villagers[0].vote(villagers[1])).toThrowError(t('YouDead'));
   expect(() => villagers[2].vote(villagers[0])).toThrowError(t('TargetIsDead', villagers[0].nickname));
@@ -112,7 +114,7 @@ test('flow', () => {
   // everyone gets one vote in previous round, so vote again
   for (let i = 0; i < 10; i++) {
     next(Daytime);
-    daytime = stage.as(Daytime);
+    daytime = stage as Daytime;
 
     if (i === 0) {
       expect(daytime.candidates.size).toBe(survivors.length);
@@ -134,7 +136,7 @@ test('flow', () => {
 
   // two players gets one vote, others player wavied, so vote again
   next(Daytime);
-  daytime = stage.as(Daytime);
+  daytime = stage as Daytime;
   survivors.forEach(survivor => (survivor.id === villagers[1].id ? survivor.waive() : survivor.vote(villagers[1])));
 
   expect(daytime.countResults()).toMatchObject({ numberOfVotes: survivors.length - 1, count: survivors.length - 1 });

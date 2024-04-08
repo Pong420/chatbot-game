@@ -73,14 +73,16 @@ export default defineMessages(
     NicknameUsed: `暱稱「{0}」已被使用，請更換後再參加`,
 
     Self: '自己',
-    TurnEnded: '你已作出了選擇！',
+    TurnEnded: ['你已作出了選擇！', `有些事...無法改變!，下次吧`],
     StageNotEnded: '仍有玩家未完成行動，無法進入下回合',
     YouDead: '安息吧，你已經死了！',
     NotYourTurn: '目前不是你的行動回合',
-    Voted: '我感受到{0}你對投票的渴望，但每人只有一票！',
-    VoteOutOfRange: '{0}不在投票範圍',
     TargetIsDead: ['{0}已經死了，你是有多大仇!?', '{0}已經死了，原諒他吧'],
     TargetNoExists: ['{0}不存在'],
+
+    VoteNotStarted: `現在不是投票時間`,
+    Voted: '我感受到{0}你對投票的渴望，但每人只有一票！',
+    VoteOutOfRange: '{0}不在投票範圍',
 
     GameName: `狼人殺`,
     JoinButton: `參加`,

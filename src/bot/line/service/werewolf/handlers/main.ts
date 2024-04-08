@@ -28,15 +28,17 @@ export const mainHandlers = [
 
     return getStageMessage(game.stage);
   }),
-  createHandler(Group, TextEqual(t('Open')), WerewolfGame, async game => {
+  createHandler(Group, TextEqual(t('Open')), IsHost, async ({ game }) => {
     if (game.stage instanceof Init) {
       const stage = game.next();
+      // FIXME: handle error
       await updateGame(game.groupId, game.serialize());
       return getStageMessage(stage);
     }
   }),
   createHandler(Group, TextEqual([t('Next'), t('NextShort')]), IsHost, async ({ game }) => {
     const stage = game.next();
+    // FIXME: handle error
     await updateGame(game.groupId, game.serialize());
     return getStageMessage(stage);
   }),

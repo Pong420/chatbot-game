@@ -48,9 +48,9 @@ export class Character {
     this.causeOfDeath.push(instance);
   }
 
-  @Action(() => Daytime)
+  @Action(() => Daytime, { errorMessage: t('VoteNotStarted') })
   vote(character: Character) {
-    const stage = this.stage.as(Daytime);
+    const stage = this.stage as Daytime;
     if (character.isDead) throw t('TargetIsDead', character.id === this.id ? t('Self') : character.nickname);
     if (stage.voted.includes(this.id)) throw t('Voted');
     if (!stage.candidates.has(character.id)) throw t('VoteOutOfRange');
@@ -59,9 +59,9 @@ export class Character {
     return { self: this.id === character.id };
   }
 
-  @Action(() => Daytime)
+  @Action(() => Daytime, { errorMessage: false })
   waive() {
-    const stage = this.stage.as(Daytime);
+    const stage = this.stage as Daytime;
     stage.voted.push(this.id);
   }
 

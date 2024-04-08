@@ -27,6 +27,10 @@ vi.spyOn(module, 'getGame').mockImplementation(groupId => {
 });
 
 vi.spyOn(module, 'createGame').mockImplementation(payload => {
+  if (gameDB.has(payload.groupId)) {
+    return Promise.resolve({ data: null, error: { code: 0 } }) as unknown as ReturnType<(typeof module)['createGame']>;
+  }
+
   const data = genMockGameData(payload);
   gameDB.set(payload.groupId, JSON.parse(JSON.stringify(data)));
   return Promise.resolve({ data, error: null }) as unknown as ReturnType<(typeof module)['createGame']>;

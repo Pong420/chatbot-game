@@ -28,6 +28,10 @@ vi.spyOn(module, 'getUser').mockImplementation(userId => {
 });
 
 vi.spyOn(module, 'createUser').mockImplementation(({ userId }) => {
+  if (userDB.has(userId)) {
+    return Promise.resolve({ data: null, error: { code: 0 } }) as unknown as ReturnType<(typeof module)['createUser']>;
+  }
+
   const data = genMockUserData({ userId });
   userDB.set(userId, data);
   return Promise.resolve({ data, error: null }) as unknown as ReturnType<(typeof module)['createUser']>;

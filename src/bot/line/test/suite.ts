@@ -28,15 +28,16 @@ const createBuilderUtil = (type: 'group' | 'single') => {
 
 export function createLineEventTestSuite<
   Messages extends Record<string, (client: LineUser, ...args: any[]) => WebhookEvent>
->(handlers: Handler[], builder: (options: BuilderUtils) => Messages) {
+>(handlers: Handler[], builder: (options: BuilderUtils) => Messages = () => ({}) as any) {
   const expectEvent = createExpectEvent(handlers);
   const messages = builder({ g: createBuilderUtil('group'), s: createBuilderUtil('single') });
 
-  const createLineUser = (payload: LineUser | ConstructorParameters<typeof LineUser>[0]) => {
+  const createLineUser = (payload?: LineUser | ConstructorParameters<typeof LineUser>[0]) => {
     const client = payload instanceof LineUser ? payload : new LineUser(payload);
     const api = {} as {
       [K in keyof Messages]: (...args: OmitLineUserArg<Messages[K]>) => ReturnType<typeof expectEvent>;
     };
+
     const general = {
       g: (...params: Parameters<LineUser['groupMessage']>) => expectEvent(client.groupMessage(...params)),
       s: (...params: Parameters<LineUser['singleMessage']>) => expectEvent(client.singleMessage(...params))
@@ -48,5 +49,5 @@ export function createLineEventTestSuite<
     return Object.assign(client, api, general) as LineUser & typeof api & typeof general;
   };
 
-  return { createLineUser };
+  return { createLineUser, expectEvent };
 }

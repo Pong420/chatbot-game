@@ -1,32 +1,28 @@
 import { nanoid } from 'nanoid';
 import { expect, test } from 'vitest';
-import { createEventHandler } from '@line/handler';
-import { LineUser } from '@line/test';
+import { createLineEventTestSuite } from '@line/test';
 import { textMessage } from '@line/utils/createMessage';
 import { maxLength } from '@line/utils/userService';
 import { t } from '@line/locales';
 import { nicknameHandlers, crearteIntroContent } from './nickname';
 
-const client = new LineUser();
-const handleEvent = createEventHandler(nicknameHandlers);
+const { createLineUser } = createLineEventTestSuite(nicknameHandlers);
+const client = createLineUser();
 
 test('nickname', async () => {
-  await expect(handleEvent(client.singleMessage(t(`NickNameIntro`)))).resolves.toEqual(crearteIntroContent());
-  await expect(handleEvent(client.singleMessage(t(`MyNickName`)))).resolves.toEqual(textMessage(client.name));
+  await client.s(t(`NickNameIntro`)).toEqual(crearteIntroContent());
+  await client.s(t(`MyNickName`)).toEqual(textMessage(client.name));
 
   const nickname = `New Name`;
-  const setNicknameMsg = (nickname: string) => client.singleMessage(t.regex(`SetNickName`, nickname));
-  await expect(handleEvent(setNicknameMsg(nickname))).resolves.toEqual(textMessage(t('NickNameSuccess')));
+  const setNickName = (nickname: string) => client.s(t.regex('SetNickName', nickname));
 
-  await expect(handleEvent(client.singleMessage(t(`MyNickName`)))).resolves.toEqual(textMessage(nickname));
+  await setNickName(nickname).toTextMessage(t('NickNameSuccess'));
+  await setNickName(nickname).toTextMessage(t('NickNameUsing', nickname));
+  await setNickName('').toTextMessage(t('NickNameEmpty'));
+  await setNickName(nanoid()).toTextMessage(t('NickNameMaxLength', maxLength));
+  await setNickName('「${nickname}」').toTextMessage(t('NickNameContainBracket'));
 
-  await expect(handleEvent(setNicknameMsg(nickname))).resolves.toEqual(textMessage(t('NickNameUsing', nickname)));
-
-  await expect(handleEvent(setNicknameMsg(''))).resolves.toEqual(textMessage(t('NickNameEmpty')));
-  await expect(handleEvent(setNicknameMsg(nanoid()))).resolves.toEqual(textMessage(t('NickNameMaxLength', maxLength)));
-  await expect(handleEvent(setNicknameMsg('「${nickname}」'))).resolves.toEqual(
-    textMessage(t('NickNameContainBracket'))
-  );
+  await client.s(t(`MyNickName`)).toTextMessage(nickname);
 });
 
 test('nickname intro content', async () => {

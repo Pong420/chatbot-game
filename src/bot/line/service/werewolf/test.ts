@@ -20,5 +20,5 @@ export const { createLineUser } = createLineEventTestSuite(werewolfGameHandlers,
 });
 
 export const groupId = nanoid();
-export const players = Array.from({ length: 12 }, () => createLineUser(new LineUser({ groupId })));
+export const players = Array.from({ length: 12 }, () => createLineUser({ groupId }));
 export type WerewolfPlayer = (typeof players)[number];

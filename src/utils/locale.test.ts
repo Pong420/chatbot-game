@@ -7,6 +7,5 @@ test('replace', () => {
       replaceAll: `{0}, {0}, {1}, {2}`
     }
   });
-
   expect(t('replaceAll', 'a', 'b', 'c')).toEqual(`a, a, b, c`);
 });

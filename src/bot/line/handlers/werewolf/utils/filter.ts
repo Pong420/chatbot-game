@@ -1,8 +1,8 @@
 import { Constructable } from '@/types';
 import { createFilter, Game, UserId } from '@line/filter';
 import { Werewolf } from '@werewolf/game';
-import { t } from '@werewolf/locales';
 import { Character } from '@werewolf/character';
+import { t } from '@werewolf/locales';
 
 export const GetWerewolfGame = Game(Werewolf);
 
@@ -15,7 +15,7 @@ export const IsHost = createFilter(UserId, GetWerewolfGame, (userId, game) => {
 export const IsPlayer = createFilter(UserId, GetWerewolfGame, async (userId, game) => {
   const character = game.players.get(userId);
   if (!character) throw t(`NotJoined`);
-  if (character.name === Character.type) throw t(`NotStarted`);
+  if (character.constructor === Character) throw t(`NotStarted`);
   return { userId, game, character };
 });
 

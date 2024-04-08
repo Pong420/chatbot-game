@@ -6,11 +6,9 @@ import { Action } from '../decorators';
 import { t } from '../locales';
 
 export class Character {
-  static readonly type: string = 'Character';
+  readonly type: string;
 
-  readonly type: string = 'Character'; // the actual value will be assigned in @Transform
-
-  readonly name: string;
+  readonly name: string; // translated character name
 
   readonly id: string; // user id
 
@@ -21,8 +19,9 @@ export class Character {
   isDead = false;
 
   @Type(() => Death, {
+    keepDiscriminatorProperty: true,
     discriminator: {
-      property: '__type',
+      property: 'type',
       subTypes: deathSubTypes
     }
   })
@@ -34,13 +33,6 @@ export class Character {
   // TODO:
   // statistics / action logs
   // - number of votes, who vote most
-
-  is<C extends typeof Character>(CharacterConstructor: C) {
-    if (!(this instanceof CharacterConstructor)) {
-      throw new Error(`expect ${CharacterConstructor.name} but it is ${this['name']}`);
-    }
-    return this as InstanceType<C>;
-  }
 
   heal() {
     this.causeOfDeath.shift();

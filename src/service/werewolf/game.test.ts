@@ -1,7 +1,7 @@
 import { test, expect } from 'vitest';
 import { Game } from './game';
 import { Character, Villager, Werewolf } from './character';
-import { Init, Start, Night, Daytime, Stage, End } from './stage';
+import { Init, Start, Night, Daytime, Stage, End, stages } from './stage';
 import { t } from './locales';
 import { Voted } from './death';
 
@@ -13,9 +13,24 @@ let villagers: Villager[] = [];
 
 const testSerialisation = () => {
   const serialized = game.serialize();
+  expect(serialized.data).not.toHaveProperty('survivors');
+
   let newGame = Game.create(serialized);
   newGame = Game.create(serialized); // this check serialized is not updated
-  expect(game).toMatchObject(newGame);
+
+  // make sure the stage.name is not renamed
+  const StageConstructor = stages[game.stage.name as keyof typeof stages];
+  expect(Object.prototype.isPrototypeOf.call(Stage, StageConstructor)).toBeTruthy();
+
+  newGame.players.forEach(player => {
+    expect(player.constructor).not.toEqual(Character);
+    expect(player).toBeInstanceOf(Character);
+    expect(player).toStrictEqual(game.players.get(player.id)!);
+  });
+
+  expect(newGame.stage.survivors).toHaveLength(game.stage.survivors.length);
+  expect(Object.keys(newGame.stage.playersByName)).toHaveLength(game.stage.players.size);
+  expect(game.stage).toStrictEqual(newGame.stage);
 };
 
 const next = (StageConstructor: typeof Stage) => {

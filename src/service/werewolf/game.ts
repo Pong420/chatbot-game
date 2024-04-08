@@ -9,7 +9,7 @@ const subTypes: DiscriminatorDescriptor['subTypes'] = [];
 for (const k in stages) {
   const value = stages[k as keyof typeof stages];
   if (Object.prototype.isPrototypeOf.call(Stage, value)) {
-    subTypes.push({ name: value.name, value });
+    subTypes.push({ name: k, value });
   }
 }
 
@@ -25,18 +25,16 @@ export class Game {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static create({ data, ...payload }: { groupId: string; data?: any }) {
-    return plainToInstance(
+    const game = plainToInstance(
       Game,
-      {
-        ...payload,
-        // not require data will be modiflied, `{ ...data }` is required
-        stage: data && { ...data }
-      },
+      { ...payload, stage: data },
       {
         // for initial value of stage
         exposeUnsetFields: false
       }
     ) as Game;
+    game.stage.init();
+    return game;
   }
 
   groupId: string;
@@ -59,11 +57,22 @@ export class Game {
     return { groupId, data: stage };
   }
 
+  // id or name
+  getPlayer(key: string) {
+    return this.stage.players.get(key) || this.stage.playersByName[key];
+  }
+
   getCharacters<C extends Character>(
-    CharacterContructor: Constructable<C>,
-    from?: Array<Character> | Map<string, Character>
+    CharacterConstructor: Constructable<C>,
+    from: Array<Character> | Map<string, Character> = this.players
   ) {
-    return this.stage.getCharacters(CharacterContructor, from);
+    const targets: C[] = [];
+    from.forEach(c => {
+      if (c instanceof CharacterConstructor) {
+        targets.push(c as C);
+      }
+    });
+    return targets;
   }
 
   shouldEndGame() {
@@ -85,14 +94,12 @@ export class Game {
   }
 
   next() {
-    // TODO:
     if (!this.stage.ended()) throw t('StageNotEnded');
     this.stage.onEnd();
 
     const NextStage = this.shouldEndGame() ? End : this.stage.next();
-    // FIXME: make this better
-    const { name, ...stage } = instanceToPlain(this.stage);
-    this.stage = plainToInstance(NextStage, stage) as Stage;
+    const { data } = this.serialize();
+    this.stage = plainToInstance(NextStage, data) as Stage;
     this.stage.onStart();
     return this.stage;
   }

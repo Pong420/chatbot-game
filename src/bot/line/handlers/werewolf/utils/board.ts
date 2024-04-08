@@ -66,7 +66,7 @@ export function myCharacter(character: Character) {
   const iamCmd = t('Iam', character.name);
   const introCmd = t('CharacterIntro', character.name);
 
-  if (character.type === Villager.type) {
+  if (character instanceof Villager) {
     return t('YouAreVillager');
   }
 

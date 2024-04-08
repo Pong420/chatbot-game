@@ -1,15 +1,17 @@
+import { DiscriminatorDescriptor } from 'class-transformer';
+
 export class Death {
   static readonly type: string;
 }
 
 export class Killed extends Death {
-  static readonly type = 'Killed';
+  readonly type = 'Killed';
 
   userId: string;
 }
 
 export class Voted extends Death {
-  static readonly type = 'Voted';
+  readonly type = 'Voted';
 
   votes: string[] = [];
   total: number;
@@ -19,7 +21,16 @@ export class Voted extends Death {
   }
 }
 
-export type CauseOfDeath = InstanceType<(typeof types)[number]>;
+export type CauseOfDeath = InstanceType<(typeof death)[keyof typeof death]>;
 
-const types = [Killed, Voted];
-export const deathSubTypes = types.map(constructor => ({ value: constructor, name: constructor.type as string }));
+const death = {
+  Killed,
+  Voted
+};
+
+export const deathSubTypes: DiscriminatorDescriptor['subTypes'] = [];
+
+for (const k in death) {
+  const value = death[k as keyof typeof death];
+  deathSubTypes.push({ name: k, value });
+}

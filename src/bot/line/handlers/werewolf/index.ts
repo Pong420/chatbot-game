@@ -1,3 +1,4 @@
-import werewolfMainHandlers from './main';
+import mainHandlers from './main';
+import werewolfHandlers from './werewolf';
 
-export const werewolfHanlders = [...werewolfMainHandlers];
+export const werewolfGameHandlers = [...mainHandlers, ...werewolfHandlers];

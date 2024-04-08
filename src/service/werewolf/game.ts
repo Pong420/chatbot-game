@@ -60,10 +60,10 @@ export class Game {
   }
 
   getCharacters<C extends Character>(
-    CharacterConstructor: Constructable<C>,
+    CharacterContructor: Constructable<C>,
     from?: Array<Character> | Map<string, Character>
   ) {
-    return this.stage.getCharacters(CharacterConstructor, from);
+    return this.stage.getCharacters(CharacterContructor, from);
   }
 
   shouldEndGame() {

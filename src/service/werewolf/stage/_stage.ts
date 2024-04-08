@@ -32,6 +32,10 @@ export class Stage {
   })
   players = new Map<string, Character>();
 
+  // @Exclude() // TODO: should exclude?
+  playersByName: Record<string, Character> = {};
+
+  // @Exclude() // TODO: should exclude?
   survivors: Character[] = [];
 
   /**
@@ -72,6 +76,7 @@ export class Stage {
   onStart() {
     this.players.forEach(player => {
       player.stage = this;
+      this.playersByName[player.nickname] = player;
     });
     this.survivors = this.survivors.map(survivor => this.players.get(survivor.id)!);
   }

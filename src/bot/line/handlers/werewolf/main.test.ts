@@ -7,14 +7,14 @@ import { textMessage } from '@line/utils/createMessage';
 import { Werewolf as WerewolfGame } from '@werewolf/game';
 import { t } from '@werewolf/locales';
 import { getGame } from '@/supabase/game';
-import { werewolfMainHandlers } from './main';
+import { werewolfGameHandlers } from './index';
 import { getCharacters } from './utils/test';
 import * as board from './utils/board';
 
 const groupId = nanoid();
 const client = new LineUser({ groupId });
 const clients = Array.from({ length: 11 }, () => new LineUser({ groupId }));
-const handleEvent = createEventHandler(werewolfMainHandlers);
+const handleEvent = createEventHandler(werewolfGameHandlers);
 
 const CreateGame = async (c = client) => {
   await expect(Initiate(c)).resolves.toEqual(board.start());
@@ -61,4 +61,10 @@ test('main', async () => {
 
   expect(werewolfs.length).toBeGreaterThanOrEqual(1);
   expect(villagers.length).toBeGreaterThanOrEqual(1);
+
+  for (const werewolf of werewolfs) {
+    await expect(
+      handleEvent(werewolf.singleMessage(t(`Kill`).replace('^', '').replace('(.*)', villagers[0].name)))
+    ).resolves.toEqual(textMessage(t(`KillSuccss`)));
+  }
 });

@@ -104,6 +104,7 @@ export default defineMessages(
     YouAreVillager: `你是「${WerewolfCharacter.Villager}」，請努力活下去！`,
     CharacterIntroButton: '角色簡介',
 
+    KillSuccss: '好',
     Hungry: ['平安夜？不，你餓了，快選一個晚餐吧', '什麼都能忍，餓不能！快選一個晚餐吧'],
     DuplicatedKill: '知道了，你們是有多大仇!?',
     DuplicatedSuicide: '知道了，你就這麼想死嗎?'

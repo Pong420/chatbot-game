@@ -1,3 +1,4 @@
+import { Action } from '@line/bot-sdk';
 import { Character, Villager } from '@werewolf/character';
 import { t } from '@werewolf/locales';
 import {
@@ -12,8 +13,17 @@ import {
   centeredText,
   wrapedText,
   createFlexText,
-  Payload
+  Payload,
+  postBackTextAction
 } from '@line/utils/createMessage';
+import { Werewolf } from '@werewolf/game';
+
+interface PlayerListProps {
+  names: string[];
+  title?: CreateTableMessageProps['title'];
+  buttons?: CreateTableMessageProps['buttons'];
+  action?: (name: string) => Action;
+}
 
 function tableMessage({ title = [], ...props }: CreateTableMessageProps) {
   return createTableMessage({
@@ -106,5 +116,38 @@ export function voted(text: string) {
   return tableMessage({
     title: [centeredText('投票結束')],
     rows: [[wrapAndCenterText(text)]]
+  });
+}
+
+function playerList({ title = [], names, action, buttons }: PlayerListProps) {
+  return tableMessage({
+    title,
+    rows: names.map((name, idx) => [
+      wrapedText(`${idx + 1}.`, { flex: 0, align: 'start' }),
+      wrapedText(`${name}`, {
+        flex: 9,
+        align: 'start',
+        margin: 'md',
+        action: action && action(name)
+      })
+    ]),
+    buttons
+  });
+}
+
+export function werewolf(game: Werewolf, killerId: string) {
+  const names = game.stage.survivors.reduce(
+    (names, player) => (killerId === player.id ? names : [...names, player.name]),
+    [] as string[]
+  );
+
+  return playerList({
+    names,
+    title: [centeredText('點擊名稱選擇目標')],
+    action: name => postBackTextAction(t(`Kill`).replace('(.*)', name)),
+    buttons: [
+      primaryButton(messageAction(t('NoKill'))),
+      secondaryButton(messageAction(t('Suicide'), `請再輸入「${t('Suicide')}」確認`))
+    ]
   });
 }

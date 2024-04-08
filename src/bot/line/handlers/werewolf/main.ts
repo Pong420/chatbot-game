@@ -16,7 +16,7 @@ function getStageMessage(stage: Stage) {
   if (stage instanceof Daytime) return board.daytime('');
 }
 
-export const werewolfMainHandlers = [
+export const mainHandlers = [
   createHandler(GroupId, UserId, TextEqual(t('Initiate')), CanStartGame, async (groupId, userId) => {
     const game = Werewolf.create({ groupId });
 
@@ -65,4 +65,4 @@ export const werewolfMainHandlers = [
   })
 ];
 
-export default werewolfMainHandlers;
+export default mainHandlers;

@@ -63,8 +63,8 @@ test('main', async () => {
   expect(villagers.length).toBeGreaterThanOrEqual(1);
 
   for (const werewolf of werewolfs) {
-    await expect(
-      handleEvent(werewolf.singleMessage(t(`Kill`).replace('^', '').replace('(.*)', villagers[0].name)))
-    ).resolves.toEqual(textMessage(t(`KillSuccss`)));
+    await expect(handleEvent(werewolf.singleMessage(t.regex(`Kill`, villagers[0].name)))).resolves.toEqual(
+      textMessage(t(`KillSuccss`))
+    );
   }
 });

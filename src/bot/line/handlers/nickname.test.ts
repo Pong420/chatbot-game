@@ -15,8 +15,7 @@ test('nickname', async () => {
   await expect(handleEvent(client.singleMessage(t(`MyNickName`)))).resolves.toEqual(textMessage(client.name));
 
   const nickname = `New Name`;
-  const setNicknameMsg = (nickname: string) =>
-    client.singleMessage(t(`SetNickName`).replace('^', '').replace('(.*)', nickname));
+  const setNicknameMsg = (nickname: string) => client.singleMessage(t.regex(`SetNickName`, nickname));
   await expect(handleEvent(setNicknameMsg(nickname))).resolves.toEqual(textMessage(t('NickNameSuccess')));
 
   await expect(handleEvent(client.singleMessage(t(`MyNickName`)))).resolves.toEqual(textMessage(nickname));

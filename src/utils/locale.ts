@@ -44,5 +44,14 @@ export function createTranslateFunction<O extends Record<string, string | string
       .map(t => t.trim());
   };
 
+  t.regex = function (key: keyof O, ...args: string[]) {
+    let content = t(key, ...args);
+    content = content.replace(/^\^|\$$/, '');
+    for (const arg of args) {
+      content = content.replace('(.*)', arg);
+    }
+    return content;
+  };
+
   return { t, messages };
 }

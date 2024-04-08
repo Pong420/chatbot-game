@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { messagingApi, middleware } from '@line/bot-sdk';
-import { Request as LineRequest, Response as LineResponse } from '@line/bot-sdk/dist/middleware';
+
+type MiddlewareParams = Parameters<ReturnType<typeof middleware>>;
+type LineRequest = MiddlewareParams[0];
+type LineResponse = MiddlewareParams[1];
 
 const channelSecret = process.env.LINE_CHANNEL_SECRET || '';
 const channelAccessToken = process.env.LINE_CHANNEL_ACCESS_TOKEN || '';

@@ -48,7 +48,7 @@ export class Character {
     this.causeOfDeath.push(instance);
   }
 
-  @Action(() => Daytime, { errorMessage: t('VoteNotStarted') })
+  @Action(() => Daytime, { notYourTurn: t('VoteNotStarted') })
   vote(character: Character) {
     const stage = this.stage as Daytime;
     if (character.isDead) throw t('TargetIsDead', character.id === this.id ? t('Self') : character.nickname);
@@ -59,7 +59,7 @@ export class Character {
     return { self: this.id === character.id };
   }
 
-  @Action(() => Daytime, { errorMessage: false })
+  @Action(() => Daytime, { notYourTurn: false })
   waive() {
     const stage = this.stage as Daytime;
     stage.voted.push(this.id);

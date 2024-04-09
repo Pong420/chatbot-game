@@ -52,7 +52,7 @@ export const StageCommand = {
 export const KillerCommand = {
   Kill: `^我要殺(.*)`,
   Suicide: `我要自殺`,
-  NoKill: `今晚是平安夜`
+  Idle: `今晚是平安夜`
 };
 
 export const CommonCommand = {
@@ -73,10 +73,10 @@ export default defineMessages(
     NicknameUsed: `暱稱「{0}」已被使用，請更換後再參加`,
 
     Self: '自己',
-    TurnEnded: ['你已作出了選擇！', `有些事...無法改變!，下次吧`],
+    TurnEnded: ['你已作出了選擇！', `有些事...無法改變!`],
     StageNotEnded: '仍有玩家未完成行動，無法進入下回合',
     YouDead: '安息吧，你已經死了！',
-    NotYourTurn: '目前不是你的行動回合',
+    NotYourTurn: '現在幹這件事不合適吧？',
     TargetIsDead: ['{0}已經死了，你是有多大仇!?', '{0}已經死了，原諒他吧'],
     TargetNoExists: ['{0}不存在'],
 
@@ -108,7 +108,10 @@ export default defineMessages(
     YouAreVillager: `你是「${Character.Villager}」，請努力活下去！`,
     CharacterIntroButton: '角色簡介',
 
+    IamWerewolfGroup: [`喂，是警察叔叔嗎，這裏有狼人哇`, `欸，我也是耶，「嗷嗚~~」`, `「嗷嗚~~」`],
     KillSuccss: '好',
+    SuicideSuccss: [`你就這麼有信心有人救你？`, `希望你能賭贏吧！`],
+    IdleSuccess: `'你竟然忍住了!? 但你下一晚不可能再忍受饑餓，快想明天的晚餐吧!`,
     Hungry: ['平安夜？不，你餓了，快選一個晚餐吧', '什麼都能忍，餓不能！快選一個晚餐吧'],
     DuplicatedKill: '知道了，你們是有多大仇!?',
     DuplicatedSuicide: '知道了，你就這麼想死嗎?'

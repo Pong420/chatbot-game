@@ -146,7 +146,7 @@ export function werewolf(game: Werewolf, killerId: string) {
     title: [centeredText('點擊名稱選擇目標')],
     action: name => postBackTextAction(t.regex(`Kill`, name)),
     buttons: [
-      primaryButton(messageAction(t('NoKill'))),
+      primaryButton(messageAction(t('Idle'))),
       secondaryButton(messageAction(t('Suicide'), `請再輸入「${t('Suicide')}」確認`))
     ]
   });

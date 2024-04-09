@@ -10,8 +10,7 @@ export class Werewolf extends Character {
 
   hungry = false;
 
-  @Action(() => Night)
-  kill(character?: Character, nickname = '') {
+  protected _kill(character?: Character, nickname = '') {
     if (!character) throw t(`TargetNoExists`, nickname);
 
     const suicide = this.id === character.id;
@@ -20,18 +19,24 @@ export class Werewolf extends Character {
 
     character.dead(Killed, { userId: this.id });
     this.hungry = !suicide;
+  }
 
-    return { suicide };
+  @Action(() => Night)
+  kill(character?: Character, nickname = '') {
+    this._kill(character, nickname);
+    return t('KillSuccss');
   }
 
   @Action(() => Night)
   idle() {
     if (this.hungry) throw t('Hungry');
     this.hungry = true;
+    return t('IdleSuccess');
   }
 
   @Action(() => Night)
   suicide() {
-    return this.kill(this);
+    this._kill(this);
+    return t('SuicideSuccss');
   }
 }

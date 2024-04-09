@@ -15,9 +15,7 @@ export const getCharacters = <C extends LineUser>(game: Werewolf, clients: C[]) 
 
 export const expectEvent = createExpectEvent(werewolfGameHandlers);
 
-export const { createLineUser } = createLineEventTestSuite(werewolfGameHandlers, ({}) => {
-  return {};
-});
+export const { createLineUser } = createLineEventTestSuite(werewolfGameHandlers);
 
 export const groupId = nanoid();
 export const players = Array.from({ length: 12 }, () => createLineUser({ groupId }));

@@ -7,9 +7,8 @@ import { t } from '@werewolf/locales';
 export const WerewolfGame = Game(Werewolf);
 
 export const IsHost = createFilter(UserId, WerewolfGame, (userId, game) => {
-  if (userId && game.stage.host === userId) {
-    return { userId, game };
-  }
+  if (game.stage.host !== userId) throw false;
+  return { userId, game };
 });
 
 export const IsPlayer = createFilter(UserId, WerewolfGame, async (userId, game) => {

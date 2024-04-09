@@ -1,6 +1,6 @@
 import { t as lt } from '@line/locales';
 import { createHandler } from '@line/handler';
-import { CanStartGame, Group, GroupId, Single, TextEqual, User, UserId } from '@line/filter';
+import { CanStartGame, Group, Single, TextEqual, User, UserId } from '@line/filter';
 import { createGame, updateGame } from '@/supabase/game';
 import { updateUser } from '@/supabase/user';
 import { Werewolf } from '@werewolf/game';
@@ -17,7 +17,7 @@ function getStageMessage(stage: Stage) {
 }
 
 export const mainHandlers = [
-  createHandler(GroupId, UserId, TextEqual(t('Initiate')), CanStartGame, async (groupId, userId) => {
+  createHandler(UserId, TextEqual(t('Initiate')), CanStartGame, async (userId, groupId) => {
     const game = Werewolf.create({ groupId });
 
     // FIXME:
@@ -43,15 +43,17 @@ export const mainHandlers = [
     return getStageMessage(stage);
   }),
   createHandler(Group, TextEqual(t('Join')), User, WerewolfGame, async (user, game) => {
+    // TODO: move to game
     if (user.game && user.game !== game.groupId) return lt(`JoinedOtherGroupsGame`, user.nickname);
 
+    // TODO:  move to game
     if (game.stage instanceof Init) return t('WaitFotHostSetup');
     else if (!(game.stage instanceof Start)) return t(`Started`);
 
     game.stage.join({ id: user.userId, nickname: user.nickname });
 
     await Promise.all([
-      //
+      // FIXME: handl error
       updateUser(user.userId, { game: game.groupId }),
       updateGame(game.groupId, game.serialize())
     ]);

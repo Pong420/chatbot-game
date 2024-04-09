@@ -15,6 +15,7 @@ const clientInOthersGroup = createLineUser({ name: players[0].name });
 clientInOthersGroup.profile.userId = players[0].userId;
 
 test('main', async () => {
+  await host.s(t(`Initiate`)).toBeUndefined();
   await host.g(t(`Initiate`)).toEqual(board.start());
   await host.g(t(`Initiate`)).toEqual(textMessage(lt(`OtherGameRuning`, WerewolfGame.type)));
 

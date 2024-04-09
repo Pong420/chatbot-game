@@ -16,6 +16,7 @@ export async function getUser(event: WebhookEvent | null, userId = event?.source
       resp = await api.createUser({ userId, nickname: profile.displayName });
     }
   }
+
   if (resp.error) throw t('SystemError');
   return resp.data;
 }

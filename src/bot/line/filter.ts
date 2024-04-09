@@ -3,8 +3,9 @@ import { WebhookEvent } from '@line/bot-sdk';
 
 type Filtered<T> = Exclude<Awaited<T>, undefined | null | boolean>;
 export type FilterFunction = (event: WebhookEvent) => any;
-export type OutputFunction<FilterFunctions extends FilterFunction[], R> = (
-  ...args: [...ExtractReturnType<FilterFunctions>, WebhookEvent]
+export type FilterFunctionArray = ReadonlyArray<FilterFunction>;
+export type OutputFunction<FilterFunctions extends FilterFunctionArray, R> = (
+  ...args: [...ExtractReturnType<FilterFunctions>, event: WebhookEvent]
 ) => R;
 
 export type ExtractReturnType<T extends readonly unknown[]> = T extends [infer F, ...infer R]
@@ -18,27 +19,28 @@ export type ExtractReturnType<T extends readonly unknown[]> = T extends [infer F
 /**
  * Filter rule:
  *
- * To stop the following filters or output function
- *  1. return false, no message will return to user
- *  2. return a string / Message / Message[] will reply to user ( handled by handler.ts )
- *  3. throw a false or string or Error will reply to user ( handled by handler.ts )
+ * `undefined`, `null`, `boolean` will not appield to the arguments of output function, see the type `Filtered`
  *
- * `undefined`, `null`, `true` will not appield to the argument of output function, see the type `Filtered`
+ * To stop the following filters or output function
+ *  1. return false, no message will return to user,
+ *  2. throw "false" almost the same as returen `false`, but the types may look better
+ *  3. throw string or Error transform to message and reply to user ( handled by handler.ts )
+ *
  */
-export function createFilter<FilterFunctions extends FilterFunction[], R>(
+export function createFilter<FilterFunctions extends any[], R>(
   ...payload: [...FilterFunctions, OutputFunction<FilterFunctions, R>]
 ) {
+  const filters = payload.slice(0, -1) as unknown as FilterFunctions;
+  const output = payload.slice(-1)[0] as OutputFunction<FilterFunctions, R>;
+
   return async (event: WebhookEvent) => {
     const args: unknown[] = [];
-    const filters = payload.slice(0, -1) as unknown as FilterFunctions;
-    const output = payload.slice(-1)[0] as OutputFunction<FilterFunctions, R>;
-
     for (const filter of filters) {
+      if (typeof filter !== 'function') continue;
       const arg = await filter(event);
       if (arg === false) throw void 0;
       if (arg !== null && typeof arg !== 'undefined' && arg !== true) args.push(arg);
     }
-
     return output(...(args as ExtractReturnType<FilterFunctions>), event);
   };
 }

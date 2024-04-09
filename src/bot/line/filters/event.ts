@@ -1,10 +1,10 @@
+import { WebhookEvent } from '@line/bot-sdk';
 import { isGroupEvent, isSingleEvent } from '@line/types';
-import { createFilter } from '@line/filter';
 
-export const Single = createFilter(isSingleEvent);
+export const Single = isSingleEvent;
 
-export const Group = createFilter(isGroupEvent);
-export const GroupId = createFilter(event => (isGroupEvent(event) ? event.source.groupId : false));
-export const MemberJoin = createFilter(event => event.type === 'memberJoined');
-export const MemberLeft = createFilter(event => event.type === 'memberLeft');
-export const LeaveGroup = createFilter(event => event.type === 'leave');
+export const Group = isGroupEvent;
+export const GroupId = (event: WebhookEvent) => isGroupEvent(event) && event.source.groupId;
+export const MemberJoin = (event: WebhookEvent) => event.type === 'memberJoined';
+export const MemberLeft = (event: WebhookEvent) => event.type === 'memberLeft';
+export const LeaveGroup = (event: WebhookEvent) => event.type === 'leave';

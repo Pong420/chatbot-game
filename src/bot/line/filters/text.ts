@@ -1,6 +1,5 @@
 import { WebhookEvent } from '@line/bot-sdk';
 import { getPostBackText, isPostBackEvent, isTextMessage } from '@line/types';
-import { createFilter } from '@line/filter';
 
 interface TextOptions {
   postbackOnly?: boolean;
@@ -22,7 +21,7 @@ export function TextEqual(except: string | string[], options: TextEqualOptions =
       ? (payload: string) => except === payload
       : (payload: string) => except.includes(payload);
 
-  return createFilter(event => {
+  return (event: WebhookEvent) => {
     let text = '';
 
     if (isPostBackEvent(event)) {
@@ -38,11 +37,11 @@ export function TextEqual(except: string | string[], options: TextEqualOptions =
     }
 
     return false;
-  });
+  };
 }
 
 export const TextMatch = (regex: RegExp | string, { postbackOnly = false }: TextOptions = {}) => {
-  return createFilter(event => {
+  return (event: WebhookEvent) => {
     let text = '';
 
     if (isPostBackEvent(event)) {
@@ -54,5 +53,5 @@ export const TextMatch = (regex: RegExp | string, { postbackOnly = false }: Text
     }
 
     return !!text && text.match(regex);
-  });
+  };
 };

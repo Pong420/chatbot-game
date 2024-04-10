@@ -79,7 +79,7 @@ export function myCharacter(character: Character) {
 
 export function night(text: string, command?: string) {
   return tableMessage({
-    title: [wrapAndCenterText(`現在是晚上`)],
+    title: [wrapAndCenterText(t('NightBoard'))],
     rows: [[wrapAndCenterText(text)]],
     buttons: command ? [primaryButton(sendTextToBot(command))] : undefined
   });
@@ -87,7 +87,7 @@ export function night(text: string, command?: string) {
 
 export function daytime(text: string, command?: string) {
   return tableMessage({
-    title: [wrapAndCenterText('現在是白天')],
+    title: [wrapAndCenterText(t(`DaytimeBoard`))],
     rows: [[wrapAndCenterText(text)]],
     buttons: command ? [primaryButton(sendTextToBot(command))] : undefined
   });
@@ -97,24 +97,21 @@ export function voting(votes: Record<string, Character[]>, count: number) {
   const entries = Object.entries(votes);
   const rows = entries.map<Payload[]>(([name, list]) => {
     return [
-      wrapedText(name, { flex: 9, action: messageAction(`我投 ${name}`) }),
+      wrapedText(name, { flex: 9, action: messageAction(t(`Vote`, name)) }),
       createFlexText({ flex: 0, align: 'end' })(String(list.length))
     ];
   });
 
   return tableMessage({
-    title: [wrapAndCenterText(`投票階段 ${count}/${entries.length}`), wrapAndCenterText(`點擊名稱即可進行投票`)],
+    title: [wrapAndCenterText(t(`VoteBoard`, count, entries.length)), wrapAndCenterText(t(`ClickToVote`))],
     rows: rows,
-    buttons: [
-      // primaryButton(messageAction(WereWolfCommand.WhoNotVoted)),
-      // secondaryButton(messageAction(WereWolfCommand.Waive))
-    ]
+    buttons: [primaryButton(messageAction(t(`WhoNotVoted`))), secondaryButton(messageAction(t(`Waive`)))]
   });
 }
 
 export function voted(text: string) {
   return tableMessage({
-    title: [centeredText('投票結束')],
+    title: [centeredText(t(`VoteEndBoard`))],
     rows: [[wrapAndCenterText(text)]]
   });
 }
@@ -143,10 +140,11 @@ export function werewolf(game: Werewolf, killerId: string) {
 
   return playerList({
     names,
-    title: [centeredText('點擊名稱選擇目標')],
+    title: [centeredText(t(`ClickToSelect`))],
     action: name => postBackTextAction(t.regex(`Kill`, name)),
     buttons: [
       primaryButton(messageAction(t('Idle'))),
+      // TODO:
       secondaryButton(messageAction(t('Suicide'), `請再輸入「${t('Suicide')}」確認`))
     ]
   });

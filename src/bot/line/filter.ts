@@ -8,7 +8,7 @@ export type OutputFunction<FilterFunctions extends FilterFunctionArray, R> = (
   ...args: [...ExtractReturnType<FilterFunctions>, event: WebhookEvent]
 ) => R;
 
-export type ExtractReturnType<T extends readonly unknown[]> = T extends [infer F, ...infer R]
+export type ExtractReturnType<T extends readonly any[]> = T extends [infer F, ...infer R]
   ? F extends FilterFunction
     ? Filtered<ReturnType<F>> extends never
       ? [...ExtractReturnType<R>]
@@ -27,7 +27,7 @@ export type ExtractReturnType<T extends readonly unknown[]> = T extends [infer F
  *  3. throw string or Error transform to message and reply to user ( handled by handler.ts )
  *
  */
-export function createFilter<FilterFunctions extends any[], R>(
+export function createFilter<FilterFunctions extends FilterFunction[], R>(
   ...payload: [...FilterFunctions, OutputFunction<FilterFunctions, R>]
 ) {
   const filters = payload.slice(0, -1) as unknown as FilterFunctions;

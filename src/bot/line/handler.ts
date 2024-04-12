@@ -3,12 +3,12 @@ import { client } from './client';
 import { textMessage } from './utils/createMessage';
 import { createFilter, FilterFunction, OutputFunction } from './filter';
 
-type Excepted = void | undefined | null | string | Message | Message[];
+export type Result = void | undefined | null | string | Message | Message[];
 
 export type Handler = ReturnType<typeof createHandler>;
 
 export function createHandler<FilterFunctions extends FilterFunction[]>(
-  ...filters: [...FilterFunctions, OutputFunction<FilterFunctions, Excepted | Promise<Excepted>>]
+  ...filters: [...FilterFunctions, OutputFunction<FilterFunctions, Result | Promise<Result>>]
 ) {
   return async (event: WebhookEvent) => {
     const output = createFilter(...filters);

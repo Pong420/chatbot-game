@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+export * from './game';
 
 export type ValueOf<T> = T[keyof T];
 export type UnionToIntercetion<U> = (U extends any ? (arg: U) => any : never) extends (arg: infer I) => any ? I : never;

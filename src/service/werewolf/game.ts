@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { Type, DiscriminatorDescriptor, plainToInstance, instanceToPlain } from 'class-transformer';
-import { Constructable } from '@/types';
+import { Constructable, GameInstance } from '@/types';
 import { stages, Init, Stage, End } from './stage';
 import { Character, Werewolf } from './character';
 import { t } from './locales';
@@ -19,10 +19,8 @@ export interface CreateGame {
   stage?: object;
 }
 
-export class Game {
+export class Game extends GameInstance {
   static readonly type: string = 'Werewolf';
-
-  readonly name = t('GameName');
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static create({ data, ...payload }: { groupId: string; data?: any }) {
@@ -37,6 +35,8 @@ export class Game {
     game.stage.init();
     return game;
   }
+
+  readonly name = t('GameName');
 
   groupId: string;
 

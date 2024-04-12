@@ -1,18 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { WebhookEvent } from '@line/bot-sdk';
 import { getGame } from '@/supabase/game';
+import { GameConstructor, GameInstance } from '@/types';
 import { isGroupEvent, isSingleEvent } from '@line/types';
 import { createFilter, GroupId } from '@line/filter';
 import { getUser } from '@line/utils/userService';
 import { t } from '@line/locales';
 
-interface GameConstructor<G> {
-  type: string;
-  create: (options: { groupId: string; data?: any }) => G;
-  new (...args: any[]): G;
-}
-
-export const Game = <G>(GameConstructor: GameConstructor<G>) => {
+export const Game = <G extends GameInstance>(GameConstructor: GameConstructor<G>) => {
   return async (event: WebhookEvent) => {
     const groupId = isGroupEvent(event)
       ? event.source.groupId

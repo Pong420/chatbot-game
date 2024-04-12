@@ -1,5 +1,6 @@
 import { createHandler } from '@line/handler';
 import { Group, Single, TextEqual, TextMatch } from '@line/filter';
+import { updateGame } from '@/supabase/game';
 import { Werewolf } from '@werewolf/character';
 import { t } from '@werewolf/locales';
 import { IsCharacter, IsPlayer } from '../filter';
@@ -15,16 +16,17 @@ export const werewolfHandlers = [
   createHandler(Single, TextMatch(t('Kill')), IsWerewolf, async ([, name], { game, character }) => {
     const target = game.stage.playersByName[name];
     const message = character.kill(game.players.get(target.id)!, name);
-    // TODO: update database
+    await updateGame(game);
     return message;
   }),
-  createHandler(Single, TextEqual(t('Suicide')), IsWerewolf, async ({ character }) => {
+  createHandler(Single, TextEqual(t('Suicide')), IsWerewolf, async ({ game, character }) => {
     const message = character.suicide();
-    // TODO: update date date
+    await updateGame(game);
     return message;
   }),
-  createHandler(Single, TextEqual(t('Idle')), IsWerewolf, async ({ character }) => {
+  createHandler(Single, TextEqual(t('Idle')), IsWerewolf, async ({ game, character }) => {
     const message = character.idle();
+    await updateGame(game);
     return message;
   })
 ];

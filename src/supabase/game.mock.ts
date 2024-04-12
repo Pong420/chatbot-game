@@ -36,11 +36,13 @@ vi.spyOn(module, 'createGame').mockImplementation(payload => {
   return Promise.resolve({ data, error: null }) as unknown as ReturnType<(typeof module)['createGame']>;
 });
 
-vi.spyOn(module, 'updateGame').mockImplementation((userId, payload) => {
-  let data = gameDB.get(userId);
+vi.spyOn(module, 'updateGame').mockImplementation((...payload) => {
+  const [changes, groupId] =
+    typeof payload[0] === 'string' ? [payload[1], payload[0]] : [payload[0].serialize(), payload[0].groupId];
+  let data = gameDB.get(groupId);
   if (data) {
-    data = { ...data, ...payload };
-    gameDB.set(userId, JSON.parse(JSON.stringify(data)));
+    data = { ...data, ...changes };
+    gameDB.set(groupId, JSON.parse(JSON.stringify(data)));
   }
   return Promise.resolve({ data, error: data ? null : { code: 0 } }) as unknown as ReturnType<
     (typeof module)['updateGame']

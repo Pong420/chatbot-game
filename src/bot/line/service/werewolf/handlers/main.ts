@@ -31,15 +31,13 @@ export const mainHandlers = [
   createHandler(Group, TextEqual(t('Open')), IsHost, async ({ game }) => {
     if (game.stage instanceof Init) {
       const stage = game.next();
-      // FIXME: handle error
-      await updateGame(game.groupId, game.serialize());
+      await updateGame(game);
       return getStageMessage(stage);
     }
   }),
   createHandler(Group, TextEqual([t('Next'), t('NextShort')]), IsHost, async ({ game }) => {
     const stage = game.next();
-    // FIXME: handle error
-    await updateGame(game.groupId, game.serialize());
+    await updateGame(game);
     return getStageMessage(stage);
   }),
   createHandler(Group, TextEqual(t('Join')), User, WerewolfGame, async (user, game) => {
@@ -53,9 +51,9 @@ export const mainHandlers = [
     game.stage.join({ id: user.userId, nickname: user.nickname });
 
     await Promise.all([
-      // FIXME: handl error
+      //
       updateUser(user.userId, { game: game.groupId }),
-      updateGame(game.groupId, game.serialize())
+      updateGame(game)
     ]);
 
     if (game.players.size < 12) {

@@ -5,7 +5,7 @@ type Filtered<T> = Exclude<Awaited<T>, undefined | null | boolean>;
 export type FilterFunction = (event: WebhookEvent) => any;
 export type FilterFunctionArray = ReadonlyArray<FilterFunction>;
 export type OutputFunction<FilterFunctions extends FilterFunctionArray, R> = (
-  ...args: [...ExtractReturnType<FilterFunctions>, event: WebhookEvent]
+  ...args: ExtractReturnType<FilterFunctions>
 ) => R;
 
 export type ExtractReturnType<T extends readonly any[]> = T extends [infer F, ...infer R]
@@ -41,7 +41,7 @@ export function createFilter<FilterFunctions extends FilterFunction[], R>(
       if (arg === false) throw void 0;
       if (arg !== null && typeof arg !== 'undefined' && arg !== true) args.push(arg);
     }
-    return output(...(args as ExtractReturnType<FilterFunctions>), event);
+    return output(...(args as ExtractReturnType<FilterFunctions>));
   };
 }
 

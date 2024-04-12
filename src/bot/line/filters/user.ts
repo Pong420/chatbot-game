@@ -12,4 +12,8 @@ export const UserId = (event: WebhookEvent) => {
   return userId;
 };
 
-export const User = createFilter(UserId, async (userId, event) => getUser(event, userId));
+export const User = createFilter(
+  UserId,
+  (event: WebhookEvent) => event,
+  async (userId, event) => getUser(event, userId)
+);

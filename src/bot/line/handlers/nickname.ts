@@ -1,3 +1,4 @@
+import { WebhookEvent } from '@line/bot-sdk';
 import { createHandler } from '@line/handler';
 import { TextEqual, TextMatch, User, UserId } from '@line/filter';
 import { setNickname, maxLength } from '@line/utils/userService';
@@ -14,5 +15,10 @@ export const crearteIntroContent = () =>
 export const nicknameHandlers = [
   createHandler(TextEqual(t('NickNameIntro')), crearteIntroContent),
   createHandler(TextEqual(t('MyNickName')), User, user => user.nickname),
-  createHandler(UserId, TextMatch(t('SetNickName')), (_, [, nickname], event) => setNickname(event, nickname))
+  createHandler(
+    UserId,
+    TextMatch(t('SetNickName')),
+    (event: WebhookEvent) => event,
+    (_, [, nickname], event) => setNickname(event, nickname)
+  )
 ];

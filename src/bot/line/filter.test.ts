@@ -18,28 +18,25 @@ test('rule', async () => {
 
   const run = (...filters: any[]) => createFilter(...filters, (...args) => args.length)(singleMessage);
 
-  await expect(run(Zero)).resolves.toEqual(2);
-  await expect(run(EmptyString)).resolves.toEqual(2);
+  await expect(run(Zero)).resolves.toEqual(1);
+  await expect(run(EmptyString)).resolves.toEqual(1);
 
-  await expect(run(Truthy)).resolves.toEqual(1);
-  await expect(run(Undefined)).resolves.toEqual(1);
-  await expect(run(Null)).resolves.toEqual(1);
+  await expect(run(Truthy)).resolves.toEqual(0);
+  await expect(run(Undefined)).resolves.toEqual(0);
+  await expect(run(Null)).resolves.toEqual(0);
 
   await expect(run(Falsy)).rejects.toBeFalsy();
 });
 
 test('Single & Group', async () => {
-  const singleHandler = createHandler(Single, event => {
-    expect(event).toMatchObject({ type: 'message' });
+  const singleHandler = createHandler(Single, () => {
     return `World`;
   });
-  const groupHandler = createHandler(Group, event => {
-    expect(event).toMatchObject({ type: 'message' });
+  const groupHandler = createHandler(Group, () => {
     return `World`;
   });
-  const groupEventHandler = createHandler(GroupId, (groupId, event) => {
+  const groupEventHandler = createHandler(GroupId, groupId => {
     expect(groupId).toBe(client.groupId);
-    expect(event).toMatchObject({ type: 'message' });
     return `World`;
   });
 

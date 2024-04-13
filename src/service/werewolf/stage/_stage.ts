@@ -85,6 +85,17 @@ export class Stage {
     return targets;
   }
 
+  /**
+   * Since players could be rescued, we cannot update survivors on each stage
+   */
+  updateSurvivors() {
+    this._survivors = [];
+    this.players.forEach(player => {
+      player.isDead = player.causeOfDeath.length > 0;
+      !player.isDead && this._survivors.push(player.id);
+    });
+  }
+
   next(): typeof Stage {
     throw "next stage haven't defined";
   }
@@ -93,11 +104,5 @@ export class Stage {
     this.init();
   }
 
-  onEnd() {
-    this._survivors = [];
-    this.players.forEach(player => {
-      player.isDead = player.causeOfDeath.length > 0;
-      !player.isDead && this._survivors.push(player.id);
-    });
-  }
+  onEnd() {}
 }

@@ -6,4 +6,5 @@ export * from './voted';
 export * from './guard';
 export * from './witcher';
 export * from './hunter';
+export * from './predictor';
 export * from './end';

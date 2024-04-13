@@ -77,6 +77,8 @@ export class Start extends Stage {
       })
     );
 
+    this.updateSurvivors();
+
     super.onEnd();
   }
 }

@@ -17,12 +17,12 @@ export class Werewolf extends Character {
     if (!character) throw t(`TargetNoExists`, nickname);
 
     const suicide = this.id === character.id;
-    if (character.isDead) throw t('TargetIsDead', character.id === this.id ? t('Self') : character.nickname);
+    if (character.isDead) throw t('CantKillDeadTarget', character.id === this.id ? t('Self') : character.nickname);
     if (character.isKilledBy(this)) throw suicide ? t('DuplicatedSuicide') : t('DuplicatedKill');
 
     character.dead(Killed, { userId: this.id });
     this.killed.push(character.id);
-    this.hungry = !suicide;
+    this.hungry = this.hungry ? !this.suicide : false;
   }
 
   @Action(() => Night)

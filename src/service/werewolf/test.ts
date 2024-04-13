@@ -3,7 +3,7 @@ import { expect, vi } from 'vitest';
 import { Constructable } from '@/types';
 import { Game } from './game';
 import { Character, Guard, Hunter, Predictor, Villager, Werewolf, Witcher } from './character';
-import { Init, Start, Stage, stages } from './stage';
+import { Init, Start, Stage, stages, Stages } from './stage';
 import { t } from './locales';
 
 interface CreateGameOptions {
@@ -72,6 +72,10 @@ export function werewolfTestUtils() {
     return stage as S;
   };
 
+  const nextStage = <K extends keyof Stages>(key: K) => {
+    return next(stages[key] as Stages[K]);
+  };
+
   const createGame = ({ numOfPlayers = 12, characters = [] }: CreateGameOptions) => {
     game = Game.create({ groupId: '1' });
     stage = game.stage;
@@ -101,9 +105,17 @@ export function werewolfTestUtils() {
     expect(game.players.size).toEqual(Math.min(numOfPlayers, 12));
   };
 
+  const allVoteTo = (character: Character) => {
+    survivors.forEach(survivor => {
+      survivor.id === character.id ? survivor.waive() : survivor.vote(character);
+    });
+  };
+
   return {
     createGame,
     testSerialisation,
-    next
+    next,
+    nextStage,
+    allVoteTo
   };
 }

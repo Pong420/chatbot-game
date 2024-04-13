@@ -5,6 +5,10 @@ import { Predictor as PredictorCharacter } from '../character';
 export class Predictor extends Stage {
   readonly name = 'Predictor';
 
+  static available(stage: Stage) {
+    return !!stage.getPlayersByCharacter(PredictorCharacter, stage.survivors).length;
+  }
+
   onStart(): void {
     super.onStart();
     this.survivors.forEach(player => {

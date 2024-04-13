@@ -1,6 +1,8 @@
 import { Stage } from './_stage';
 import { Night } from './night';
 import { Guard as GuardCharacter } from '../character';
+import { Witcher as WitcherStage } from './witcher';
+import { Predictor as PredictorStage } from './predictor';
 
 export class Guard extends Stage {
   readonly name = 'Guard';
@@ -18,7 +20,7 @@ export class Guard extends Stage {
     });
   }
 
-  next() {
-    return Night;
+  next(): typeof Stage {
+    return WitcherStage.available(this) ? WitcherStage : PredictorStage.available(this) ? PredictorStage : Night;
   }
 }

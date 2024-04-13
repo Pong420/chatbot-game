@@ -112,7 +112,7 @@ export default defineMessages(
     StageNotEnded: '仍有玩家未完成行動，無法進入下回合',
     YouDead: '安息吧，你已經死了！',
     NotYourTurn: '現在幹這件事不合適吧？',
-    TargetIsDead: ['{0}已經死了，你是有多大仇!?', '{0}已經死了，原諒他吧'],
+    TargetIsDead: ['{0}已死亡'],
     TargetNoExists: ['{0}不存在'],
 
     VoteNotStarted: `現在不是投票時間`,
@@ -154,6 +154,7 @@ export default defineMessages(
     Hungry: ['平安夜？不，你餓了，快選一個晚餐吧', '什麼都能忍，餓不能！快選一個晚餐吧'],
     DuplicatedKill: '知道了，你們是有多大仇!?',
     DuplicatedSuicide: '知道了，你就這麼想死嗎?',
+    CantKillDeadTarget: ['{0}已經死了，你是有多大仇!?', '{0}已經死了，原諒他吧'],
 
     IamGuardGroup: `你是好人，請守護我(\´▽\`ʃ♡ƪ)`,
     ProtectSuccess: [`好`, `你是好人`],
@@ -184,7 +185,7 @@ export default defineMessages(
 
     IamPreditorGroup: [`看，這裏有個神棍`, `請給我下期的彩票號碼，拜託了`],
     PredictSuccess: `{0}是【{1}】`,
-    Predicted: `你已經知道「{0}」的身份了`,
+    Predicted: `你已經知道「{0}」的身份是【{1}】，偷窺其他人吧`,
     PredictSelf: [`{0}是【神棍】`, `{0}是【偷窺狂】`],
 
     IamHunterGroup: [`你是正式錄用的獵人嗎`, `我是好人，不要射我`],

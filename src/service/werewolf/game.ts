@@ -1,18 +1,9 @@
 import 'reflect-metadata';
-import { Type, DiscriminatorDescriptor, plainToInstance, instanceToPlain } from 'class-transformer';
+import { Type, plainToInstance, instanceToPlain } from 'class-transformer';
 import { Constructable, GameInstance } from '@/types';
-import { stages, Init, Stage, End } from './stage';
+import { stagesTypes, Init, Stage, End, Start } from './stage';
 import { Character, Werewolf } from './character';
 import { t } from './locales';
-
-const subTypes: DiscriminatorDescriptor['subTypes'] = [];
-
-for (const k in stages) {
-  const value = stages[k as keyof typeof stages];
-  if (Object.prototype.isPrototypeOf.call(Stage, value)) {
-    subTypes.push({ name: k, value });
-  }
-}
 
 export interface CreateGame {
   id: string;
@@ -44,7 +35,7 @@ export class Game extends GameInstance {
     keepDiscriminatorProperty: true,
     discriminator: {
       property: 'name',
-      subTypes
+      subTypes: stagesTypes
     }
   })
   stage: Stage = new Init();
@@ -76,8 +67,9 @@ export class Game extends GameInstance {
     return targets;
   }
 
-  shouldEndGame() {
+  protected shouldEndGame() {
     if (this.stage instanceof Init) return;
+    if (this.stage instanceof Start) return;
 
     const survivors = this.stage.survivors;
     const werewolfs = this.getPlayersByCharacter(Werewolf, survivors);
@@ -94,14 +86,23 @@ export class Game extends GameInstance {
     }
   }
 
+  protected nextStage(NextStage: typeof Stage) {
+    const { data } = this.serialize();
+    this.stage = plainToInstance(NextStage, data) as Stage;
+    this.stage.onStart();
+  }
+
   next() {
     if (!this.stage.ended()) throw t('StageNotEnded');
     this.stage.onEnd();
 
-    const NextStage = this.shouldEndGame() ? End : this.stage.next();
-    const { data } = this.serialize();
-    this.stage = plainToInstance(NextStage, data) as Stage;
-    this.stage.onStart();
+    const NextStage = this.stage.next();
+    this.nextStage(NextStage);
+
+    if (this.shouldEndGame()) {
+      this.nextStage(End);
+    }
+
     return this.stage;
   }
 }

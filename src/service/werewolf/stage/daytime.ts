@@ -42,6 +42,8 @@ export class Daytime extends Stage {
     this.results = { ...intialResults };
     this.turn += 1;
 
+    this.updateSurvivors();
+
     /**
      * this.candidates.size > 0 if previous round multiple players have the some votes
      */
@@ -78,6 +80,11 @@ export class Daytime extends Stage {
     } else {
       // all wavied
     }
+
+    /**
+     * players death as voting won't be rescue, so we update survivors
+     */
+    this.updateSurvivors();
 
     super.onEnd();
   }

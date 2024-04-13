@@ -34,17 +34,8 @@ export class Character {
   // statistics / action logs
   // - number of votes, who vote most
 
-  heal() {
-    this.causeOfDeath.shift();
-  }
-
-  dead<C extends CauseOfDeath>(causeOfDeath: Constructable<C>, payload: { [K in keyof C]?: C[K] }) {
+  dead<C extends CauseOfDeath>(causeOfDeath: Constructable<C>, payload: { [K in Exclude<keyof C, 'type'>]?: C[K] }) {
     const instance = plainToInstance(causeOfDeath, payload);
-    // if (causeOfDeath instanceof Werewolf && this.protectedBy) {
-    //   this.protectedBy.protected.push(this);
-    //   this.protectedBy = undefined;
-    //   return;
-    // }
     this.causeOfDeath.push(instance);
   }
 

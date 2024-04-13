@@ -2,11 +2,14 @@ import { Character } from './_character';
 import { Action } from '../decorators';
 import { t } from '../locales';
 import { Killed } from '../death';
-import { Dark } from '../stage';
+import { Night } from '../stage';
 
 export class Werewolf extends Character {
   readonly type = 'Werewolf';
   readonly name = t('Werewolf');
+
+  // as records, target could rescued or procteded
+  killed: string[] = [];
 
   hungry = false;
 
@@ -18,23 +21,24 @@ export class Werewolf extends Character {
     if (character.isKilledBy(this)) throw suicide ? t('DuplicatedSuicide') : t('DuplicatedKill');
 
     character.dead(Killed, { userId: this.id });
+    this.killed.push(character.id);
     this.hungry = !suicide;
   }
 
-  @Action(() => Dark)
+  @Action(() => Night)
   kill(character?: Character, nickname = '') {
     this._kill(character, nickname);
     return t('KillSuccss');
   }
 
-  @Action(() => Dark)
+  @Action(() => Night)
   idle() {
     if (this.hungry) throw t('Hungry');
     this.hungry = true;
     return t('IdleSuccess');
   }
 
-  @Action(() => Dark)
+  @Action(() => Night)
   suicide() {
     this._kill(this);
     return t('SuicideSuccss');

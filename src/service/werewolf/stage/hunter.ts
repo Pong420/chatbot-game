@@ -1,14 +1,15 @@
 import { Stage } from './_stage';
 import { Daytime } from './daytime';
-import { Werewolf } from '../character';
+import { Hunter as HunterCharacter } from '../character';
 
-export class Night extends Stage {
-  readonly name = 'Night';
+// TODO:
+export class Hunter extends Stage {
+  readonly name = 'Hunter';
 
   onStart(): void {
     super.onStart();
     this.survivors.forEach(player => {
-      if (player instanceof Werewolf) {
+      if (player instanceof HunterCharacter) {
         player.endTurn = false;
       }
     });

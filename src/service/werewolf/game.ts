@@ -63,7 +63,7 @@ export class Game extends GameInstance {
     return this.stage.players.get(key) || this.stage.playersByName[key];
   }
 
-  getCharacters<C extends Character>(
+  getPlayersByCharacter<C extends Character>(
     CharacterConstructor: Constructable<C>,
     from: Array<Character> | Map<string, Character> = this.players
   ) {
@@ -80,7 +80,7 @@ export class Game extends GameInstance {
     if (this.stage instanceof Init) return;
 
     const survivors = this.stage.survivors;
-    const werewolfs = this.getCharacters(Werewolf, survivors);
+    const werewolfs = this.getPlayersByCharacter(Werewolf, survivors);
     const allDead = survivors.length === 0;
     const werewolfWin =
       werewolfs.length > 1

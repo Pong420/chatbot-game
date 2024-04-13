@@ -5,14 +5,18 @@ import { createGame, updateGame } from '@/supabase/game';
 import { updateUser } from '@/supabase/user';
 import { Werewolf } from '@werewolf/game';
 import { t } from '@werewolf/locales';
-import { Daytime, Init, Night, Stage, Start } from '@werewolf/stage';
+import { Stage, Init, Start, Guard, Night, Daytime } from '@werewolf/stage';
 import { WerewolfGame, IsHost, IsPlayer } from '../filter';
 import * as board from '../board';
+import { Witcher } from '@werewolf/character';
+// import { Guard } from '@werewolf/character';
 
 function getStageMessage(stage: Stage) {
   if (stage instanceof Init) return board.start();
   if (stage instanceof Start) return board.players(stage.players.values());
-  if (stage instanceof Night) return board.night('');
+  if (stage instanceof Guard) return board.guardGroup();
+  if (stage instanceof Night) return board.werewolfGroup();
+  if (stage instanceof Witcher) return board.witcherGroup();
   if (stage instanceof Daytime) return board.daytime('');
 }
 
@@ -41,12 +45,9 @@ export const mainHandlers = [
     return getStageMessage(stage);
   }),
   createHandler(Group, TextEqual(t('Join')), User, WerewolfGame, async (user, game) => {
-    // TODO: move to game
     if (user.game && user.game !== game.groupId) return lt(`JoinedOtherGroupsGame`, user.nickname);
-
-    // TODO:  move to game
     if (game.stage instanceof Init) return t('WaitFotHostSetup');
-    else if (!(game.stage instanceof Start)) return t(`Started`);
+    if (!(game.stage instanceof Start)) return t(`Started`);
 
     game.stage.join({ id: user.userId, nickname: user.nickname });
 
@@ -56,11 +57,7 @@ export const mainHandlers = [
       updateGame(game)
     ]);
 
-    if (game.players.size < 12) {
-      return board.players(game.players.values());
-    } else {
-      return getStageMessage(game.next());
-    }
+    return getStageMessage(game.players.size === 12 ? game.next() : game.stage);
   }),
   createHandler(Single, TextEqual(t('MyCharacter')), IsPlayer, async ({ character }) => {
     return board.myCharacter(character);

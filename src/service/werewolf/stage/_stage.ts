@@ -1,12 +1,15 @@
 import { Exclude, Transform, TransformationType, instanceToPlain, plainToInstance } from 'class-transformer';
 import { Character, characters } from '../character';
+import { Constructable } from '@/types';
 
 const characterMap: Record<string, typeof Character> = {};
+const characterNameMap = new Map<typeof Character, string>();
 
 for (const k in characters) {
   const constructor = characters[k as keyof typeof characters];
   if (Object.prototype.isPrototypeOf.call(Character, constructor)) {
     characterMap[k] = constructor;
+    characterNameMap.set(constructor, k);
   }
 }
 
@@ -16,6 +19,15 @@ export class Stage {
   host: string; // host userId
 
   turn = 0;
+
+  numOfPlayers: number | 'flexible' = 'flexible';
+
+  @Transform(({ value, type }) => {
+    return type === TransformationType.CLASS_TO_PLAIN
+      ? value.map((constructor: typeof Character) => characterNameMap.get(constructor))
+      : value.map((name: string) => characterMap[name]);
+  })
+  characters: (typeof Character)[] = [];
 
   @Transform(({ value, options, type }) => {
     return type === TransformationType.CLASS_TO_PLAIN
@@ -58,6 +70,19 @@ export class Stage {
       endTurn = !player.endTurn ? false : endTurn;
     });
     return endTurn;
+  }
+
+  getPlayersByCharacter<C extends Character>(
+    CharacterConstructor: Constructable<C>,
+    from: Array<Character> | Map<string, Character> = this.players
+  ) {
+    const targets: C[] = [];
+    from.forEach(c => {
+      if (c instanceof CharacterConstructor) {
+        targets.push(c as C);
+      }
+    });
+    return targets;
   }
 
   next(): typeof Stage {

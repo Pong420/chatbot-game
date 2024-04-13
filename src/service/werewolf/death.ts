@@ -6,7 +6,11 @@ export class Death {
 
 export class Killed extends Death {
   readonly type = 'Killed';
+  userId: string;
+}
 
+export class Poisoned extends Death {
+  readonly type = 'Poisoned';
   userId: string;
 }
 
@@ -25,6 +29,7 @@ export type CauseOfDeath = InstanceType<(typeof death)[keyof typeof death]>;
 
 const death = {
   Killed,
+  Poisoned,
   Voting
 };
 

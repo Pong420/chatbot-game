@@ -23,4 +23,6 @@ export const IsCharacter = <C extends Character>(CharacterConstructor: Construct
     if (d.character instanceof CharacterConstructor) {
       return { ...d, character: d.character as C };
     }
+    // TODO:
+    // messages for 不，你不是
   });

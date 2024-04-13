@@ -77,12 +77,28 @@ export function myCharacter(character: Character) {
   });
 }
 
-export function night(text: string, command?: string) {
+function _night(text: string, command?: string) {
   return tableMessage({
     title: [wrapAndCenterText(t('NightBoard'))],
     rows: [[wrapAndCenterText(text)]],
     buttons: command ? [primaryButton(sendTextToBot(command))] : undefined
   });
+}
+
+export function werewolfGroup() {
+  return _night(t(`WerewolfDM`), t(`IamWerewolf`));
+}
+
+export function guardGroup() {
+  return _night(t(`GuardDM`), t(`IamGuard`));
+}
+
+export function witcherGroup() {
+  return _night(t(`WitcherDM`), t(`IamWitcher`));
+}
+
+export function predictorGrouo() {
+  return _night(t(`PredictorDM`), t(`IamPredictor`));
 }
 
 export function daytime(text: string, command?: string) {

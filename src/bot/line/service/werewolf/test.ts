@@ -4,7 +4,7 @@ import { characters } from '@werewolf/character';
 import { Werewolf } from '@werewolf/game';
 import { werewolfGameHandlers } from './handler';
 
-export const getCharacters = <C extends LineUser>(game: Werewolf, clients: C[]) =>
+export const getPlayersByCharacter = <C extends LineUser>(game: Werewolf, clients: C[]) =>
   Object.entries(characters).reduce(
     (res, [k, CharacterConstructor]) => ({
       ...res,

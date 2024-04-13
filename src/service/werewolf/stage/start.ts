@@ -3,7 +3,7 @@ import { randomPick } from '@/utils/random';
 import { Character, Villager, Werewolf } from '../character';
 import { t } from '../locales';
 import { Stage } from './_stage';
-import { Night } from './night';
+import { Dark } from './dark';
 import type { Init } from './init';
 
 /**
@@ -28,7 +28,7 @@ export class Start extends Stage {
   }
 
   next() {
-    return Night;
+    return Dark;
   }
 
   onEnd(): void {

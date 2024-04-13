@@ -1,6 +1,5 @@
 import { Exclude, Transform, TransformationType, instanceToPlain, plainToInstance } from 'class-transformer';
 import { Character, characters } from '../character';
-import { t } from '../locales';
 
 const characterMap: Record<string, typeof Character> = {};
 
@@ -62,7 +61,7 @@ export class Stage {
   }
 
   next(): typeof Stage {
-    throw t('SystemError');
+    throw "next stage haven't defined";
   }
 
   onStart() {

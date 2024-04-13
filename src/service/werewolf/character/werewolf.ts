@@ -2,7 +2,7 @@ import { Character } from './_character';
 import { Action } from '../decorators';
 import { t } from '../locales';
 import { Killed } from '../death';
-import { Night } from '../stage';
+import { Dark } from '../stage';
 
 export class Werewolf extends Character {
   readonly type = 'Werewolf';
@@ -21,20 +21,20 @@ export class Werewolf extends Character {
     this.hungry = !suicide;
   }
 
-  @Action(() => Night)
+  @Action(() => Dark)
   kill(character?: Character, nickname = '') {
     this._kill(character, nickname);
     return t('KillSuccss');
   }
 
-  @Action(() => Night)
+  @Action(() => Dark)
   idle() {
     if (this.hungry) throw t('Hungry');
     this.hungry = true;
     return t('IdleSuccess');
   }
 
-  @Action(() => Night)
+  @Action(() => Dark)
   suicide() {
     this._kill(this);
     return t('SuicideSuccss');

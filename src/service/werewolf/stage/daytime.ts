@@ -40,6 +40,7 @@ export class Daytime extends Stage {
     super.onStart();
     this.voted = [];
     this.results = { ...intialResults };
+    this.turn += 1;
 
     /**
      * this.candidates.size > 0 if previous round multiple players have the some votes

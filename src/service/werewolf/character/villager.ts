@@ -1,4 +1,4 @@
-import { t } from '@werewolf/locales';
+import { t } from '../locales';
 import { Character } from './_character';
 
 export class Villager extends Character {

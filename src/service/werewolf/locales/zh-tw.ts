@@ -3,11 +3,11 @@ import { characters } from '@werewolf/character';
 
 export const Character: Record<keyof typeof characters, string> = {
   Villager: `村民`,
-  Werewolf: `狼人`
-  // Witcher: `女巫`,
-  // Guard: `守衛`,
-  // Hunter: `獵人`,
-  // Predictor: `預言家`
+  Werewolf: `狼人`,
+  Witcher: `女巫`,
+  Guard: `守衛`,
+  Hunter: `獵人`,
+  Predictor: `預言家`
 };
 
 export const IamCommand = (() => {
@@ -109,6 +109,7 @@ export default defineMessages(
     CharacterIntroButton: '角色簡介',
 
     NightBoard: '現在是晚上',
+    GettingDark: '天快黑了',
     WerewolfEnd: `狼人已選擇目標`,
 
     IamWerewolfGroup: [`喂，是警察叔叔嗎，這裏有狼人哇`, `欸，我也是耶，「嗷嗚~~」`, `「嗷嗚~~」`],

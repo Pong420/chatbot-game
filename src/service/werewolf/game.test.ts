@@ -2,7 +2,7 @@ import { test, expect } from 'vitest';
 import { Constructable } from '@/types';
 import { Game } from './game';
 import { Character, Villager, Werewolf } from './character';
-import { Init, Start, Night, Daytime, Stage, End, stages, Voted } from './stage';
+import { Init, Start, Daytime, Stage, End, stages, Voted, Dark } from './stage';
 import { t } from './locales';
 import { Voting } from './death';
 
@@ -74,8 +74,7 @@ test('flow', () => {
   createGame({ numOfPlayers: 6 });
   expect(game.players.size).toBe(6);
 
-  next(Night);
-  expect(stage.turn).toBe(1);
+  next(Dark);
   expect(werewolfs.length).toBeGreaterThanOrEqual(1);
   expect(villagers.length).toBeGreaterThanOrEqual(1);
   expect(() => game.next()).toThrowError(t('StageNotEnded'));
@@ -159,7 +158,7 @@ test('flow', () => {
 
   // --------------------------------------------------------------------------------
 
-  next(Night);
+  next(Dark);
 
   expect(() => werewolfs[0].kill(villagers[1])).toThrowError(t('TargetIsDead', villagers[1].nickname)); // expecet not to VoteOutOfRange
   werewolfs[0].kill(villagers[2]);

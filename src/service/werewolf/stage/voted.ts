@@ -1,5 +1,5 @@
 import { Stage } from './_stage';
-import { Night } from './night';
+import { Dark } from './dark';
 import { VoteResult } from './daytime';
 
 export class Voted extends Stage {
@@ -8,6 +8,6 @@ export class Voted extends Stage {
   results: VoteResult;
 
   next(): typeof Stage {
-    return Night;
+    return Dark;
   }
 }

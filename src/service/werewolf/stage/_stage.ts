@@ -1,6 +1,6 @@
 import { Exclude, Transform, TransformationType, instanceToPlain, plainToInstance } from 'class-transformer';
-import { Character, characters } from '../character';
 import { Constructable } from '@/types';
+import { Character, characters } from '../character';
 
 const characterMap: Record<string, typeof Character> = {};
 const characterNameMap = new Map<typeof Character, string>();

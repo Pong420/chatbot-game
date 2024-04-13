@@ -1,96 +1,22 @@
 import { test, expect } from 'vitest';
-import { Constructable } from '@/types';
 import { Game } from './game';
-import { Character, Guard, Hunter, Predictor, Villager, Werewolf, Witcher } from './character';
-import { Init, Start, Daytime, Stage, End, stages, Voted, Night } from './stage';
+import { Daytime, End, Voted, Night, Start, Stage } from './stage';
+import { Character, Villager, Werewolf } from './character';
 import { t } from './locales';
 import { Voting } from './death';
+import { werewolfTestUtils } from './test';
 
-interface CreateGameOptions {
-  numOfPlayers?: number;
-  characters?: (typeof Character)[];
-}
+declare let game: Game;
+declare let stage: Stage;
+declare let survivors: Character[];
+declare let werewolfs: Werewolf[];
+declare let villagers: Villager[];
 
-let game: Game = Game.create({ groupId: '1' });
-let stage: Stage = game.stage;
-let survivors: Character[] = [];
-let werewolfs: Werewolf[] = [];
-let villagers: Villager[] = [];
-let hunters: Hunter[] = [];
-let guards: Guard[] = [];
-let predictors: Predictor[] = [];
-let witchers: Witcher[] = [];
-
-const testSerialisation = () => {
-  const serialized = game.serialize();
-  expect(serialized.data).not.toHaveProperty('survivors');
-
-  // TODO: stringify
-
-  let newGame = Game.create(serialized);
-  newGame = Game.create(serialized); // this check serialized is not updated
-
-  // make sure the stage.name is not renamed
-  const StageConstructor = stages[game.stage.name as keyof typeof stages];
-  expect(Object.prototype.isPrototypeOf.call(Stage, StageConstructor)).toBeTruthy();
-
-  newGame.players.forEach(player => {
-    expect(player.constructor).not.toEqual(Character);
-    expect(player).toBeInstanceOf(Character);
-    expect(player).toStrictEqual(game.players.get(player.id)!);
-  });
-
-  expect(newGame.stage.survivors).toHaveLength(game.stage.survivors.length);
-  expect(Object.keys(newGame.stage.playersByName)).toHaveLength(game.stage.players.size);
-  expect(game.stage).toStrictEqual(newGame.stage);
-};
-
-const next = <S extends Stage>(StageConstructor: Constructable<S>) => {
-  stage = game.next();
-  testSerialisation();
-  expect(stage).toBeInstanceOf(StageConstructor);
-
-  survivors = game.stage.survivors;
-  werewolfs = game.getPlayersByCharacter(Werewolf);
-  villagers = game.getPlayersByCharacter(Villager);
-  hunters = game.getPlayersByCharacter(Hunter);
-  guards = game.getPlayersByCharacter(Guard);
-  predictors = game.getPlayersByCharacter(Predictor);
-  witchers = game.getPlayersByCharacter(Witcher);
-
-  return stage as S;
-};
-
-const createGame = ({ numOfPlayers = 12, characters = [] }: CreateGameOptions) => {
-  game = Game.create({ groupId: '1' });
-  stage = game.stage;
-
-  expect(stage).toBeInstanceOf(Init);
-  const init = stage as Init;
-  init.numOfPlayers = numOfPlayers;
-  init.characters = characters;
-  testSerialisation();
-
-  next(Start);
-  expect(stage.characters).toHaveLength(numOfPlayers);
-  expect(() => game.next()).toThrowError(t('NoEnoughPlayers', numOfPlayers));
-
-  for (let i = 0; i < numOfPlayers; i++) {
-    const name = `player_${i}`;
-    const join = () => (stage as Start).join({ id: `${i}`, nickname: `player_${i}` });
-
-    if (i >= 12) {
-      expect(join).toThrowError(t('GameIsFull', name)); // full
-    } else {
-      join();
-      expect(join).toThrowError(t('Joined', name)); // duplicated join
-    }
-  }
-  expect(game.players.size).toEqual(Math.min(numOfPlayers, 12));
-};
-
-test('flow', () => {
+test('basic', () => {
+  const { createGame, next } = werewolfTestUtils();
   createGame({ numOfPlayers: 6, characters: [Werewolf, Villager, Villager, Villager, Villager, Villager] });
+
+  expect(game.stage).toBeInstanceOf(Start);
   expect(game.players.size).toBe(6);
 
   next(Night);

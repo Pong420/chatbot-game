@@ -1,10 +1,12 @@
 import { Transform, TransformationType } from 'class-transformer';
-import { Voted } from '../death';
 import { t } from '../locales';
 import { Stage } from './_stage';
-import { Night } from './night';
+import { Voted } from './voted';
+import { Voting } from '../death';
 
-const intialResults = { numberOfVotes: 0, count: 0, players: [] as string[] };
+const intialResults = { numberOfVotes: 0, count: 0, players: [] as string[], votes: [] as string[] };
+
+export type VoteResult = typeof intialResults;
 
 export class Daytime extends Stage {
   readonly name = 'Daytime';
@@ -14,7 +16,7 @@ export class Daytime extends Stage {
   @Transform(({ type, value }) => (type === TransformationType.CLASS_TO_PLAIN ? Array.from(value) : new Map(value)))
   candidates = new Map<string, string[]>();
 
-  results: typeof intialResults;
+  results: VoteResult;
 
   countResults() {
     const results = { ...this.results };
@@ -26,6 +28,7 @@ export class Daytime extends Stage {
         }
         results.count = votes.length;
         results.players.push(id);
+        results.votes = votes;
       }
       results.numberOfVotes += votes.length;
     });
@@ -68,7 +71,7 @@ export class Daytime extends Stage {
         const [id] = results.players;
         const player = this.players.get(id);
         if (!player) throw t('SystemError');
-        player.dead(Voted, { votes: this.candidates.get(id), total: results.numberOfVotes });
+        player.dead(Voting, { votes: this.candidates.get(id), total: results.numberOfVotes });
         this.candidates.clear();
       }
     } else {
@@ -79,6 +82,6 @@ export class Daytime extends Stage {
   }
 
   next(): typeof Stage {
-    return this.candidates.size ? Daytime : Night;
+    return this.candidates.size ? Daytime : Voted;
   }
 }

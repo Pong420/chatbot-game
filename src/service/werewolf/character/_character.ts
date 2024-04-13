@@ -1,6 +1,6 @@
 import { Exclude, plainToInstance, Type } from 'class-transformer';
 import { Constructable } from '@/types';
-import { Voted, CauseOfDeath, Death, deathSubTypes, Killed } from '../death';
+import { Voting, CauseOfDeath, Death, deathSubTypes, Killed } from '../death';
 import { Daytime, type Stage } from '../stage';
 import { Action } from '../decorators';
 import { t } from '../locales';
@@ -69,7 +69,7 @@ export class Character {
     return this.causeOfDeath.some(c => c instanceof Killed && c.userId === character.id);
   }
 
-  isKillByVoted() {
-    return this.causeOfDeath.some(c => c instanceof Voted);
+  isKillByVoting() {
+    return this.causeOfDeath.some(c => c instanceof Voting);
   }
 }

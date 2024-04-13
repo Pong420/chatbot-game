@@ -10,8 +10,8 @@ export class Killed extends Death {
   userId: string;
 }
 
-export class Voted extends Death {
-  readonly type = 'Voted';
+export class Voting extends Death {
+  readonly type = 'Voting';
 
   votes: string[] = [];
   total: number;
@@ -25,7 +25,7 @@ export type CauseOfDeath = InstanceType<(typeof death)[keyof typeof death]>;
 
 const death = {
   Killed,
-  Voted
+  Voting
 };
 
 export const deathSubTypes: DiscriminatorDescriptor['subTypes'] = [];

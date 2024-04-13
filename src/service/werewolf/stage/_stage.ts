@@ -1,5 +1,4 @@
 import { Exclude, Transform, TransformationType, instanceToPlain, plainToInstance } from 'class-transformer';
-import { Constructable } from '@/types';
 import { Character, characters } from '../character';
 import { t } from '../locales';
 
@@ -35,9 +34,6 @@ export class Stage {
   @Exclude()
   playersByName: Record<string, Character> = {};
 
-  /**
-   * This reduce the size of serialized data
-   */
   _survivors: string[] = [];
 
   @Exclude()
@@ -45,24 +41,16 @@ export class Stage {
     return this._survivors.map(id => this.players.get(id)!);
   }
 
+  @Exclude()
+  get nearDeath() {
+    return this.survivors.filter(s => !!s.causeOfDeath.length);
+  }
+
   init() {
     this.players.forEach(player => {
       player.stage = this;
       this.playersByName[player.nickname] = player;
     });
-  }
-
-  getCharacters<C extends Character>(
-    CharacterConstructor: Constructable<C>,
-    from: Array<Character> | Map<string, Character> = this.players
-  ) {
-    const targets: C[] = [];
-    from.forEach(c => {
-      if (c instanceof CharacterConstructor) {
-        targets.push(c as C);
-      }
-    });
-    return targets;
   }
 
   ended() {

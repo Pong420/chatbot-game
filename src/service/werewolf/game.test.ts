@@ -1,9 +1,10 @@
 import { test, expect } from 'vitest';
+import { Constructable } from '@/types';
 import { Game } from './game';
 import { Character, Villager, Werewolf } from './character';
-import { Init, Start, Night, Daytime, Stage, End, stages } from './stage';
+import { Init, Start, Night, Daytime, Stage, End, stages, Voted } from './stage';
 import { t } from './locales';
-import { Voted } from './death';
+import { Voting } from './death';
 
 let game: Game = Game.create({ groupId: '1' });
 let stage: Stage = game.stage;
@@ -33,7 +34,7 @@ const testSerialisation = () => {
   expect(game.stage).toStrictEqual(newGame.stage);
 };
 
-const next = (StageConstructor: typeof Stage) => {
+const next = <S extends Stage>(StageConstructor: Constructable<S>) => {
   stage = game.next();
   testSerialisation();
   expect(stage).toBeInstanceOf(StageConstructor);
@@ -41,6 +42,8 @@ const next = (StageConstructor: typeof Stage) => {
   survivors = game.stage.survivors;
   werewolfs = game.getCharacters(Werewolf);
   villagers = game.getCharacters(Villager);
+
+  return stage as S;
 };
 
 const createGame = ({ numOfPlayers = 13 } = {}) => {
@@ -80,18 +83,17 @@ test('flow', () => {
   werewolfs[0].kill(villagers[0]);
   werewolfs.forEach(w => !w.endTurn && w.idle());
   expect(() => werewolfs[0].kill(villagers[0])).toThrowError(t(`TurnEnded`));
-
   expect(() => werewolfs[0].vote(villagers[0])).toThrowError(t('VoteNotStarted'));
+  expect(stage.nearDeath).toHaveLength(1);
 
   // --------------------------------------------------------------------------------
 
   // test vote and vote to self
-  next(Daytime);
+  let daytime = next(Daytime);
   expect(survivors).toHaveLength(stage.players.size - 1);
   expect(survivors).not.toContainEqual(villagers[0]);
   expect(() => werewolfs[0].kill(villagers[1])).toThrowError(t('NotYourTurn'));
 
-  let daytime = stage as Daytime;
   expect(() => villagers[0].vote(villagers[0])).toThrowError(t('YouDead'));
   expect(() => villagers[0].vote(villagers[1])).toThrowError(t('YouDead'));
   expect(() => villagers[2].vote(villagers[0])).toThrowError(t('TargetIsDead', villagers[0].nickname));
@@ -113,8 +115,7 @@ test('flow', () => {
 
   // everyone gets one vote in previous round, so vote again
   for (let i = 0; i < 10; i++) {
-    next(Daytime);
-    daytime = stage as Daytime;
+    daytime = next(Daytime);
 
     if (i === 0) {
       expect(daytime.candidates.size).toBe(survivors.length);
@@ -135,8 +136,7 @@ test('flow', () => {
   // --------------------------------------------------------------------------------
 
   // two players gets one vote, others player wavied, so vote again
-  next(Daytime);
-  daytime = stage as Daytime;
+  daytime = next(Daytime);
   survivors.forEach(survivor => (survivor.id === villagers[1].id ? survivor.waive() : survivor.vote(villagers[1])));
 
   expect(daytime.countResults()).toMatchObject({ numberOfVotes: survivors.length - 1, count: survivors.length - 1 });
@@ -145,13 +145,25 @@ test('flow', () => {
 
   // villagers[1] is dead by voting
 
-  next(Night);
-  expect(villagers[1].causeOfDeath[0]).toBeInstanceOf(Voted);
-  expect(villagers[1].causeOfDeath[0] as Voted).toHaveProperty('total', survivors.length);
+  const voted = next(Voted);
+
+  expect(voted.results).toEqual({
+    numberOfVotes: survivors.length,
+    count: survivors.length,
+    players: [villagers[1].id],
+    votes: Array.from({ length: 4 }, () => expect.any(String))
+  });
+  expect(villagers[1].causeOfDeath[0]).toBeInstanceOf(Voting);
+  expect(villagers[1].causeOfDeath[0] as Voting).toHaveProperty('total', survivors.length);
   expect(survivors).toHaveLength(stage.players.size - 2);
+
+  // --------------------------------------------------------------------------------
+
+  next(Night);
 
   expect(() => werewolfs[0].kill(villagers[1])).toThrowError(t('TargetIsDead', villagers[1].nickname)); // expecet not to VoteOutOfRange
   werewolfs[0].kill(villagers[2]);
+  expect(stage.nearDeath).toHaveLength(1);
 
   // --------------------------------------------------------------------------------
 

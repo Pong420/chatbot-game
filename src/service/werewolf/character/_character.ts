@@ -16,6 +16,7 @@ export class Character {
 
   turn = 1;
   endTurn = true;
+
   isDead = false;
 
   @Type(() => Death, {
@@ -26,6 +27,8 @@ export class Character {
     }
   })
   causeOfDeath: CauseOfDeath[] = [];
+
+  isProtected: string[] = [];
 
   @Exclude()
   stage: Stage;

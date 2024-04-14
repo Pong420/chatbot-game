@@ -11,8 +11,9 @@ export class Predictor extends Character {
 
   @Action(() => PredictorStage)
   predict(character: Character) {
-    if (character.isDead) throw t(`TargetIsDead`, character.nickname);
-    if (this.id === character.id) throw t(`PredictSelf`, character.nickname);
+    const self = this.id === character.id;
+    if (character.isDead) throw self ? t('YouDead') : t('TargetIsDead', character.nickname);
+    if (self) throw t(`PredictSelf`, character.nickname);
     if (this.predicted.includes(character.id)) throw t('Predicted', character.nickname, character.name);
     this.predicted.push(character.id);
     return t('PredictSuccess', character.nickname, character.name);

@@ -111,11 +111,16 @@ export function werewolfTestUtils() {
     });
   };
 
+  const allWaive = () => {
+    survivors.forEach(survivor => survivor.waive());
+  };
+
   return {
     createGame,
     testSerialisation,
     next,
     nextStage,
-    allVoteTo
+    allVoteTo,
+    allWaive
   };
 }

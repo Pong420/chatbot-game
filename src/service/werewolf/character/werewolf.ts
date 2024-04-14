@@ -8,7 +8,7 @@ export class Werewolf extends Character {
   readonly type = 'Werewolf';
   readonly name = t('Werewolf');
 
-  // as records, target could rescued or procteded
+  // as records, target could rescued or protected
   killed: string[] = [];
 
   hungry = false;
@@ -19,10 +19,14 @@ export class Werewolf extends Character {
     const suicide = this.id === character.id;
     if (character.isDead) throw t('CantKillDeadTarget', character.id === this.id ? t('Self') : character.nickname);
     if (character.isKilledBy(this)) throw suicide ? t('DuplicatedSuicide') : t('DuplicatedKill');
+    if (character.isProtected.length) {
+      character.isProtected = character.isProtected.slice(0, -1);
+    } else {
+      character.dead(Killed, { userId: this.id });
+    }
 
-    character.dead(Killed, { userId: this.id });
     this.killed.push(character.id);
-    this.hungry = this.hungry ? !this.suicide : false;
+    this.hungry = false;
   }
 
   @Action(() => Night)

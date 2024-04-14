@@ -79,6 +79,7 @@ export class Daytime extends Stage {
       }
     } else {
       // all wavied
+      this.candidates.clear();
     }
 
     /**

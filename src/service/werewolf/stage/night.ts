@@ -9,14 +9,14 @@ export class Night extends Stage {
 
   onStart(): void {
     super.onStart();
-    this.survivors.forEach(player => {
-      if (player instanceof Werewolf) {
-        player.endTurn = false;
+    this.survivors.forEach(survivor => {
+      if (survivor instanceof Werewolf) {
+        survivor.endTurn = false;
       }
     });
   }
 
   next(): typeof Stage {
-    return WitcherStage.available(this) ? WitcherStage : PredictorStage.available(this) ? PredictorStage : Daytime;
+    return WitcherStage.available(this) || PredictorStage.available(this) || Daytime;
   }
 }

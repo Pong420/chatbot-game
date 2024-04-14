@@ -7,7 +7,7 @@ export class Witcher extends Stage {
   readonly name = 'Witcher';
 
   static available(stage: Stage) {
-    return !!stage.getPlayersByCharacter(WitcherCharacter, stage.survivors).length;
+    return !!stage.getPlayersByCharacter(WitcherCharacter, stage.survivors).length ? Witcher : undefined;
   }
 
   onStart(): void {
@@ -20,6 +20,6 @@ export class Witcher extends Stage {
   }
 
   next(): typeof Stage {
-    return PredictorStage.available(this) ? PredictorStage : Night;
+    return PredictorStage.available(this) || Night;
   }
 }

@@ -6,15 +6,15 @@ export class Predictor extends Stage {
   readonly name = 'Predictor';
 
   static available(stage: Stage) {
-    return !!stage.getPlayersByCharacter(PredictorCharacter, stage.survivors).length;
+    return !!stage.getPlayersByCharacter(PredictorCharacter, stage.survivors).length ? Predictor : undefined;
   }
 
   onStart(): void {
     super.onStart();
-    this.survivors.forEach(player => {
-      if (player instanceof PredictorCharacter) {
+    this.survivors.forEach(survivor => {
+      if (survivor instanceof PredictorCharacter) {
         // if all survivors predicted, player turn should be ended
-        player.endTurn = this.survivors.every(survivor => player.predicted.includes(survivor.id));
+        survivor.endTurn = this.survivors.every(s => survivor.predicted.includes(s.id));
       }
     });
   }

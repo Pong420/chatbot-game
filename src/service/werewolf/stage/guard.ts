@@ -8,19 +8,24 @@ export class Guard extends Stage {
   readonly name = 'Guard';
 
   static available(stage: Stage) {
-    return !!stage.getPlayersByCharacter(GuardCharacter, stage.survivors).length;
+    return !!stage.getPlayersByCharacter(GuardCharacter, stage.survivors).length ? Guard : undefined;
   }
 
   onStart(): void {
     super.onStart();
-    this.survivors.forEach(player => {
-      if (player instanceof GuardCharacter) {
-        player.endTurn = false;
+
+    this.players.forEach(player => {
+      player.isProtected = [];
+    });
+
+    this.survivors.forEach(survivor => {
+      if (survivor instanceof GuardCharacter) {
+        survivor.endTurn = false;
       }
     });
   }
 
   next(): typeof Stage {
-    return WitcherStage.available(this) ? WitcherStage : PredictorStage.available(this) ? PredictorStage : Night;
+    return WitcherStage.available(this) || PredictorStage.available(this) || Night;
   }
 }

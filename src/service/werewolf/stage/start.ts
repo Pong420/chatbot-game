@@ -55,7 +55,7 @@ export class Start extends Stage {
   }
 
   next(): typeof Stage {
-    return GuardStage.available(this) ? GuardStage : Night;
+    return GuardStage.available(this) || Night;
   }
 
   onEnd(): void {

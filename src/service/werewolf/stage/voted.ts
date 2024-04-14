@@ -1,5 +1,6 @@
 import { Stage } from './_stage';
 import { Night } from './night';
+import { Guard } from './guard';
 import { VoteResult } from './daytime';
 
 export class Voted extends Stage {
@@ -7,7 +8,7 @@ export class Voted extends Stage {
 
   results: VoteResult;
 
-  next() {
-    return Night;
+  next(): typeof Stage {
+    return Guard.available(this) || Night;
   }
 }

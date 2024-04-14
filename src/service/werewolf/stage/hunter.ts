@@ -8,9 +8,9 @@ export class Hunter extends Stage {
 
   onStart(): void {
     super.onStart();
-    this.survivors.forEach(player => {
-      if (player instanceof HunterCharacter) {
-        player.endTurn = false;
+    this.survivors.forEach(survivor => {
+      if (survivor instanceof HunterCharacter) {
+        survivor.endTurn = false;
       }
     });
   }

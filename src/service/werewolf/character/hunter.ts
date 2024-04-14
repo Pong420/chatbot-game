@@ -7,6 +7,7 @@ import { Character } from './_character';
 export class Hunter extends Character {
   readonly type = 'Hunter';
   readonly name = t('Hunter');
+  readonly good = true;
 
   shot?: string;
   canShot = false;

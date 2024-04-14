@@ -6,6 +6,7 @@ import { Character } from './_character';
 export class Predictor extends Character {
   readonly type = 'Predictor';
   readonly name = t('Predictor');
+  readonly good = true;
 
   predicted: string[] = [];
 
@@ -16,6 +17,6 @@ export class Predictor extends Character {
     if (self) throw t(`PredictSelf`, character.nickname);
     if (this.predicted.includes(character.id)) throw t('Predicted', character.nickname, character.name);
     this.predicted.push(character.id);
-    return t('PredictSuccess', character.nickname, character.name);
+    return t(character.good ? 'PredictResultGood' : 'PredictResultBad', character.nickname);
   }
 }

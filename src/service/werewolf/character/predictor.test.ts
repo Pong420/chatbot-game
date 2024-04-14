@@ -27,7 +27,7 @@ test('predictor', () => {
   nextStage('Predictor');
 
   expect(() => predictors[0].predict(predictors[0])).toThrowError(t('PredictSelf', predictors[0].nickname));
-  expect(predictors[0].predict(villagers[0])).toEqual(t('PredictSuccess', villagers[0].nickname, villagers[0].name));
+  expect(predictors[0].predict(villagers[0])).toEqual(t('PredictResultGood', villagers[0].nickname));
   expect(predictors[0].predicted).toHaveLength(1);
   expect(() => predictors[0].predict(villagers[1])).toThrowError(t('TurnEnded'));
 
@@ -42,7 +42,7 @@ test('predictor', () => {
 
   // cannot predict dead target
   expect(() => predictors[0].predict(villagers[1])).toThrowError(t('TargetIsDead', villagers[1].nickname));
-  expect(predictors[0].predict(werewolfs[0])).toEqual(t('PredictSuccess', werewolfs[0].nickname, werewolfs[0].name));
+  expect(predictors[0].predict(werewolfs[0])).toEqual(t('PredictResultBad', werewolfs[0].nickname));
   expect(predictors[0].predicted).toHaveLength(2);
 
   nextStage('Daytime');
@@ -60,7 +60,7 @@ test('predictor', () => {
   expect(() => predictors[0].predict(werewolfs[0])).toThrowError(
     t('Predicted', werewolfs[0].nickname, werewolfs[0].name)
   );
-  expect(predictors[0].predict(villagers[3])).toEqual(t('PredictSuccess', villagers[3].nickname, villagers[3].name));
+  expect(predictors[0].predict(villagers[3])).toEqual(t('PredictResultGood', villagers[3].nickname));
 
   nextStage('Daytime');
   expect(predictors[0].isDead).toBeTrue();

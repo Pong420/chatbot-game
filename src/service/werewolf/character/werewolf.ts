@@ -7,6 +7,7 @@ import { Night } from '../stage';
 export class Werewolf extends Character {
   readonly type = 'Werewolf';
   readonly name = t('Werewolf');
+  readonly good = false;
 
   // as records, target could rescued or protected
   killed: string[] = [];

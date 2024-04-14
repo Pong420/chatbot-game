@@ -185,7 +185,8 @@ export default defineMessages(
     PoisonSelf: ['這不是正常操作，選別人吧'],
 
     IamPredictorGroup: [`看，這裏有個神棍`, `請給我下期的彩票號碼，拜託了`],
-    PredictSuccess: `{0}是【{1}】`,
+    PredictResultGood: `{0}是好人`,
+    PredictResultBad: `{0}是壞人`,
     Predicted: `你已經知道「{0}」的身份是【{1}】，偷窺其他人吧`,
     PredictSelf: [`{0}是【神棍】`, `{0}是【偷窺狂】`],
 

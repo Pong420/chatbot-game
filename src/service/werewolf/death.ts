@@ -5,17 +5,16 @@ export class Death {
 }
 
 export class Killed extends Death {
-  readonly type = 'Killed';
+  type = 'Killed';
   userId: string;
 }
 
-export class Poisoned extends Death {
-  readonly type = 'Poisoned';
-  userId: string;
+export class Poisoned extends Killed {
+  type = 'Poisoned';
 }
 
 export class Voting extends Death {
-  readonly type = 'Voting';
+  type = 'Voting';
 
   votes: string[] = [];
   total: number;

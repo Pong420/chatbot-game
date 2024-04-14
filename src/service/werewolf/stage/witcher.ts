@@ -1,7 +1,7 @@
-import { Stage } from './_stage';
-import { Night } from './night';
 import { Witcher as WitcherCharacter } from '../character';
+import { Stage } from './_stage';
 import { Predictor as PredictorStage } from './predictor';
+import { Daytime } from './daytime';
 
 export class Witcher extends Stage {
   readonly name = 'Witcher';
@@ -20,6 +20,6 @@ export class Witcher extends Stage {
   }
 
   next(): typeof Stage {
-    return PredictorStage.available(this) || Night;
+    return PredictorStage.available(this) || Daytime;
   }
 }

@@ -179,8 +179,9 @@ export default defineMessages(
     RescueSuccess: [`阿彌陀佛，救人一命，勝造七級浮屠`, `你是個好人`],
     RescueSelfSuccess: [`只有自己可以救自己`, `沒錯，自私一點有錯麼？`, '人不為己，天誅地滅', '正所謂，死道友不死貧道'],
     PoisonSuccess: [`毒藥用對了，也是救命藥，希望你的選擇沒有錯`, `對，病人該吃藥了!`],
-    RescueFailed: `沒有藥了`,
-    PoisonFailed: `沒有毒藥了`,
+    TargetNotInjured: `{0}沒有受傷啊`,
+    Rescued: `沒有傷藥了`,
+    Poisoned: `沒有毒藥了`,
     PoisonSelf: ['這不是正常操作，選別人吧'],
 
     IamPredictorGroup: [`看，這裏有個神棍`, `請給我下期的彩票號碼，拜託了`],

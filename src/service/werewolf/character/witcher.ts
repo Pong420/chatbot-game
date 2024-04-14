@@ -16,22 +16,33 @@ export class Witcher extends Character {
 
   @Action(() => WitcherStage)
   rescue(character: Character) {
-    if (this.rescued) throw t(`RescueFailed`);
+    if (this.rescued) throw t(`Rescued`);
+    if (character.isDead) throw t(`TargetIsDead`, character.nickname);
+
     const self = this.id === character.id;
+    const index = character.causeOfDeath.findIndex(c => c instanceof Killed);
+    if (index === -1) throw t(`TargetNotInjured`, character.nickname);
 
     this.rescued = character.id;
-    const index = character.causeOfDeath.findIndex(c => c instanceof Killed);
     character.causeOfDeath = [...character.causeOfDeath.slice(0, index), ...character.causeOfDeath.slice(index + 1)];
+
     return self ? t('RescueSelfSuccess') : t('RescueSuccess');
   }
 
   @Action(() => WitcherStage)
   poison(character: Character) {
-    if (this.poisoned) throw t(`PoisonFailed`);
+    if (this.poisoned) throw t(`Poisoned`);
+    if (character.isDead) throw t(`CantKillDeadTarget`, character.nickname);
+
     const self = this.id === character.id;
 
     this.poisoned = character.id;
     character.dead(Poisoned, { userId: this.id });
     return self ? t(`PoisonSelf`) : t('PoisonSuccess');
+  }
+
+  @Action(() => WitcherStage)
+  idle() {
+    //
   }
 }

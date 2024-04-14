@@ -3,8 +3,8 @@ import { Game } from './game';
 import { Daytime, End, Voted, Night, Start, Stage } from './stage';
 import { Character, Villager, Werewolf } from './character';
 import { t } from './locales';
-import { Voting } from './death';
 import { werewolfTestUtils } from './test';
+import { Voting } from './death';
 
 declare let game: Game;
 declare let stage: Stage;
@@ -15,7 +15,7 @@ declare let villagers: Villager[];
 // TODO: test turn
 
 test('basic', () => {
-  const { createGame, next } = werewolfTestUtils();
+  const { createGame, next, allVoteTo, allWaive } = werewolfTestUtils();
   createGame({ numOfPlayers: 6, characters: [Werewolf, Villager, Villager, Villager, Villager, Villager] });
 
   expect(game.stage).toBeInstanceOf(Start);
@@ -34,7 +34,6 @@ test('basic', () => {
 
   // --------------------------------------------------------------------------------
 
-  // test vote and vote to self
   let daytime = next(Daytime);
   expect(survivors).toHaveLength(5);
   expect(survivors).not.toContainEqual(villagers[0]);
@@ -48,81 +47,55 @@ test('basic', () => {
   werewolfs[0].vote(villagers[1]);
 
   expect(() => game.next()).toThrowError(t('StageNotEnded'));
-  survivors.forEach(survivor => {
-    if (survivor.endTurn) return;
-    expect(survivor.vote(survivor)).toMatchObject({ self: true });
-  });
-  survivors.forEach(survivor => {
-    expect(daytime.candidates.get(survivor.id)).toHaveLength(1);
-  });
-  expect(daytime.countResults()).toMatchObject({ numberOfVotes: survivors.length, count: 1 });
+  allWaive();
+  expect(daytime.countResults()).toMatchObject({ numberOfVotes: 2, count: 1 });
 
   // --------------------------------------------------------------------------------
 
-  // everyone gets one vote in previous round, so vote again
-  for (let i = 0; i < 10; i++) {
-    daytime = next(Daytime);
-
-    if (i === 0) {
-      expect(daytime.candidates.size).toBe(survivors.length);
-    } else {
-      expect(daytime.candidates.size).toBe(2);
-    }
-
-    expect(() => game.next()).toThrowError(t('StageNotEnded'));
-    expect(() => villagers[2].vote(villagers[0])).toThrowError(t('CantKillDeadTarget', villagers[0].nickname)); // expecet not to VoteOutOfRange
-
-    villagers[1].vote(werewolfs[0]);
-    werewolfs[0].vote(villagers[1]);
-    survivors.forEach(survivor => !survivor.endTurn && survivor.waive());
-
-    expect(daytime.countResults()).toMatchObject({ numberOfVotes: 2, count: 1 });
-  }
-
-  // --------------------------------------------------------------------------------
-
-  // two players gets one vote, others player wavied, so vote again
+  // two players got one vote, enter second round
   daytime = next(Daytime);
-  expect(survivors).toHaveLength(5);
-  survivors.forEach(survivor => (survivor.id === villagers[1].id ? survivor.waive() : survivor.vote(villagers[1])));
 
-  expect(daytime.countResults()).toMatchObject({ numberOfVotes: 4, count: 4 });
+  expect(daytime.candidates.size).toBe(2);
+
+  expect(() => game.next()).toThrowError(t('StageNotEnded'));
+  expect(() => villagers[2].vote(villagers[0])).toThrowError(t('CantKillDeadTarget', villagers[0].nickname)); // expecet not to VoteOutOfRange
+
+  expect(() => villagers[1].vote(werewolfs[0])).toThrowError(t(`TurnEnded`));
+  expect(() => werewolfs[0].vote(villagers[1])).toThrowError(t(`TurnEnded`));
+
+  allWaive();
+
+  expect(daytime.countResults()).toMatchObject({ numberOfVotes: 0, count: 0 });
 
   // --------------------------------------------------------------------------------
-
-  // villagers[1] is dead by voting
 
   const voted = next(Voted);
-  expect(survivors).toHaveLength(4);
+  expect(survivors).toHaveLength(5);
 
   expect(voted.results).toEqual({
-    numberOfVotes: 4,
-    count: 4,
-    players: [villagers[1].id],
-    votes: Array.from({ length: 4 }, () => expect.any(String))
+    numberOfVotes: 0,
+    count: 0,
+    players: [],
+    votes: []
   });
-  expect(villagers[1].causeOfDeath[0]).toBeInstanceOf(Voting);
-  expect(villagers[1].causeOfDeath[0] as Voting).toHaveProperty('total', 4);
 
   // --------------------------------------------------------------------------------
 
   next(Night);
 
-  expect(() => werewolfs[0].kill(villagers[1])).toThrowError(t('CantKillDeadTarget', villagers[1].nickname)); // expecet not to VoteOutOfRange
-  werewolfs[0].kill(villagers[2]);
+  expect(werewolfs[0].kill(villagers[1])).toEqual(t(`KillSuccss`));
   expect(stage.nearDeath).toHaveLength(1);
 
   // --------------------------------------------------------------------------------
 
-  // villagers[2] is killed by werewolf
-
-  next(Daytime);
-  expect(survivors).toHaveLength(3);
-  werewolfs[0].vote(villagers[3]);
-  villagers[4].vote(villagers[3]);
-  villagers[3].vote(werewolfs[0]);
+  daytime = next(Daytime);
+  expect(daytime.secondRound).toBeFalse();
+  allVoteTo(werewolfs[0]);
 
   // --------------------------------------------------------------------------------
 
   next(End);
+
+  expect(werewolfs[0].isDead).toBeTrue();
+  expect(werewolfs[0].causeOfDeath[0]).toBeInstanceOf(Voting);
 });

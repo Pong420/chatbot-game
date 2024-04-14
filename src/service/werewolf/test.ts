@@ -107,12 +107,13 @@ export function werewolfTestUtils() {
 
   const allVoteTo = (character: Character) => {
     survivors.forEach(survivor => {
+      if (survivor.endTurn) return;
       survivor.id === character.id ? survivor.waive() : survivor.vote(character);
     });
   };
 
   const allWaive = () => {
-    survivors.forEach(survivor => survivor.waive());
+    survivors.forEach(survivor => !survivor.endTurn && survivor.waive());
   };
 
   return {

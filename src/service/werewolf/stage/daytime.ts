@@ -16,6 +16,8 @@ export class Daytime extends Stage {
   @Transform(({ type, value }) => (type === TransformationType.CLASS_TO_PLAIN ? Array.from(value) : new Map(value)))
   candidates = new Map<string, string[]>();
 
+  secondRound = false;
+
   results: VoteResult;
 
   countResults() {
@@ -44,18 +46,16 @@ export class Daytime extends Stage {
 
     this.updateSurvivors();
 
-    /**
-     * this.candidates.size > 0 if previous round multiple players have the some votes
-     */
-    if (!this.candidates.size) {
+    if (this.secondRound) {
+      this.survivors.forEach(survivor => {
+        survivor.endTurn = this.candidates.has(survivor.id);
+      });
+    } else {
       this.survivors.forEach(survivor => {
         this.candidates.set(survivor.id, []);
+        survivor.endTurn = false;
       });
     }
-
-    this.survivors.forEach(character => {
-      character.endTurn = false;
-    });
   }
 
   onEnd(): void {
@@ -65,20 +65,27 @@ export class Daytime extends Stage {
     if (results.count) {
       // true if more than 1 players have the same votes
       if (results.players.length > 1) {
-        // update the candidates for next round
-        this.candidates.clear();
-        results.players.forEach(id => {
-          this.candidates.set(id, []);
-        });
+        if (this.secondRound) {
+          this.secondRound = false;
+          this.candidates.clear();
+        } else {
+          this.secondRound = true;
+          this.candidates.clear();
+          results.players.forEach(id => {
+            this.candidates.set(id, []);
+          });
+        }
       } else {
         const [id] = results.players;
         const player = this.players.get(id);
         if (!player) throw t('SystemError');
         player.dead(Voting, { votes: this.candidates.get(id), total: results.numberOfVotes });
+        this.secondRound = false;
         this.candidates.clear();
       }
     } else {
       // all wavied
+      this.secondRound = false;
       this.candidates.clear();
     }
 
@@ -91,6 +98,6 @@ export class Daytime extends Stage {
   }
 
   next(): typeof Stage {
-    return this.candidates.size ? Daytime : Voted;
+    return this.secondRound && !!this.candidates.size ? Daytime : Voted;
   }
 }

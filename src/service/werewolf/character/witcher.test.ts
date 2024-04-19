@@ -2,7 +2,7 @@ import { expect, test } from 'vitest';
 import { t } from '../locales';
 import { Game } from '../game';
 import { Stage, stages } from '../stage';
-import { werewolfTestUtils } from '../test';
+import { testSuite } from '../test';
 import { Character } from './_character';
 import { Werewolf } from './werewolf';
 import { Villager } from './villager';
@@ -16,7 +16,7 @@ declare let villagers: Villager[];
 declare let witchers: Witcher[];
 
 test('witcher', () => {
-  const { createGame, nextStage, allWaive } = werewolfTestUtils();
+  const { createGame, nextStage, allWaive } = testSuite();
 
   const characters = [Werewolf, Witcher, Villager, Villager, Villager, Villager];
   createGame({ numOfPlayers: characters.length, characters });

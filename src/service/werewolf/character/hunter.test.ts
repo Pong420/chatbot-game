@@ -2,7 +2,7 @@ import { expect, test } from 'vitest';
 import { Game } from '../game';
 import { stages } from '../stage';
 import { t } from '../locales';
-import { werewolfTestUtils } from '../test';
+import { testSuite } from '../test';
 import { Character } from './_character';
 import { Werewolf } from './werewolf';
 import { Villager } from './villager';
@@ -17,7 +17,7 @@ declare let hunters: Hunter[];
 declare let witchers: Witcher[];
 
 test.each(['', 'not '])('hunter was killed - %sshot', shot => {
-  const { createGame, nextStage, allWaive } = werewolfTestUtils();
+  const { createGame, nextStage, allWaive } = testSuite();
 
   const characters = [Werewolf, Hunter, Hunter, Villager, Villager, Villager];
   createGame({ numOfPlayers: characters.length, characters });
@@ -58,7 +58,7 @@ test.each(['', 'not '])('hunter was killed - %sshot', shot => {
 });
 
 test('hunter - vote', () => {
-  const { createGame, nextStage, allVoteTo } = werewolfTestUtils();
+  const { createGame, nextStage, allVoteTo } = testSuite();
 
   const characters = [Werewolf, Hunter, Villager, Villager, Villager, Villager];
   createGame({ numOfPlayers: characters.length, characters });
@@ -76,7 +76,7 @@ test('hunter - vote', () => {
 });
 
 test('hunter - witcher', () => {
-  const { createGame, nextStage, allWaive } = werewolfTestUtils();
+  const { createGame, nextStage, allWaive } = testSuite();
 
   const characters = [Werewolf, Hunter, Witcher, Villager, Villager, Villager];
   createGame({ numOfPlayers: characters.length, characters });

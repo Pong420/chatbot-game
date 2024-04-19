@@ -3,7 +3,7 @@ import { Game } from './game';
 import { Start, Stage, Vote } from './stage';
 import { Character, Villager, Werewolf } from './character';
 import { t } from './locales';
-import { werewolfTestUtils } from './test';
+import { testSuite } from './test';
 import { Voting } from './death';
 
 declare let game: Game;
@@ -15,7 +15,7 @@ declare let villagers: Villager[];
 // TODO: test turn
 
 test('basic', () => {
-  const { createGame, nextStage, allVoteTo, allWaive } = werewolfTestUtils();
+  const { createGame, nextStage, allVoteTo, allWaive } = testSuite();
   createGame({ numOfPlayers: 6, characters: [Werewolf, Villager, Villager, Villager, Villager, Villager] });
 
   expect(game.stage).toBeInstanceOf(Start);

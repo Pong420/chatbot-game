@@ -21,7 +21,7 @@ declare let guards: Guard[];
 declare let predictors: Predictor[];
 declare let witchers: Witcher[];
 
-export function werewolfTestUtils() {
+export function testSuite() {
   vi.stubGlobal('game', undefined);
   vi.stubGlobal('stage', undefined);
   vi.stubGlobal('survivors', []);

@@ -1,4 +1,4 @@
-import { werewolfTestUtils } from '@werewolf/test';
+import { testSuite } from '@werewolf/test';
 import { expect, test } from 'vitest';
 import { Predictor } from './predictor';
 import { Werewolf } from './werewolf';
@@ -13,7 +13,7 @@ declare let villagers: Villager[];
 declare let predictors: Predictor[];
 
 test('predictor', () => {
-  const { createGame, nextStage, allVoteTo } = werewolfTestUtils();
+  const { createGame, nextStage, allVoteTo } = testSuite();
 
   const characters = [Werewolf, Predictor, Villager, Villager, Villager, Villager, Villager, Villager];
   createGame({ numOfPlayers: characters.length, characters });

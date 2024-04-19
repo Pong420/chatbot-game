@@ -1,6 +1,6 @@
 import { test, expect } from 'vitest';
 import { Game } from './game';
-import { Daytime, End, Voted, Night, Start, Stage } from './stage';
+import { Start, Stage, Vote } from './stage';
 import { Character, Villager, Werewolf } from './character';
 import { t } from './locales';
 import { werewolfTestUtils } from './test';
@@ -15,13 +15,13 @@ declare let villagers: Villager[];
 // TODO: test turn
 
 test('basic', () => {
-  const { createGame, next, allVoteTo, allWaive } = werewolfTestUtils();
+  const { createGame, nextStage, allVoteTo, allWaive } = werewolfTestUtils();
   createGame({ numOfPlayers: 6, characters: [Werewolf, Villager, Villager, Villager, Villager, Villager] });
 
   expect(game.stage).toBeInstanceOf(Start);
   expect(game.players.size).toBe(6);
 
-  next(Night);
+  nextStage('Night');
   expect(werewolfs).toHaveLength(1);
   expect(villagers).toHaveLength(5);
   expect(() => game.next()).toThrowError(t('StageNotEnded'));
@@ -34,7 +34,7 @@ test('basic', () => {
 
   // --------------------------------------------------------------------------------
 
-  let daytime = next(Daytime);
+  let daytime: Vote = nextStage('Daytime');
   expect(survivors).toHaveLength(5);
   expect(survivors).not.toContainEqual(villagers[0]);
   expect(() => werewolfs[0].kill(villagers[1])).toThrowError(t('NotYourTurn'));
@@ -53,7 +53,7 @@ test('basic', () => {
   // --------------------------------------------------------------------------------
 
   // two players got one vote, enter second round
-  daytime = next(Daytime);
+  daytime = nextStage('ReVote');
 
   expect(daytime.candidates.size).toBe(2);
 
@@ -69,7 +69,7 @@ test('basic', () => {
 
   // --------------------------------------------------------------------------------
 
-  const voted = next(Voted);
+  const voted = nextStage('Voted');
   expect(survivors).toHaveLength(5);
 
   expect(voted.results).toEqual({
@@ -81,20 +81,19 @@ test('basic', () => {
 
   // --------------------------------------------------------------------------------
 
-  next(Night);
+  nextStage('Night');
 
   expect(werewolfs[0].kill(villagers[1])).toEqual(t(`KillSuccss`));
   expect(stage.nearDeath).toHaveLength(1);
 
   // --------------------------------------------------------------------------------
 
-  daytime = next(Daytime);
-  expect(daytime.secondRound).toBeFalse();
+  daytime = nextStage('Daytime');
   allVoteTo(werewolfs[0]);
 
   // --------------------------------------------------------------------------------
 
-  next(End);
+  nextStage('End');
 
   expect(werewolfs[0].isDead).toBeTrue();
   expect(werewolfs[0].causeOfDeath[0]).toBeInstanceOf(Voting);

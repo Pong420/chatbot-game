@@ -1,17 +1,6 @@
 import { Exclude, Transform, TransformationType, instanceToPlain, plainToInstance } from 'class-transformer';
 import { Constructable } from '@/types';
-import { Character, characters } from '../character';
-
-const characterMap: Record<string, typeof Character> = {};
-const characterNameMap = new Map<typeof Character, string>();
-
-for (const k in characters) {
-  const constructor = characters[k as keyof typeof characters];
-  if (Object.prototype.isPrototypeOf.call(Character, constructor)) {
-    characterMap[k] = constructor;
-    characterNameMap.set(constructor, k);
-  }
-}
+import { Character, characterMap, characterNameMap } from '../character';
 
 export class Stage {
   static available?(stage: Stage): typeof Stage | undefined;

@@ -8,8 +8,8 @@ export class Predictor extends Stage {
     return !!stage.getPlayersByCharacter(PredictorCharacter, stage.survivors).length ? Predictor : undefined;
   }
 
-  onStart(): void {
-    super.onStart();
+  onStart(stage: Stage): void {
+    super.onStart(stage);
     this.survivors.forEach(survivor => {
       if (survivor instanceof PredictorCharacter) {
         // if all survivors predicted, player turn should be ended

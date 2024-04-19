@@ -12,8 +12,8 @@ export class ReVote extends Vote {
     return undefined;
   }
 
-  onStart(): void {
-    super.onStart();
+  onStart(stage: Stage): void {
+    super.onStart(stage);
 
     this.survivors.forEach(survivor => {
       survivor.endTurn = this.candidates.has(survivor.id);

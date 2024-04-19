@@ -7,7 +7,7 @@ export class Stage {
 
   readonly name: string;
 
-  host: string; // host userId
+  host: string; // host's userId
 
   turn = 0;
 
@@ -87,7 +87,8 @@ export class Stage {
     });
   }
 
-  onStart() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onStart(stage: Stage) {
     this.init();
   }
 

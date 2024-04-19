@@ -11,6 +11,7 @@ import {
   Night,
   Witcher,
   Predictor,
+  Hunter,
   Daytime,
   Voted,
   ReVote
@@ -101,14 +102,15 @@ export class Game extends GameInstance {
 
   protected nextStage(NextStage: typeof Stage) {
     const { data } = this.serialize();
+    const stage = this.stage;
     this.stage = plainToInstance(NextStage, data) as Stage;
-    this.stage.onStart();
+    this.stage.onStart(stage);
   }
 
-  getNextStage(current = this.stage.constructor as typeof Stage): typeof Stage {
-    if (current === Init) return Start;
+  getNextStage(CurrStage = this.stage.constructor as typeof Stage): typeof Stage {
+    if (CurrStage === Init) return Start;
 
-    const orders: (typeof Stage)[] = [
+    const stages: (typeof Stage)[] = [
       Guard,
       Night, // werewolf
       Witcher,
@@ -118,8 +120,17 @@ export class Game extends GameInstance {
       Voted
     ];
 
-    const nextIndex = (orders.indexOf(current) + 1) % orders.length;
-    const NextStage = orders[nextIndex];
+    const nextIndex = (stages.indexOf(CurrStage) + 1) % stages.length;
+    const NextStage = stages[nextIndex];
+
+    if ((NextStage === Daytime || CurrStage === Voted) && Hunter.available(this.stage)) {
+      return Hunter;
+    }
+
+    if (this.stage instanceof Hunter) {
+      if (this.stage.ref === 'vote') return this.getNextStage(Voted);
+      return Daytime;
+    }
 
     if (!NextStage) {
       throw `cannot get next stage from ${this.stage.name}`;

@@ -8,8 +8,8 @@ export class Witcher extends Stage {
     return !!stage.getPlayersByCharacter(WitcherCharacter, stage.survivors).length ? Witcher : undefined;
   }
 
-  onStart(): void {
-    super.onStart();
+  onStart(stage: Stage): void {
+    super.onStart(stage);
     this.survivors.forEach(player => {
       if (player instanceof WitcherCharacter) {
         player.endTurn = !!player.rescued && !!player.poisoned;

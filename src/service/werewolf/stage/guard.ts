@@ -8,8 +8,8 @@ export class Guard extends Stage {
     return !!stage.getPlayersByCharacter(GuardCharacter, stage.survivors).length ? Guard : undefined;
   }
 
-  onStart(): void {
-    super.onStart();
+  onStart(stage: Stage): void {
+    super.onStart(stage);
 
     this.players.forEach(player => {
       player.isProtected = [];

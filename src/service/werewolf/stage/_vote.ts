@@ -33,8 +33,8 @@ export class Vote extends Stage {
     return results;
   }
 
-  onStart(): void {
-    super.onStart();
+  onStart(stage: Stage): void {
+    super.onStart(stage);
     this.voted = [];
     this.results = { ...intialResults };
     this.turn += 1;

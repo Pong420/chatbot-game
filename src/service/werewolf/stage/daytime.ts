@@ -1,7 +1,6 @@
 import { Transform, TransformationType } from 'class-transformer';
 import { t } from '../locales';
 import { Stage } from './_stage';
-import { Voted } from './voted';
 import { Voting } from '../death';
 
 const intialResults = { numberOfVotes: 0, count: 0, players: [] as string[], votes: [] as string[] };
@@ -9,7 +8,7 @@ const intialResults = { numberOfVotes: 0, count: 0, players: [] as string[], vot
 export type VoteResult = typeof intialResults;
 
 export class Daytime extends Stage {
-  readonly name = 'Daytime';
+  name = 'Daytime';
 
   voted: string[];
 
@@ -95,9 +94,5 @@ export class Daytime extends Stage {
     this.updateSurvivors();
 
     super.onEnd();
-  }
-
-  next(): typeof Stage {
-    return this.secondRound && !!this.candidates.size ? Daytime : Voted;
   }
 }

@@ -10,13 +10,16 @@ export class Hunter extends Character {
   readonly good = true;
 
   shot?: string;
-  canShot = false;
+
+  get canShoot() {
+    return this.causeOfDeath.filter(cause => cause instanceof Killed).length >= 1;
+  }
 
   @Action(() => HunterStage)
   shoot(character: Character) {
-    if (!this.canShot) throw t(`NotReadyForShoot`);
+    if (!this.canShoot) throw t(`NotReadyForShoot`);
+    if (character.isDead) throw t(`CantKillDeadTarget`, character.nickname);
     if (this.id === character.id) throw t(`ShootSelf`);
-    this.canShot = false;
     this.shot = character.id;
     character.dead(Killed, { userId: this.id });
     return t(`ShootSuccess`);
@@ -24,8 +27,7 @@ export class Hunter extends Character {
 
   @Action(() => HunterStage)
   noShoot() {
-    this.canShot = false;
-    this.shot = undefined;
+    delete this.shot;
     return t(`NoShootSuccess`);
   }
 }

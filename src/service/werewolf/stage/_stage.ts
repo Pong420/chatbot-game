@@ -14,6 +14,8 @@ for (const k in characters) {
 }
 
 export class Stage {
+  static available?(stage: Stage): typeof Stage | undefined;
+
   readonly name: string;
 
   host: string; // host userId
@@ -94,10 +96,6 @@ export class Stage {
       player.isDead = player.causeOfDeath.length > 0;
       !player.isDead && this._survivors.push(player.id);
     });
-  }
-
-  next(): typeof Stage {
-    throw "next stage haven't defined";
   }
 
   onStart() {

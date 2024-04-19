@@ -1,7 +1,20 @@
 import 'reflect-metadata';
 import { Type, plainToInstance, instanceToPlain } from 'class-transformer';
 import { Constructable, GameInstance } from '@/types';
-import { stagesTypes, Init, Stage, End, Start } from './stage';
+import {
+  stagesTypes,
+  Init,
+  Stage,
+  End,
+  Start,
+  Guard,
+  Night,
+  Witcher,
+  Predictor,
+  Daytime,
+  Voted,
+  ReVote
+} from './stage';
 import { Character, Werewolf } from './character';
 import { t } from './locales';
 
@@ -92,11 +105,40 @@ export class Game extends GameInstance {
     this.stage.onStart();
   }
 
+  getNextStage(current = this.stage.constructor as typeof Stage): typeof Stage {
+    if (current === Init) return Start;
+
+    const orders: (typeof Stage)[] = [
+      Guard,
+      Night, // werewolf
+      Witcher,
+      Predictor,
+      Daytime,
+      ReVote,
+      Voted
+    ];
+
+    const nextIndex = (orders.indexOf(current) + 1) % orders.length;
+    const NextStage = orders[nextIndex];
+
+    if (!NextStage) {
+      throw `cannot get next stage from ${this.stage.name}`;
+    }
+
+    if (typeof NextStage.available === 'function') {
+      if (!NextStage.available(this.stage)) {
+        return this.getNextStage(NextStage);
+      }
+    }
+
+    return NextStage;
+  }
+
   next() {
     if (!this.stage.ended()) throw t('StageNotEnded');
     this.stage.onEnd();
 
-    const NextStage = this.stage.next();
+    const NextStage = this.getNextStage();
     this.nextStage(NextStage);
 
     if (this.shouldEndGame()) {

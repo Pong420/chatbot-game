@@ -3,8 +3,6 @@ import { randomOption, randomPick } from '@/utils/random';
 import { Character, Werewolf, Predictor, Witcher, Hunter, Guard, Villager } from '../character';
 import { t } from '../locales';
 import { Stage } from './_stage';
-import { Night } from './night';
-import { Guard as GuardStage } from './guard';
 import type { Init } from './init';
 
 /**
@@ -52,10 +50,6 @@ export class Start extends Stage {
     }
 
     return characters;
-  }
-
-  next(): typeof Stage {
-    return GuardStage.available(this) || Night;
   }
 
   onEnd(): void {

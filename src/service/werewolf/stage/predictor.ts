@@ -1,5 +1,4 @@
 import { Stage } from './_stage';
-import { Daytime } from './daytime';
 import { Predictor as PredictorCharacter } from '../character';
 
 export class Predictor extends Stage {
@@ -17,9 +16,5 @@ export class Predictor extends Stage {
         survivor.endTurn = this.survivors.every(s => survivor.predicted.includes(s.id));
       }
     });
-  }
-
-  next() {
-    return Daytime;
   }
 }

@@ -1,5 +1,5 @@
 import { Constructable } from '@/types';
-import { createFilter, Game, UserId } from '@line/filter';
+import { createFilter, Game, TextMatch, UserId } from '@line/filter';
 import { Werewolf } from '@werewolf/game';
 import { Character } from '@werewolf/character';
 import { t } from '@werewolf/locales';
@@ -25,4 +25,11 @@ export const IsCharacter = <C extends Character>(CharacterConstructor: Construct
     }
     // TODO:
     // messages for 不，你不是
+  });
+
+export const TargetPlayer = (regex: RegExp | string) =>
+  createFilter(TextMatch(regex), WerewolfGame, async ([, name], game) => {
+    const target = game.stage.playersByName[name];
+    if (!target) throw t(`TargetNoExists`, name);
+    return target;
   });

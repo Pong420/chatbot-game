@@ -1,7 +1,6 @@
 import { vi } from 'vitest';
 import { nanoid } from 'nanoid';
 import * as module from './game';
-import { ERROR_CODE_EMPTY } from './supabase';
 
 export type Game = module.Game;
 
@@ -21,14 +20,12 @@ export const genMockGameData = (override?: Partial<Game>): Game => {
 
 vi.spyOn(module, 'getGame').mockImplementation(groupId => {
   const data = gameDB.get(groupId);
-  return Promise.resolve({ data, error: data ? null : { code: ERROR_CODE_EMPTY } }) as unknown as ReturnType<
-    (typeof module)['getGame']
-  >;
+  return Promise.resolve(data || null);
 });
 
 vi.spyOn(module, 'createGame').mockImplementation(payload => {
   if (gameDB.has(payload.groupId)) {
-    return Promise.resolve({ data: null, error: { code: 0 } }) as unknown as ReturnType<(typeof module)['createGame']>;
+    throw new Error(`Duplicated`);
   }
 
   const data = genMockGameData(payload);
@@ -44,7 +41,6 @@ vi.spyOn(module, 'updateGame').mockImplementation((...payload) => {
     data = { ...data, ...changes };
     gameDB.set(groupId, JSON.parse(JSON.stringify(data)));
   }
-  return Promise.resolve({ data, error: data ? null : { code: 0 } }) as unknown as ReturnType<
-    (typeof module)['updateGame']
-  >;
+  if (!data) throw Error(`game not found`);
+  return Promise.resolve(data);
 });

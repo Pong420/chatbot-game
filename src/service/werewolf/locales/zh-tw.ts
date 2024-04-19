@@ -111,7 +111,7 @@ export default defineMessages(
     TurnEnded: ['你已作出了選擇！', `有些事...無法改變!`],
     StageNotEnded: '仍有玩家未完成行動，無法進入下回合',
     YouDead: '安息吧，你已經死了！',
-    NotYourTurn: '現在幹這件事不合適吧？',
+    NotYourTurn: ['現在幹這件事不合適吧？', '還不是你的回合'],
     TargetIsDead: ['{0}已死亡'],
     TargetNoExists: ['{0}不存在'],
 
@@ -154,7 +154,7 @@ export default defineMessages(
     Hungry: ['平安夜？不，你餓了，快選一個晚餐吧', '什麼都能忍，餓不能！快選一個晚餐吧'],
     DuplicatedKill: '知道了，你們是有多大仇!?',
     DuplicatedSuicide: '知道了，你就這麼想死嗎?',
-    CantKillDeadTarget: ['{0}已經死了，你是有多大仇!?', '{0}已經死了，原諒他吧'],
+    CantKillDeadTarget: ['{0}已經死了，你們是有多大仇!?', '{0}已經死了，放過他吧'],
 
     IamGuardGroup: `你是好人，請守護我(\´▽\`ʃ♡ƪ)`,
     ProtectSuccess: [`好`, `你是好人`],

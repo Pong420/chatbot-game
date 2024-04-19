@@ -14,9 +14,7 @@ export class Werewolf extends Character {
 
   hungry = false;
 
-  protected _kill(character?: Character, nickname = '') {
-    if (!character) throw t(`TargetNoExists`, nickname);
-
+  protected _kill(character: Character) {
     const suicide = this.id === character.id;
     if (character.isDead) throw t('CantKillDeadTarget', character.id === this.id ? t('Self') : character.nickname);
     if (character.isKilledBy(this)) throw suicide ? t('DuplicatedSuicide') : t('DuplicatedKill');
@@ -31,8 +29,8 @@ export class Werewolf extends Character {
   }
 
   @Action(() => Night)
-  kill(character?: Character, nickname = '') {
-    this._kill(character, nickname);
+  kill(character: Character) {
+    this._kill(character);
     return t('KillSuccss');
   }
 

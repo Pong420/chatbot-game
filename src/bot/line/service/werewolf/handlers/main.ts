@@ -6,10 +6,9 @@ import { updateUser } from '@/supabase/user';
 import { Werewolf } from '@werewolf/game';
 import { t } from '@werewolf/locales';
 import { Stage, Init, Start, Guard, Night, Daytime } from '@werewolf/stage';
+import { Witcher } from '@werewolf/character';
 import { WerewolfGame, IsHost, IsPlayer } from '../filter';
 import * as board from '../board';
-import { Witcher } from '@werewolf/character';
-// import { Guard } from '@werewolf/character';
 
 function getStageMessage(stage: Stage) {
   if (stage instanceof Init) return board.start();
@@ -27,9 +26,7 @@ export const mainHandlers = [
     // FIXME:
     game.stage.host = userId;
 
-    const resp = await createGame({ type: Werewolf.type, ...game.serialize() });
-    if (resp.error) return t('SystemError');
-
+    await createGame({ type: Werewolf.type, ...game.serialize() });
     return getStageMessage(game.stage);
   }),
   createHandler(Group, TextEqual(t('Open')), IsHost, async ({ game }) => {

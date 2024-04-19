@@ -17,7 +17,7 @@ export const Game = <G extends GameInstance>(GameConstructor: GameConstructor<G>
 
     if (!groupId) throw false;
 
-    const { data } = await getGame(groupId);
+    const data = await getGame(groupId);
     return data?.type === GameConstructor.type
       ? GameConstructor.create({ groupId: data.groupId, data: data.data })
       : null;
@@ -25,7 +25,7 @@ export const Game = <G extends GameInstance>(GameConstructor: GameConstructor<G>
 };
 
 export const CanStartGame = createFilter(GroupId, async groupId => {
-  const { data } = await getGame(groupId);
+  const data = await getGame(groupId);
   if (data) throw t('OtherGameRuning', data.type);
   return groupId;
 });

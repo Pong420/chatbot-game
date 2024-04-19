@@ -8,16 +8,17 @@ export class Hunter extends Stage {
   ref: 'daytime' | 'vote';
 
   static available(stage: Stage) {
-    return !!stage.getPlayersByCharacter(HunterCharacter, stage.survivors).filter(c => c.canShoot).length
+    return !!stage.getPlayersByCharacter(HunterCharacter, stage.players).filter(c => c.canShoot).length
       ? Hunter
       : undefined;
   }
 
   onStart(stage: Stage): void {
     super.onStart(stage);
-    this.survivors.forEach(survivor => {
-      if (survivor instanceof HunterCharacter) {
-        survivor.endTurn = !survivor.canShoot;
+    this.players.forEach(player => {
+      if (player instanceof HunterCharacter && player.canShoot) {
+        player._canShoot = true;
+        player.endTurn = false;
       }
     });
 

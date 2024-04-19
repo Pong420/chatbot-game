@@ -38,7 +38,6 @@ export class Vote extends Stage {
     this.voted = [];
     this.results = { ...intialResults };
     this.turn += 1;
-    this.updateSurvivors();
   }
 
   onEnd(): void {
@@ -63,11 +62,6 @@ export class Vote extends Stage {
       // all wavied
       this.candidates.clear();
     }
-
-    /**
-     * players death as voting won't be rescue, so we update survivors
-     */
-    this.updateSurvivors();
 
     super.onEnd();
   }

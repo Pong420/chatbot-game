@@ -1,6 +1,6 @@
 import { test, expect } from 'vitest';
 import { Game } from './game';
-import { Start, Stage, Vote } from './stage';
+import { Start, Stage, VoteBaseStage } from './stage';
 import { Character, Villager, Werewolf } from './character';
 import { t } from './locales';
 import { testSuite } from './test';
@@ -34,9 +34,14 @@ test('basic', () => {
 
   // --------------------------------------------------------------------------------
 
-  let daytime: Vote = nextStage('Daytime');
+  nextStage('Daytime');
   expect(survivors).toHaveLength(5);
   expect(survivors).not.toContainEqual(villagers[0]);
+
+  // --------------------------------------------------------------------------------
+
+  let vote: VoteBaseStage = nextStage('Vote');
+
   expect(() => werewolfs[0].kill(villagers[1])).toThrowError(t('NotYourTurn'));
 
   expect(() => villagers[0].vote(villagers[0])).toThrowError(t('YouDead'));
@@ -48,14 +53,14 @@ test('basic', () => {
 
   expect(() => game.next()).toThrowError(t('StageNotEnded'));
   allWaive();
-  expect(daytime.countResults()).toMatchObject({ numberOfVotes: 2, count: 1 });
+  expect(vote.countResults()).toMatchObject({ numberOfVotes: 2, count: 1 });
 
   // --------------------------------------------------------------------------------
 
   // two players got one vote, enter second round
-  daytime = nextStage('ReVote');
+  vote = nextStage('ReVote');
 
-  expect(daytime.candidates.size).toBe(2);
+  expect(vote.candidates.size).toBe(2);
 
   expect(() => game.next()).toThrowError(t('StageNotEnded'));
   expect(() => villagers[2].vote(villagers[0])).toThrowError(t('CantKillDeadTarget', villagers[0].nickname)); // expecet not to VoteOutOfRange
@@ -65,7 +70,7 @@ test('basic', () => {
 
   allWaive();
 
-  expect(daytime.countResults()).toMatchObject({ numberOfVotes: 0, count: 0 });
+  expect(vote.countResults()).toMatchObject({ numberOfVotes: 0, count: 0 });
 
   // --------------------------------------------------------------------------------
 
@@ -88,7 +93,11 @@ test('basic', () => {
 
   // --------------------------------------------------------------------------------
 
-  daytime = nextStage('Daytime');
+  nextStage('Daytime');
+
+  // --------------------------------------------------------------------------------
+
+  vote = nextStage('Vote');
   allVoteTo(werewolfs[0]);
 
   // --------------------------------------------------------------------------------

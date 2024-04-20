@@ -13,8 +13,9 @@ import {
   Predictor,
   Hunter,
   Daytime,
-  Voted,
-  ReVote
+  Vote,
+  ReVote,
+  Voted
 } from './stage';
 import { Character, Werewolf } from './character';
 import { t } from './locales';
@@ -116,6 +117,7 @@ export class Game extends GameInstance {
       Witcher,
       Predictor,
       Daytime,
+      Vote,
       ReVote,
       Voted
     ];

@@ -32,7 +32,10 @@ test('predictor', () => {
   expect(() => predictors[0].predict(villagers[1])).toThrowError(t('TurnEnded'));
 
   nextStage('Daytime');
+
+  nextStage('Vote');
   allVoteTo(villagers[1]);
+
   nextStage('Voted');
 
   nextStage('Night');
@@ -46,6 +49,8 @@ test('predictor', () => {
   expect(predictors[0].predicted).toHaveLength(2);
 
   nextStage('Daytime');
+
+  nextStage('Vote');
   allVoteTo(villagers[2]);
 
   nextStage('Voted');
@@ -58,19 +63,24 @@ test('predictor', () => {
   // target is killed by werewolf but haven't confirmed
   expect(predictors[0].isKilledBy(werewolfs[0])).toBeTrue();
   expect(() => predictors[0].predict(werewolfs[0])).toThrowError(
-    t('Predicted', werewolfs[0].nickname, werewolfs[0].name)
+    t('Predicted', werewolfs[0].nickname, t(`PredictedBadGuy`))
   );
   expect(predictors[0].predict(villagers[3])).toEqual(t('PredictResult', villagers[3].nickname, t('PredictedGoodGuy')));
 
   nextStage('Daytime');
   expect(predictors[0].isDead).toBeTrue();
+
+  nextStage('Vote');
   allVoteTo(villagers[3]);
 
   nextStage('Voted');
+
   nextStage('Night');
   werewolfs[0].idle();
 
   nextStage('Daytime');
+
+  nextStage('Vote');
   allVoteTo(werewolfs[0]);
 
   nextStage('End');
@@ -93,7 +103,10 @@ test('predictor - all', () => {
   expect(() => predictors[0].predict(werewolfs[0])).toThrowError(t(`PredictedAll`));
 
   nextStage('Daytime');
+
+  nextStage('Vote');
   allVoteTo(villagers[1]);
+
   nextStage('Voted');
 
   nextStage('Night');

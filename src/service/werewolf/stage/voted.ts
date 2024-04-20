@@ -1,5 +1,5 @@
 import { Stage } from './_stage';
-import { VoteResult } from './_vote';
+import { VoteResult } from './_vote_base';
 
 export class Voted extends Stage {
   readonly name = 'Voted';

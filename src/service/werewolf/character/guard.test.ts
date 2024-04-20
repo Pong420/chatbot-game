@@ -35,12 +35,14 @@ test('guard', () => {
   nextStage('Daytime');
   expect(guards[0].isDead).toBeFalse();
   expect(survivors).toHaveLength(6);
+
+  nextStage('Vote');
   allVoteTo(villagers[0]);
 
   nextStage('Voted');
-  nextStage('Guard');
-
   expect(villagers[0].isDead).toBeTrue();
+
+  nextStage('Guard');
   expect(() => guards[0].protect(guards[0])).toThrowError(t(`DuplicatedProtectedSelf`));
   expect(() => guards[0].protect(villagers[0])).toThrowError(t(`TargetIsDead`, villagers[0].nickname));
   expect(guards[0].protect(villagers[1])).toEqual(t('ProtectSuccess'));
@@ -52,6 +54,8 @@ test('guard', () => {
   nextStage('Daytime');
   expect(villagers[0].isDead).toBeTrue();
   expect(survivors).toHaveLength(4);
+
+  nextStage('Vote');
   allVoteTo(werewolfs[1]);
 
   nextStage('Voted');
@@ -63,6 +67,8 @@ test('guard', () => {
 
   nextStage('Daytime');
   expect(survivors).toHaveLength(3);
+
+  nextStage('Vote');
   allWaive();
 
   nextStage('Voted');

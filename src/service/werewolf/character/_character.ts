@@ -1,7 +1,7 @@
 import { Exclude, plainToInstance, Type } from 'class-transformer';
 import { Constructable } from '@/types';
 import { Voting, CauseOfDeath, Death, deathSubTypes, Killed } from '../death';
-import { Vote, type Stage } from '../stage';
+import { VoteBaseStage, type Stage } from '../stage';
 import { Action } from '../decorators';
 import { t } from '../locales';
 
@@ -42,9 +42,9 @@ export class Character {
     this.causeOfDeath.push(instance);
   }
 
-  @Action(() => Vote, { notYourTurn: () => t('VoteNotStarted') })
+  @Action(() => VoteBaseStage, { notYourTurn: () => t('VoteNotStarted') })
   vote(character: Character) {
-    const stage = this.stage as Vote;
+    const stage = this.stage as VoteBaseStage;
     if (character.isDead) throw t('CantKillDeadTarget', character.id === this.id ? t('Self') : character.nickname);
     if (stage.voted.includes(this.id)) throw t('Voted');
     if (!stage.candidates.has(character.id)) throw t('VoteOutOfRange');
@@ -52,9 +52,9 @@ export class Character {
     stage.candidates.get(character.id)!.push(this.id);
   }
 
-  @Action(() => Vote, { notYourTurn: () => false })
+  @Action(() => VoteBaseStage, { notYourTurn: () => false })
   waive() {
-    const stage = this.stage as Vote;
+    const stage = this.stage as VoteBaseStage;
     stage.voted.push(this.id);
   }
 

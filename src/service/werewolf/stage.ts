@@ -19,4 +19,4 @@ for (const k in stages) {
 export { stages };
 export * from './stage/_stage';
 export * from './stage/_stages';
-export * from './stage/_vote';
+export * from './stage/_vote_base';

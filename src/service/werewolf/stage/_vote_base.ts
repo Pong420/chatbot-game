@@ -7,7 +7,7 @@ const intialResults = { numberOfVotes: 0, count: 0, players: [] as string[], vot
 
 export type VoteResult = typeof intialResults;
 
-export class Vote extends Stage {
+export class VoteBaseStage extends Stage {
   voted: string[];
 
   @Transform(({ type, value }) => (type === TransformationType.CLASS_TO_PLAIN ? Array.from(value) : new Map(value)))

@@ -34,9 +34,12 @@ test('witcher', () => {
   witchers[0].idle();
 
   nextStage('Daytime');
+
+  nextStage('Vote');
   allWaive();
 
   nextStage('Voted');
+
   nextStage('Night');
   werewolfs[0].kill(villagers[0]);
 
@@ -47,6 +50,8 @@ test('witcher', () => {
   expect(() => witchers[0].rescue(villagers[0])).toThrowError(t(`TurnEnded`));
 
   nextStage('Daytime');
+
+  nextStage('Vote');
   allWaive();
 
   nextStage('Voted');
@@ -59,9 +64,12 @@ test('witcher', () => {
 
   nextStage('Daytime');
   expect(villagers[1].isDead).toBeFalse();
+
+  nextStage('Vote');
   allWaive();
 
   nextStage('Voted');
+
   nextStage('Night');
 
   werewolfs[0].kill(villagers[1]);
@@ -71,9 +79,12 @@ test('witcher', () => {
   witchers[0].idle();
 
   nextStage('Daytime');
+
+  nextStage('Vote');
   allWaive();
 
   nextStage('Voted');
+
   nextStage('Night');
 
   werewolfs[0].kill(witchers[0]);
@@ -104,5 +115,7 @@ test('witcher - no medicine', () => {
   expect(() => witchers[0].idle()).not.toThrowError();
 
   nextStage('Daytime');
+
+  nextStage('Vote');
   allWaive();
 });

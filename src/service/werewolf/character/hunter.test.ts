@@ -29,6 +29,7 @@ test.each(['', 'not '])('hunter was killed - %sshot', shot => {
   expect(() => hunters[0].shoot(villagers[0])).toThrowError(t(`NotYourTurn`));
 
   nextStage('Daytime');
+  nextStage('Vote');
   allWaive();
 
   nextStage('Voted');
@@ -50,6 +51,7 @@ test.each(['', 'not '])('hunter was killed - %sshot', shot => {
   } else {
     hunters[0].noShoot();
     nextStage('Daytime');
+    nextStage('Vote');
   }
 
   expect(survivors).not.toContain(hunters[0]);
@@ -66,6 +68,7 @@ test('hunter - vote', () => {
   werewolfs[0].idle();
 
   nextStage('Daytime');
+  nextStage('Vote');
   allVoteTo(hunters[0]);
 
   nextStage('Voted');
@@ -87,6 +90,7 @@ test('hunter - witcher', () => {
   witchers[0].rescue(hunters[0]);
 
   nextStage('Daytime');
+  nextStage('Vote');
   allWaive();
 
   nextStage('Voted');
@@ -98,4 +102,5 @@ test('hunter - witcher', () => {
   witchers[0].poison(hunters[0]);
 
   nextStage('Daytime');
+  nextStage('Vote');
 });

@@ -5,7 +5,20 @@ import { createGame, updateGame } from '@/supabase/game';
 import { updateUser } from '@/supabase/user';
 import { Werewolf } from '@werewolf/game';
 import { t } from '@werewolf/locales';
-import { Stage, Init, Start, Guard, Night, Daytime, Witcher, Predictor, Hunter } from '@werewolf/stage';
+import {
+  Stage,
+  Init,
+  Start,
+  Guard,
+  Night,
+  Daytime,
+  Witcher,
+  Predictor,
+  Hunter,
+  Vote,
+  Voted,
+  End
+} from '@werewolf/stage';
 import { WerewolfGame, IsHost, IsPlayer, IsCharacter } from '../filter';
 import * as board from '../board';
 
@@ -18,6 +31,9 @@ function getStageMessage(stage: Stage) {
   if (stage instanceof Predictor) return board.predictorGroup();
   if (stage instanceof Hunter) return board.hunterGroup();
   if (stage instanceof Daytime) return board.daytime('');
+  if (stage instanceof Vote) return board.voting({}, 0);
+  if (stage instanceof Voted) return board.voted('');
+  if (stage instanceof End) return null;
 }
 
 // TODO: intro

@@ -2,6 +2,7 @@ export * from './init';
 export * from './start';
 export * from './night';
 export * from './daytime';
+export * from './vote';
 export * from './revote';
 export * from './voted';
 export * from './guard';

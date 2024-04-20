@@ -23,6 +23,17 @@
       "rules": {
         "@typescript-eslint/no-unused-vars": 0
       }
+    },
+    {
+      "files": ["**/handlers/*.ts"],
+      "rules": {
+        "import/no-anonymous-default-export": [
+          "error",
+          {
+            "allowArray": true
+          }
+        ]
+      }
     }
   ]
 }

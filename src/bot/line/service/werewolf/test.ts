@@ -2,7 +2,7 @@ import { nanoid } from 'nanoid';
 import { createExpectEvent, LineUser, createLineEventTestSuite } from '@line/test';
 import { characters } from '@werewolf/character';
 import { Werewolf } from '@werewolf/game';
-import { werewolfGameHandlers } from './handler';
+import { default as handlers } from './handler';
 
 export const getPlayersByCharacter = <C extends LineUser>(game: Werewolf, clients: C[]) =>
   Object.entries(characters).reduce(
@@ -13,9 +13,9 @@ export const getPlayersByCharacter = <C extends LineUser>(game: Werewolf, client
     {} as Record<`${Lowercase<keyof typeof characters>}s`, C[]>
   );
 
-export const expectEvent = createExpectEvent(werewolfGameHandlers);
+export const expectEvent = createExpectEvent(handlers);
 
-export const { createLineUser } = createLineEventTestSuite(werewolfGameHandlers);
+export const { createLineUser } = createLineEventTestSuite(handlers);
 
 export const groupId = nanoid();
 export const players = Array.from({ length: 12 }, () => createLineUser({ groupId }));

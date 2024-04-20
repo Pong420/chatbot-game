@@ -24,7 +24,7 @@ export const IamCommand = (() => {
     Iam,
     ...IamCommands,
     ...entries.reduce(
-      (res, [key, value]) => ({ ...res, [`${key}DM`]: `${value}請私我輸入「${IamCommands[`Iam${key}`]}」` }),
+      (res, [key, value]) => ({ ...res, [`${key}DM`]: `${value}請私我輸入【${IamCommands[`Iam${key}`]}】` }),
       {} as Record<`${keyof typeof Character}DM`, string>
     )
   };
@@ -102,10 +102,10 @@ export default defineMessages(
   {
     SystemError: '系統錯誤',
 
-    GameIsFull: '人數已滿，「{0}」下次請早',
+    GameIsFull: '人數已滿，【{0}】下次請早',
     Joined: '{0}你已經參加遊戲',
     NoEnoughPlayers: '遊戲人數不能少於{0}人',
-    NicknameUsed: `暱稱「{0}」已被使用，請更換後再參加`,
+    NicknameUsed: `暱稱【{0}】已被使用，請更換後再參加`,
 
     Self: '自己',
     TurnEnded: ['你已作出了選擇！', `有些事...無法改變!`],
@@ -127,7 +127,7 @@ export default defineMessages(
 
     ShortIntro: `
       遊戲人數最少6人，最多12人,
-      主持人可以輸入「{0}」查詢指令,
+      主持人可以輸入【{0}】查詢指令,
       謹記！友誼第一，這只是遊戲，不要太認真
     `,
 
@@ -139,15 +139,17 @@ export default defineMessages(
     WaitFotHostSetup: `請等待主持完成配置`,
 
     YourCharacter: '你的角色',
-    YourAreCharacter: '你是「{0}」留意群組訊息，到你的回合後，請按指示輸入指令或點擊按鈕',
-    YouAreVillager: `你是「${Character.Villager}」，請努力活下去！`,
+    YourAreCharacter: '你是【{0}】留意群組訊息，到你的回合後，請按指示輸入指令或直接點擊按鈕',
+    YouAreVillager: `你是【${Character.Villager}】，請努力活下去！`,
     CharacterIntroButton: '角色簡介',
 
     NightBoard: '現在是晚上',
     GettingDark: '天快黑了',
     WerewolfEnd: `狼人已選擇目標`,
 
-    IamWerewolfGroup: [`喂，是警察叔叔嗎，這裏有狼人哇`, `欸，我也是耶，「嗷嗚~~」`, `「嗷嗚~~」(暗號呢`],
+    IamVillagerGroup: [`【{0}你確定你【村民】而不是【暴民】嗎?`, `我是信你的`, `我是機器人`],
+
+    IamWerewolfGroup: [`喂，是警察叔叔嗎，這裏有狼人哇`, `欸，我也是耶，【嗷嗚~~】`, `【嗷嗚~~】(暗號呢`],
     KillSuccss: '好',
     SuicideSuccss: [`你就這麼有信心有人救你？`, `希望你能賭贏吧！`],
     IdleSuccess: `'你竟然忍住了!? 但你下一晚不可能再忍受饑餓，快想明天的晚餐吧!`,
@@ -172,7 +174,7 @@ export default defineMessages(
     NoProtectSuccess: `好`,
 
     IamWitcherGroup: [
-      `喂，是霍格華茲嗎，你們是不是有個「女巫」跑了`,
+      `喂，是霍格華茲嗎，你們是不是有個【女巫】跑了`,
       `欸，你認識哈利嗎?`,
       `去去武器走！( ☉_☉)≡☞o────★°`
     ],
@@ -186,9 +188,9 @@ export default defineMessages(
     NoMoreMedicine: `你沒有藥了，系統會默認你已操作完成`,
 
     IamPredictorGroup: [`看，這裏有個神棍`, `請給我下期的彩票號碼，拜託了`],
-    PredictResultGood: `{0}是好人`,
-    PredictResultBad: `{0}是壞人`,
-    Predicted: `你已經知道「{0}」的身份是【{1}】，偷窺其他人吧`,
+    PredictResultGood: `{0}是【好人】`,
+    PredictResultBad: `{0}是【壞人】`,
+    Predicted: `你已經知道【{0}】的身份是【{1}】，偷窺其他人吧`,
     PredictSelf: [`{0}是【神棍】`, `{0}是【偷窺狂】`],
     PredictedAll: `還活著的都被你查看過了，系統會默認你完成操作`,
 
@@ -207,8 +209,8 @@ export default defineMessages(
     ClickToSelect: '點擊名稱選擇目標'
 
     // TODO:
-    // 遇到錯誤時，請主持人輸入「${Command}」,
-    // 參與狼人殺，累積成就能夠獲得稱號，輸入「${Command.Titles}」了解
+    // 遇到錯誤時，請主持人輸入【${Command}】,
+    // 參與狼人殺，累積成就能夠獲得稱號，輸入【${Command.Titles}】了解
   },
   Character,
   IamCommand,

@@ -2,10 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { WebhookRequestBody } from '@line/bot-sdk';
 import { runMiddleware } from './client';
 import { createEventHandler } from './handler';
-import { debugHandlers } from './handlers/debug';
-import { nicknameHandlers } from './handlers/nickname';
-import { gameHandlers } from './handlers/game';
-import { werewolfGameHandlers } from './service/werewolf/handler';
+import { loadHanlders } from './utils/loadHandlers';
+import werewolfGameHandlers from './service/werewolf/handler';
+
+const handlers = await loadHanlders(
+  process.env.NODE_ENV === 'test'
+    ? import.meta.glob('./handlers/*.ts')
+    : { pathname: 'src/bot/line/handlers', load: pathname => import(`./handlers/${pathname}`) }
+);
 
 export async function POST(req: NextRequest, res: NextResponse) {
   await runMiddleware(req, res);
@@ -18,4 +22,4 @@ export async function POST(req: NextRequest, res: NextResponse) {
   }
 }
 
-const handleEvent = createEventHandler(debugHandlers, nicknameHandlers, gameHandlers, werewolfGameHandlers);
+const handleEvent = createEventHandler(handlers, werewolfGameHandlers);

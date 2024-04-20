@@ -22,3 +22,5 @@ export const nicknameHandlers = [
     (_, [, nickname], event) => setNickname(event, nickname)
   )
 ];
+
+export default nicknameHandlers;

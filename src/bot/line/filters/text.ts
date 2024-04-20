@@ -52,6 +52,6 @@ export const TextMatch = (regex: RegExp | string, { postbackOnly = false }: Text
       text = event.message.text;
     }
 
-    return !!text && text.match(regex);
+    return (!!text && text.match(regex)) || false;
   };
 };

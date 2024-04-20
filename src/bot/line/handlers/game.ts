@@ -1,11 +1,11 @@
 import { t } from '@line/locales';
 import { createHandler } from '@line/handler';
-import { Single, UserId } from '@line/filter';
+import { Single, TextEqual, UserId } from '@line/filter';
 import { updateUser } from '@/supabase/user';
 
-export const gameHandlers = [
+export default [
   // TODO: handle memeber left
-  createHandler(Single, UserId, async userId => {
+  createHandler(Single, TextEqual(t(`ForceQuitGame`)), UserId, async userId => {
     await updateUser(userId, { game: null });
     return t(`ForceQuitGameSucess`);
   })

@@ -8,7 +8,7 @@ import * as board from '../board';
 
 const IsWerewolf = IsCharacter(Werewolf);
 
-export const werewolfHandlers = [
+export default [
   createHandler(Group, TextEqual(t('IamWerewolf')), IsPlayer, async () => t(`IamWerewolfGroup`)),
   createHandler(Single, TextEqual(t('IamWerewolf')), IsWerewolf, async ({ userId, game }) =>
     board.werewolf(game, userId)
@@ -29,5 +29,3 @@ export const werewolfHandlers = [
     return message;
   })
 ];
-
-export default werewolfHandlers;

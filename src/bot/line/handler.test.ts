@@ -1,7 +1,7 @@
 import { expect, test, vi } from 'vitest';
 import { Single, TextEqual } from './filter';
 import { createEventHandler, createHandler } from './handler';
-import { debugHandlers } from './handlers/debug';
+import { default as debugHandlers } from './handlers/debug';
 import { textMessage } from './utils/createMessage';
 import { LineUser } from './test';
 import { t } from './locales';

@@ -31,7 +31,10 @@ export const Replies = {
   `,
 
   JoinedOtherGroupsGame: `{0}已參加了其他群組的遊戲`,
-  OtherGameRuning: '{0}進行中，請先結束遊戲'
+  OtherGameRuning: '{0}進行中，請先結束遊戲',
+
+  ForceQuitGame: `強制退出遊戲`,
+  ForceQuitGameSucess: `好`
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export

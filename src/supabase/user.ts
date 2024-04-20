@@ -11,6 +11,6 @@ export function createUser(data: TablesInsert<'users'>) {
   return supabase.from('users').insert([data]).select().single().throwOnError();
 }
 
-export function updateUser(userId: string, data: TablesUpdate<'users'>) {
-  return supabase.from('users').update(data).eq('userId', userId).select().single().throwOnError();
+export async function updateUser(userId: string, data: TablesUpdate<'users'>) {
+  return await supabase.from('users').update(data).eq('userId', userId).select().single().throwOnError();
 }

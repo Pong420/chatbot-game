@@ -1,6 +1,6 @@
 import { t as lt } from '@line/locales';
 import { createHandler } from '@line/handler';
-import { CanStartGame, Group, Single, TextEqual, User, UserId } from '@line/filter';
+import { CanStartGame, Group, LeaveGroup, Single, TextEqual, User, UserId } from '@line/filter';
 import { createGame, updateGame } from '@/supabase/game';
 import { updateUser } from '@/supabase/user';
 import { Werewolf } from '@werewolf/game';
@@ -18,6 +18,12 @@ function getStageMessage(stage: Stage) {
   if (stage instanceof Witcher) return board.witcherGroup();
   if (stage instanceof Daytime) return board.daytime('');
 }
+
+// TODO: intro
+// TODO: vote
+// TODO: waive
+// TODO: intro command
+// TODO: titles
 
 export const mainHandlers = [
   createHandler(UserId, TextEqual(t('Initiate')), CanStartGame, async (userId, groupId) => {
@@ -58,6 +64,9 @@ export const mainHandlers = [
   }),
   createHandler(Single, TextEqual(t('MyCharacter')), IsPlayer, async ({ character }) => {
     return board.myCharacter(character);
+  }),
+  createHandler(LeaveGroup, WerewolfGame, async (event, game) => {
+    await Promise.all(Array.from(game.players, ([id]) => updateUser(id, { game: null }).catch(() => void 0)));
   })
 ];
 

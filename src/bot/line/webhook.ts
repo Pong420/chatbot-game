@@ -4,6 +4,7 @@ import { runMiddleware } from './client';
 import { createEventHandler } from './handler';
 import { debugHandlers } from './handlers/debug';
 import { nicknameHandlers } from './handlers/nickname';
+import { gameHandlers } from './handlers/game';
 import { werewolfGameHandlers } from './service/werewolf/handler';
 
 export async function POST(req: NextRequest, res: NextResponse) {
@@ -17,4 +18,4 @@ export async function POST(req: NextRequest, res: NextResponse) {
   }
 }
 
-const handleEvent = createEventHandler(debugHandlers, nicknameHandlers, werewolfGameHandlers);
+const handleEvent = createEventHandler(debugHandlers, nicknameHandlers, gameHandlers, werewolfGameHandlers);

@@ -1,4 +1,4 @@
-import { expect, test } from 'vitest';
+import { expect, test, vi } from 'vitest';
 import { Single, TextEqual } from './filter';
 import { createEventHandler, createHandler } from './handler';
 import { debugHandlers } from './handlers/debug';
@@ -22,6 +22,17 @@ test('handleEvent', async () => {
   const userIdMsg = textMessage(t('GetUserIdResp', client.userId));
   await expect(handleEvent(client.singleMessage(t('GetUserId')))).resolves.toEqual(userIdMsg);
   await expect(handleEvent(client.groupMessage(t('GetUserId')))).resolves.toEqual(userIdMsg);
+});
+
+test('handleEvent - undefined', async () => {
+  const callback = vi.fn();
+  const handleEvent = createEventHandler([createHandler(() => undefined, callback)], debugHandlers);
+  await expect(handleEvent(client.singleMessage(t('GetUserId')))).resolves.toTextMessage(expect.any(String));
+
+  /**
+   * Return false is don't wants callback to be called
+   */
+  expect(callback).toBeCalledTimes(1);
 });
 
 test('handleEvent - throwError', async () => {

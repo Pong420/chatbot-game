@@ -67,7 +67,7 @@ export const KillerCommand = {
 export const GuardCommand = {
   IamGuard: `我是守衛`,
   Protect: `^我要守護(.*)`,
-  ProtectSelf: `我守護自己`,
+  ProtectSelf: `守護自己`,
   NoProtect: `不守護任何人`
 };
 
@@ -86,8 +86,8 @@ export const PredictorCommand = {
 
 export const HunterCommand = {
   IamHunter: `我是獵人`,
-  Shot: `^我要對(.*)開槍`,
-  NoShot: `放棄開槍`
+  Shoot: `^我要對(.*)開槍`,
+  NoShoot: `不開槍`
 };
 
 export const CommonCommand = {
@@ -172,6 +172,7 @@ export default defineMessages(
       '你本打算繼續守護自己，但良心隱隱作痛，放棄了這個想法'
     ],
     NoProtectSuccess: `好`,
+    GuardBoard: '點擊名稱選擇要守護的目標',
 
     IamWitcherGroup: [
       `喂，是霍格華茲嗎，你們是不是有個【女巫】跑了`,
@@ -180,25 +181,30 @@ export default defineMessages(
     ],
     RescueSuccess: [`阿彌陀佛，救人一命，勝造七級浮屠`, `你是個好人`],
     RescueSelfSuccess: [`只有自己可以救自己`, `沒錯，自私一點有錯麼？`, '人不為己，天誅地滅', '正所謂，死道友不死貧道'],
-    PoisonSuccess: [`毒藥用對了，也是救命藥，希望你的選擇沒有錯`, `對，病人該吃藥了!`],
+    PoisonSuccess: [`毒藥用對了，也是救命藥，希望你的選擇沒有錯`, `對，病人該吃藥了`],
     TargetNotInjured: `{0}沒有受傷啊`,
     Rescued: `沒有傷藥了`,
     Poisoned: `沒有毒藥了`,
     PoisonSelf: ['這不是正常操作，選別人吧'],
     NoMoreMedicine: `你沒有藥了，系統會默認你已操作完成`,
+    RescueBoard: '點擊名稱選擇你要救的玩家',
+    PoisonBoard: '點擊名稱選擇你要毒殺的玩家',
 
     IamPredictorGroup: [`看，這裏有個神棍`, `請給我下期的彩票號碼，拜託了`],
-    PredictResultGood: `{0}是【好人】`,
-    PredictResultBad: `{0}是【壞人】`,
+    PredictResult: `{0}是【{1}】`,
     Predicted: `你已經知道【{0}】的身份是【{1}】，偷窺其他人吧`,
     PredictSelf: [`{0}是【神棍】`, `{0}是【偷窺狂】`],
     PredictedAll: `還活著的都被你查看過了，系統會默認你完成操作`,
+    PredictedGoodGuy: `好人`,
+    PredictedBadGuy: `壞人`,
+    PredictorBoard: '點擊名稱選擇你要查看的玩家',
 
     IamHunterGroup: [`你是正式錄用的獵人嗎`, `我是好人，不要射我`],
     ShootSuccess: `好`,
     NoShootSuccess: `好`,
     ShootSelf: `你要死了，這一槍留給別人吧`,
     NotReadyForShoot: '再等等，還未到開槍的時候',
+    HunterBoard: `點擊名稱選擇要射擊的目標`,
 
     DaytimeBoard: '現在是白天',
 

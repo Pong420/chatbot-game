@@ -1,6 +1,7 @@
 import { Action } from '@line/bot-sdk';
-import { Character, Villager } from '@werewolf/character';
+import { Character, Predictor, Villager } from '@werewolf/character';
 import { t } from '@werewolf/locales';
+import { Werewolf } from '@werewolf/game';
 import {
   messageAction,
   sendTextToBot,
@@ -16,7 +17,6 @@ import {
   Payload,
   postBackTextAction
 } from '@line/utils/createMessage';
-import { Werewolf } from '@werewolf/game';
 
 interface PlayerListProps {
   names: string[];
@@ -163,5 +163,64 @@ export function werewolf(game: Werewolf, killerId: string) {
       // TODO:
       secondaryButton(messageAction(t('Suicide'), `請再輸入「${t('Suicide')}」確認`))
     ]
+  });
+}
+
+export function guard(names: string[]) {
+  return playerList({
+    names,
+    title: [centeredText(t(`GuardBoard`))],
+    action: name => messageAction(t(`Protect`, name)),
+    buttons: [
+      // TODO:
+      primaryButton(messageAction(t('ProtectSelf'))),
+      secondaryButton(messageAction(t(`NoProtect`)))
+    ]
+  });
+}
+
+export function predictor(predictor: Predictor, characters: Character[], skip: boolean) {
+  return tableMessage({
+    title: [wrapAndCenterText(t(`PredictorBoard`))],
+    rows: [
+      ...characters.map(c => {
+        const predictText = t(`Predict`, c.nickname);
+        const predicted = predictor.predicted.includes(c.id);
+        const action = predicted ? undefined : messageAction(predictText);
+        const title = predicted ? t(c.good ? `PredictedGoodGuy` : `PredictedBadGuy`) : '???';
+        return [
+          wrapedText(`【${title}】`, { flex: 0, align: 'start', action }),
+          wrapedText(`${c.nickname}`, { flex: 9, align: 'start', action })
+        ];
+      })
+    ],
+    footer: skip ? [wrapedText(t('PredictedAll'))] : []
+  });
+}
+
+export function rescue(names: string[]) {
+  return playerList({
+    names,
+    title: [centeredText(t(`RescueBoard`))],
+    action: name => messageAction(t(`Rescue`, name)),
+    buttons: [primaryButton(messageAction(t(`NoRescue`)))]
+  });
+}
+
+export function poison(names: string[]) {
+  return playerList({
+    names,
+    title: [centeredText(t(`PoisonBoard`))],
+    action: name => messageAction(t(`Poison`, name)),
+    buttons: [primaryButton(messageAction(t(`NoPoison`)))]
+  });
+}
+
+export function hunter(names: string[]) {
+  return playerList({
+    names,
+    title: [centeredText(t(`HunterBoard`))],
+    action: name => messageAction(t(`Shoot`, name)),
+    buttons: [secondaryButton(messageAction(t(`NoShoot`)))]
   });
 }

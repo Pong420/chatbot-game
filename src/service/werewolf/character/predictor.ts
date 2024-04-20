@@ -20,6 +20,6 @@ export class Predictor extends Character {
     if (self) throw t(`PredictSelf`, character.nickname);
     if (this.predicted.includes(character.id)) throw t('Predicted', character.nickname, character.name);
     this.predicted.push(character.id);
-    return t(character.good ? 'PredictResultGood' : 'PredictResultBad', character.nickname);
+    return t('PredictResult', character.nickname, character.good ? t(`PredictedGoodGuy`) : t('PredictedBadGuy'));
   }
 }

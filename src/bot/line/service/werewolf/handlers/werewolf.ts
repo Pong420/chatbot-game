@@ -9,10 +9,8 @@ import * as board from '../board';
 const IsWerewolf = IsCharacter(Werewolf);
 
 export default [
-  createHandler(Group, TextEqual(t('IamWerewolf')), IsPlayer, async () => t(`IamWerewolfGroup`)),
-  createHandler(Single, TextEqual(t('IamWerewolf')), IsWerewolf, async ({ userId, game }) =>
-    board.werewolf(game, userId)
-  ),
+  createHandler(Group, TextEqual(t('IamWerewolf')), IsPlayer, () => t(`IamWerewolfGroup`)),
+  createHandler(Single, TextEqual(t('IamWerewolf')), IsWerewolf, ({ userId, game }) => board.werewolf(game, userId)),
   createHandler(Single, TargetPlayer(t('Kill')), IsWerewolf, async (target, { game, character }) => {
     const message = character.kill(target);
     await updateGame(game);

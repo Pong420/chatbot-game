@@ -1,57 +1,63 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { test } from 'vitest';
-// import { getGame } from '@/supabase/game';
-import { t as lt } from '@line/locales';
-import { textMessage } from '@line/utils/createMessage';
 import { Werewolf as WerewolfGame } from '@werewolf/game';
 import { t } from '@werewolf/locales';
-import { groupId, players, createLineUser } from '../test';
+import { testSuite, WerewolfPlayer } from '../test';
 import * as board from '../board';
 
-const host = players[0];
-
-const dupClient = createLineUser({ name: players[0].name, groupId });
-const extraClient = createLineUser({ groupId });
-const clientInOthersGroup = createLineUser({ name: players[0].name });
-clientInOthersGroup.profile.userId = players[0].userId;
+declare let game: WerewolfGame;
+declare let survivors: WerewolfPlayer[];
+declare let villagers: WerewolfPlayer[];
+declare let werewolfs: WerewolfPlayer[];
+declare let werewolf: WerewolfPlayer;
+declare let hunters: WerewolfPlayer[];
+declare let hunter: WerewolfPlayer;
+declare let guards: WerewolfPlayer[];
+declare let guard: WerewolfPlayer;
+declare let predictors: WerewolfPlayer[];
+declare let predictor: WerewolfPlayer;
+declare let witchers: WerewolfPlayer[];
+declare let witcher: WerewolfPlayer;
+declare let players: WerewolfPlayer[];
+declare let host: WerewolfPlayer;
 
 test('main', async () => {
-  await host.s(t(`Initiate`)).toBeUndefined();
-  await host.g(t(`Initiate`)).toEqual(board.start());
-  await host.g(t(`Initiate`)).toEqual(textMessage(lt(`OtherGameRuning`, WerewolfGame.type)));
+  const { createGame, next } = testSuite();
+  await createGame();
 
-  await host.g(t(`Join`)).toEqual(textMessage(t(`WaitFotHostSetup`)));
+  // --------------------------------------------------------------------------------
 
-  await host.g(t(`Open`)).toMatchObject(board.players([]));
+  await next(board.guardGroup());
 
-  await host.g(t('Join')).toMatchObject({ type: 'flex' });
-  await host.g(t('Join')).toEqual(textMessage(t(`Joined`, host.name)));
+  await guard.s(t('IamGuard')).toEqual(board.guard(game));
+  await guard.s(t.regex('Protect', villagers[0].name)).toTextMessage(t(`ProtectSuccess`));
 
-  await dupClient.g(t('Join')).toEqual(textMessage(t('NicknameUsed', dupClient.name)));
+  // --------------------------------------------------------------------------------
 
-  for (const client of players) {
-    if (client === host) continue;
-    await client.g(t('Join')).toMatchObject({ type: 'flex' });
-    await client.g(t('Join')).toEqual(textMessage(t(`Joined`, client.name)));
+  await next(board.werewolfGroup());
+
+  for (const werewolf of werewolfs) {
+    await werewolf.s(t(`IamWerewolf`)).toEqual(board.werewolf(game, werewolf.userId));
+    await werewolf.s(t.regex(`Kill`, villagers[0].name)).toTextMessage(t(`KillSuccss`));
   }
 
-  await extraClient.g(t('Join')).toEqual(textMessage(t('GameIsFull', extraClient.name)));
+  // --------------------------------------------------------------------------------
 
-  await clientInOthersGroup.g(t(`Initiate`)).toEqual(board.start());
-  await clientInOthersGroup.g(t('Join')).toTextMessage(lt('JoinedOtherGroupsGame', clientInOthersGroup.name));
+  await next(board.witcherGroup());
 
-  await host.g(t(`Next`)).toMatchObject(board.guardGroup());
+  await witcher.s(t(`IamWitcher`)).toEqual(board.rescue(game, witcher.userId));
+  await witcher.s(t.regex(`Rescue`, villagers[0].name)).toTextMessage(t(`RescueSuccess`));
 
-  // resp = await getGame(players[0].groupId);
-  // game = WerewolfGame.create(resp.data!);
+  // --------------------------------------------------------------------------------
 
-  // const { werewolfs, villagers } = getPlayersByCharacter(game, players);
+  await next(board.predictorGroup());
 
-  // expect(werewolfs.length).toBeGreaterThanOrEqual(1);
-  // expect(villagers.length).toBeGreaterThanOrEqual(1);
+  await predictor.s(t(`IamPredictor`)).toEqual(board.predictor(game, predictor.userId));
+  await predictor
+    .s(t.regex(`Predict`, villagers[0].name))
+    .toTextMessage(t(`PredictResult`, villagers[0].name, t('PredictedGoodGuy')));
 
-  // for (const werewolf of werewolfs) {
-  //   await werewolf.s(t.regex(`Kill`, villagers[0].name)).toTextMessage(t(`KillSuccss`));
-  // }
+  // --------------------------------------------------------------------------------
 
-  // await host.g(t(`Next`)).toMatchObject(board.daytime(''));
+  await next(board.daytime(''));
 });

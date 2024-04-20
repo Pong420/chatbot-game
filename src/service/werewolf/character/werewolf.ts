@@ -18,6 +18,7 @@ export class Werewolf extends Character {
     const suicide = this.id === character.id;
     if (character.isDead) throw t('CantKillDeadTarget', character.id === this.id ? t('Self') : character.nickname);
     if (character.isKilledBy(this)) throw suicide ? t('DuplicatedSuicide') : t('DuplicatedKill');
+
     if (character.isProtected.length) {
       character.isProtected = character.isProtected.slice(0, -1);
     } else {

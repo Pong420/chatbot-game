@@ -3,22 +3,22 @@ import { Group, Single, TextEqual } from '@line/filter';
 import { Hunter } from '@werewolf/character';
 import { t } from '@werewolf/locales';
 import { updateGame } from '@/supabase/game';
-import { IsCharacter, IsPlayer, TargetPlayer } from '../filter';
+import { IsPlayer, createWerewolfFilter } from '../filter';
 import * as board from '../board';
 
-const IsHunter = IsCharacter(Hunter);
+const IsHunter = createWerewolfFilter(Hunter);
 
 export default [
   createHandler(Group, TextEqual(t('IamHunter')), IsPlayer, () => t(`IamHunterGroup`)),
-  createHandler(Single, TextEqual(t('IamHunter')), IsHunter, ({ game }) =>
+  createHandler(Single, TextEqual(t('IamHunter')), IsHunter(), ({ game }) =>
     board.hunter(game.stage.survivors.map(survivor => survivor.nickname))
   ),
-  createHandler(Single, TargetPlayer(t('Shoot')), IsHunter, async (target, { game, character }) => {
+  createHandler(Single, IsHunter({ target: t('Shoot') }), async ({ game, target, character }) => {
     const message = character.shoot(target);
     await updateGame(game);
     return message;
   }),
-  createHandler(Single, TextEqual(t('NoShoot')), IsHunter, async ({ game, character }) => {
+  createHandler(Single, TextEqual(t('NoShoot')), IsHunter(), async ({ game, character }) => {
     const message = character.noShoot();
     await updateGame(game);
     return message;

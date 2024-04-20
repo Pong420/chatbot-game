@@ -18,8 +18,12 @@ export class Predictor extends Character {
     const self = this.id === character.id;
     if (character.isDead) throw self ? t('YouDead') : t('TargetIsDead', character.nickname);
     if (self) throw t(`PredictSelf`, character.nickname);
-    if (this.predicted.includes(character.id)) throw t('Predicted', character.nickname, character.name);
+
+    const name = character.good ? t(`PredictedGoodGuy`) : t('PredictedBadGuy');
+
+    if (this.predicted.includes(character.id)) throw t('Predicted', character.nickname, name);
     this.predicted.push(character.id);
-    return t('PredictResult', character.nickname, character.good ? t(`PredictedGoodGuy`) : t('PredictedBadGuy'));
+
+    return t('PredictResult', character.nickname, name);
   }
 }

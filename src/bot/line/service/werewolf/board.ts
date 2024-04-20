@@ -1,5 +1,5 @@
 import { Action } from '@line/bot-sdk';
-import { Character, Predictor, Villager } from '@werewolf/character';
+import { Character, Predictor, Villager, Witcher } from '@werewolf/character';
 import { t } from '@werewolf/locales';
 import { Werewolf } from '@werewolf/game';
 import {
@@ -85,6 +85,14 @@ function _night(text: string, command?: string) {
   });
 }
 
+function _light(text: string, command?: string) {
+  return tableMessage({
+    title: [wrapAndCenterText(t(`DaytimeBoard`))],
+    rows: [[wrapAndCenterText(text)]],
+    buttons: command ? [primaryButton(sendTextToBot(command))] : undefined
+  });
+}
+
 export function werewolfGroup() {
   return _night(t(`WerewolfDM`), t(`IamWerewolf`));
 }
@@ -97,16 +105,17 @@ export function witcherGroup() {
   return _night(t(`WitcherDM`), t(`IamWitcher`));
 }
 
-export function predictorGrouo() {
+export function predictorGroup() {
   return _night(t(`PredictorDM`), t(`IamPredictor`));
 }
 
-export function daytime(text: string, command?: string) {
-  return tableMessage({
-    title: [wrapAndCenterText(t(`DaytimeBoard`))],
-    rows: [[wrapAndCenterText(text)]],
-    buttons: command ? [primaryButton(sendTextToBot(command))] : undefined
-  });
+export function hunterGroup() {
+  return _light(t(`HunterDM`), t(`IamHunter`));
+}
+
+export function daytime(text: string) {
+  // TODO:
+  return _light(text);
 }
 
 export function voting(votes: Record<string, Character[]>, count: number) {
@@ -166,11 +175,12 @@ export function werewolf(game: Werewolf, killerId: string) {
   });
 }
 
-export function guard(names: string[]) {
+export function guard(game: Werewolf) {
+  const names = game.stage.survivors.map(survivor => survivor.nickname);
   return playerList({
     names,
     title: [centeredText(t(`GuardBoard`))],
-    action: name => messageAction(t(`Protect`, name)),
+    action: name => messageAction(t.regex(`Protect`, name)),
     buttons: [
       // TODO:
       primaryButton(messageAction(t('ProtectSelf'))),
@@ -179,39 +189,54 @@ export function guard(names: string[]) {
   });
 }
 
-export function predictor(predictor: Predictor, characters: Character[], skip: boolean) {
+export function predictor(game: Werewolf, predictorId: string) {
+  const predictor = game.getPlayer<Predictor>(predictorId);
   return tableMessage({
     title: [wrapAndCenterText(t(`PredictorBoard`))],
     rows: [
-      ...characters.map(c => {
-        const predictText = t(`Predict`, c.nickname);
-        const predicted = predictor.predicted.includes(c.id);
-        const action = predicted ? undefined : messageAction(predictText);
-        const title = predicted ? t(c.good ? `PredictedGoodGuy` : `PredictedBadGuy`) : '???';
-        return [
-          wrapedText(`【${title}】`, { flex: 0, align: 'start', action }),
-          wrapedText(`${c.nickname}`, { flex: 9, align: 'start', action })
-        ];
-      })
+      ...game.stage.survivors
+        .map(c => {
+          if (predictor.id === c.id) return [];
+          const predictText = t.regex(`Predict`, c.nickname);
+          const predicted = predictor.predicted.includes(c.id);
+          const action = predicted ? undefined : messageAction(predictText);
+          const title = predicted ? t(c.good ? `PredictedGoodGuy` : `PredictedBadGuy`) : '???';
+          return [
+            wrapedText(`【${title}】`, { flex: 0, align: 'start', action }),
+            wrapedText(`${c.nickname}`, { flex: 9, align: 'start', action })
+          ];
+        })
+        .filter(r => !!r.length)
     ],
-    footer: skip ? [wrapedText(t('PredictedAll'))] : []
+    footer: predictor.predictedAll ? [wrapedText(t('PredictedAll'))] : []
   });
 }
 
-export function rescue(names: string[]) {
+export function rescue(game: Werewolf, witcherId: string) {
+  const nearDeath = game.stage.nearDeath.map(character => character.nickname);
+  const witcher = game.getPlayer<Witcher>(witcherId);
+  if (!nearDeath.length || witcher.rescued) {
+    return null;
+  }
+
   return playerList({
-    names,
+    names: nearDeath,
     title: [centeredText(t(`RescueBoard`))],
-    action: name => messageAction(t(`Rescue`, name)),
+    action: name => messageAction(t.regex(`Rescue`, name)),
     buttons: [primaryButton(messageAction(t(`NoRescue`)))]
   });
 }
 
-export function poison(names: string[]) {
+export function poison(game: Werewolf, witcherId: string) {
+  const character = game.getPlayer(witcherId);
+  const names = game.stage.survivors.reduce(
+    (res, survivor) => (survivor.id === witcherId ? res : [...res, character.nickname]),
+    [] as string[]
+  );
   return playerList({
     names,
     title: [centeredText(t(`PoisonBoard`))],
-    action: name => messageAction(t(`Poison`, name)),
+    action: name => messageAction(t.regex(`Poison`, name)),
     buttons: [primaryButton(messageAction(t(`NoPoison`)))]
   });
 }
@@ -220,7 +245,7 @@ export function hunter(names: string[]) {
   return playerList({
     names,
     title: [centeredText(t(`HunterBoard`))],
-    action: name => messageAction(t(`Shoot`, name)),
+    action: name => messageAction(t.regex(`Shoot`, name)),
     buttons: [secondaryButton(messageAction(t(`NoShoot`)))]
   });
 }

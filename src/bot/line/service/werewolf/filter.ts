@@ -1,8 +1,10 @@
+import { WebhookEvent } from '@line/bot-sdk';
 import { Constructable } from '@/types';
 import { createFilter, Game, TextMatch, UserId } from '@line/filter';
 import { Werewolf } from '@werewolf/game';
 import { Character } from '@werewolf/character';
 import { t } from '@werewolf/locales';
+import { isSingleEvent } from '@line/types';
 
 export const WerewolfGame = Game(Werewolf);
 
@@ -18,18 +20,43 @@ export const IsPlayer = createFilter(UserId, WerewolfGame, async (userId, game) 
   return { userId, game, character };
 });
 
-export const IsCharacter = <C extends Character>(CharacterConstructor: Constructable<C>) =>
-  createFilter(IsPlayer, async d => {
-    if (d.character instanceof CharacterConstructor) {
-      return { ...d, character: d.character as C };
-    }
-    // TODO:
-    // messages for 不，你不是
-  });
+export const IsCharacter = createWerewolfFilter(Character);
 
-export const TargetPlayer = (regex: RegExp | string) =>
-  createFilter(TextMatch(regex), WerewolfGame, async ([, name], game) => {
-    const target = game.stage.playersByName[name];
-    if (!target) throw t(`TargetNoExists`, name);
-    return target;
-  });
+export function createWerewolfFilter<C extends Character>(CharacterConstructor: Constructable<C>) {
+  type R = {
+    userId: string;
+    game: Werewolf;
+    target?: Character;
+    character: C;
+  };
+  type RR<T> = (event: WebhookEvent) => Promise<Promise<T>>;
+
+  interface Options {
+    target?: RegExp | string;
+  }
+
+  function filter(): RR<R>;
+  function filter(options: Options & { target: RegExp | string }): RR<R & { target: Character }>;
+  function filter(options: Options = {}): RR<R> {
+    const { target } = options;
+
+    return createFilter(
+      target ? TextMatch(target) : () => [] as string[],
+      IsPlayer,
+      (event: WebhookEvent) => event,
+      async ([, name], d, event) => {
+        if (d.character instanceof CharacterConstructor) {
+          const target = name ? d.game.stage.playersByName[name] : undefined;
+          if (!target && options?.target) throw t(`TargetNoExists`, name);
+          return { ...d, target, character: d.character as C };
+        }
+
+        if (isSingleEvent(event)) throw t(`YouAreNot`);
+
+        throw false;
+      }
+    );
+  }
+
+  return filter;
+}

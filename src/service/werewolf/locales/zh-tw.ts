@@ -142,6 +142,7 @@ export default defineMessages(
     YourAreCharacter: '你是【{0}】留意群組訊息，到你的回合後，請按指示輸入指令或直接點擊按鈕',
     YouAreVillager: `你是【${Character.Villager}】，請努力活下去！`,
     CharacterIntroButton: '角色簡介',
+    YouAreNot: `不，你不是`,
 
     NightBoard: '現在是晚上',
     GettingDark: '天快黑了',

@@ -50,7 +50,6 @@ export class Character {
     if (!stage.candidates.has(character.id)) throw t('VoteOutOfRange');
     stage.voted.push(this.id);
     stage.candidates.get(character.id)!.push(this.id);
-    return { self: this.id === character.id };
   }
 
   @Action(() => Vote, { notYourTurn: () => false })

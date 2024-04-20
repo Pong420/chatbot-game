@@ -64,8 +64,8 @@ export class Game extends GameInstance {
   }
 
   // id or name
-  getPlayer(key: string) {
-    return this.stage.players.get(key) || this.stage.playersByName[key];
+  getPlayer<C extends Character>(key: string) {
+    return (this.stage.players.get(key) || this.stage.playersByName[key]) as C;
   }
 
   getPlayersByCharacter<C extends Character>(
@@ -107,7 +107,7 @@ export class Game extends GameInstance {
     this.stage.onStart(stage);
   }
 
-  protected getNextStage(CurrStage = this.stage.constructor as typeof Stage): typeof Stage {
+  getNextStage(CurrStage = this.stage.constructor as typeof Stage): typeof Stage {
     if (CurrStage === Init) return Start;
 
     const stages: (typeof Stage)[] = [

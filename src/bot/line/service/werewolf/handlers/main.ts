@@ -5,9 +5,8 @@ import { createGame, updateGame } from '@/supabase/game';
 import { updateUser } from '@/supabase/user';
 import { Werewolf } from '@werewolf/game';
 import { t } from '@werewolf/locales';
-import { Stage, Init, Start, Guard, Night, Daytime } from '@werewolf/stage';
-import { Witcher } from '@werewolf/character';
-import { WerewolfGame, IsHost, IsPlayer } from '../filter';
+import { Stage, Init, Start, Guard, Night, Daytime, Witcher, Predictor, Hunter } from '@werewolf/stage';
+import { WerewolfGame, IsHost, IsPlayer, IsCharacter } from '../filter';
 import * as board from '../board';
 
 function getStageMessage(stage: Stage) {
@@ -16,6 +15,8 @@ function getStageMessage(stage: Stage) {
   if (stage instanceof Guard) return board.guardGroup();
   if (stage instanceof Night) return board.werewolfGroup();
   if (stage instanceof Witcher) return board.witcherGroup();
+  if (stage instanceof Predictor) return board.predictorGroup();
+  if (stage instanceof Hunter) return board.hunterGroup();
   if (stage instanceof Daytime) return board.daytime('');
 }
 
@@ -64,6 +65,18 @@ export const mainHandlers = [
   }),
   createHandler(Single, TextEqual(t('MyCharacter')), IsPlayer, async ({ character }) => {
     return board.myCharacter(character);
+  }),
+  createHandler(Group, IsCharacter({ target: t(`Vote`) }), async ({ game, target, character }) => {
+    character.vote(target);
+    await updateGame(game);
+    // TODO:
+    return board.voting({}, 0);
+  }),
+  createHandler(Group, TextEqual(t(`Waive`)), IsPlayer, async ({ game, character }) => {
+    character.waive();
+    await updateGame(game);
+    // TODO:
+    return board.voting({}, 0);
   }),
   createHandler(LeaveGroup, WerewolfGame, async (event, game) => {
     await Promise.all(Array.from(game.players, ([id]) => updateUser(id, { game: null }).catch(() => void 0)));

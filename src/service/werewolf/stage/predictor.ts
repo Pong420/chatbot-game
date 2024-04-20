@@ -14,6 +14,7 @@ export class Predictor extends Stage {
       if (survivor instanceof PredictorCharacter) {
         // if all survivors predicted, player turn should be ended
         survivor.endTurn = this.survivors.every(s => survivor.predicted.includes(s.id));
+        survivor.predictedAll = survivor.endTurn;
       }
     });
   }

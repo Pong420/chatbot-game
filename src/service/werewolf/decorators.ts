@@ -5,17 +5,13 @@ import { t } from './locales';
 import type { Stage } from './stage';
 
 export interface ActionOptions {
-  notYourTurn?: unknown;
-  endedTurn?: () => unknown;
+  notYourTurn?: (character: any) => unknown;
+  turnEnded?: (character: any) => unknown;
 }
-
-const _endedTurn = () => {
-  throw t('TurnEnded');
-};
 
 export function Action(
   get?: () => Constructable<Stage>,
-  { notYourTurn = t('NotYourTurn') as unknown, endedTurn = _endedTurn }: ActionOptions = {}
+  { notYourTurn = () => t('NotYourTurn') as unknown, turnEnded = () => t('TurnEnded') }: ActionOptions = {}
 ) {
   return function (_target: any, _propertyKey: string, descriptor: PropertyDescriptor) {
     const method = descriptor.value!;
@@ -23,8 +19,8 @@ export function Action(
     descriptor.value = function (this: Character, ...args: any) {
       const StageConstructor = get?.();
       if (this.isDead) throw t('YouDead');
-      if (!!this.stage && !!StageConstructor && !(this.stage instanceof StageConstructor)) throw notYourTurn;
-      if (this.endTurn) throw endedTurn.call(this);
+      if (!!this.stage && !!StageConstructor && !(this.stage instanceof StageConstructor)) throw notYourTurn(this);
+      if (this.endTurn) throw turnEnded(this);
 
       const res = method.apply(this, args);
       this.endTurn = true;

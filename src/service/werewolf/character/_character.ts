@@ -42,7 +42,7 @@ export class Character {
     this.causeOfDeath.push(instance);
   }
 
-  @Action(() => Vote, { notYourTurn: t('VoteNotStarted') })
+  @Action(() => Vote, { notYourTurn: () => t('VoteNotStarted') })
   vote(character: Character) {
     const stage = this.stage as Vote;
     if (character.isDead) throw t('CantKillDeadTarget', character.id === this.id ? t('Self') : character.nickname);
@@ -53,7 +53,7 @@ export class Character {
     return { self: this.id === character.id };
   }
 
-  @Action(() => Vote, { notYourTurn: false })
+  @Action(() => Vote, { notYourTurn: () => false })
   waive() {
     const stage = this.stage as Vote;
     stage.voted.push(this.id);

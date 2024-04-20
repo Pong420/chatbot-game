@@ -4,6 +4,10 @@ import { t } from '../locales';
 import { Hunter as HunterStage } from '../stage';
 import { Character } from './_character';
 
+const HunterAction = Action(() => HunterStage, {
+  turnEnded: (character: Hunter) => (character._canShoot === undefined ? t(`NotYourTurn`) : t(`TurnEnded`))
+});
+
 export class Hunter extends Character {
   readonly type = 'Hunter';
   readonly name = t('Hunter');
@@ -20,7 +24,7 @@ export class Hunter extends Character {
     );
   }
 
-  @Action(() => HunterStage)
+  @HunterAction
   shoot(character: Character) {
     if (!this._canShoot) throw t(`NotReadyForShoot`);
     if (character.isDead) throw t(`CantKillDeadTarget`, character.nickname);
@@ -31,7 +35,7 @@ export class Hunter extends Character {
     return t(`ShootSuccess`);
   }
 
-  @Action(() => HunterStage)
+  @HunterAction
   noShoot() {
     this._canShoot = false;
     return t(`NoShootSuccess`);

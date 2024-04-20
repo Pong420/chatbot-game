@@ -4,6 +4,10 @@ import { Action } from '../decorators';
 import { Witcher as WitcherStage } from '../stage';
 import { Character } from './_character';
 
+const turnEnded = (character: Witcher) => {
+  return character.rescued && character.poisoned ? t('NoMoreMedicine') : t('TurnEnded');
+};
+
 export class Witcher extends Character {
   readonly type = 'Witcher';
   readonly name = t('Witcher');
@@ -15,7 +19,7 @@ export class Witcher extends Character {
   rescued?: string;
   poisoned?: string;
 
-  @Action(() => WitcherStage)
+  @Action(() => WitcherStage, { turnEnded })
   rescue(character: Character) {
     if (this.rescued) throw t(`Rescued`);
     if (character.isDead) throw t(`TargetIsDead`, character.nickname);
@@ -30,7 +34,7 @@ export class Witcher extends Character {
     return self ? t('RescueSelfSuccess') : t('RescueSuccess');
   }
 
-  @Action(() => WitcherStage)
+  @Action(() => WitcherStage, { turnEnded })
   poison(character: Character) {
     if (this.poisoned) throw t(`Poisoned`);
     if (character.isDead) throw t(`CantKillDeadTarget`, character.nickname);
@@ -42,7 +46,7 @@ export class Witcher extends Character {
     return self ? t(`PoisonSelf`) : t('PoisonSuccess');
   }
 
-  @Action(() => WitcherStage)
+  @Action(() => WitcherStage, { turnEnded: () => false })
   idle() {
     //
   }

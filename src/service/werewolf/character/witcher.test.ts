@@ -32,7 +32,6 @@ test('witcher', () => {
   });
   expect(() => game.next()).toThrowError(t('StageNotEnded'));
   witchers[0].idle();
-  expect(() => witchers[0].idle()).toThrowError(t(`TurnEnded`));
 
   nextStage('Daytime');
   allWaive();
@@ -85,4 +84,25 @@ test('witcher', () => {
   nextStage('End');
   expect(survivors).toHaveLength(2);
   expect(survivors).toSatisfyAll((survivor: Character) => survivor instanceof Villager);
+});
+
+test('witcher - no medicine', () => {
+  const { createGame, nextStage, allWaive } = testSuite();
+
+  const characters = [Werewolf, Witcher, Villager, Villager, Villager, Villager];
+  createGame({ numOfPlayers: characters.length, characters });
+
+  nextStage('Night');
+  werewolfs[0].kill(villagers[0]);
+
+  witchers[0].rescued = villagers[0].id;
+  witchers[0].poisoned = villagers[0].id;
+
+  nextStage('Witcher');
+  expect(witchers[0].endTurn).toBeTrue();
+  expect(() => witchers[0].rescue(villagers[0])).toThrowError(t(`NoMoreMedicine`));
+  expect(() => witchers[0].idle()).not.toThrowError();
+
+  nextStage('Daytime');
+  allWaive();
 });

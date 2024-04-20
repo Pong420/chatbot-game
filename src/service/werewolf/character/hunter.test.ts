@@ -40,9 +40,7 @@ test.each(['', 'not '])('hunter was killed - %sshot', shot => {
 
   expect(() => hunters[0].shoot(hunters[0])).toThrowError(t(`ShootSelf`));
   expect(() => hunters[0].shoot(villagers[0])).toThrowError(t(`CantKillDeadTarget`, villagers[0].nickname));
-
-  // TODO: make this better
-  expect(() => hunters[1].shoot(hunters[0])).toThrowError(t(`TurnEnded`));
+  expect(() => hunters[1].shoot(hunters[0])).toThrowError(t(`NotYourTurn`));
 
   if (shot === '') {
     hunters[0].shoot(werewolfs[0]);

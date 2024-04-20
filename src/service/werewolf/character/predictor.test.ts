@@ -75,3 +75,29 @@ test('predictor', () => {
 
   nextStage('End');
 });
+
+test('predictor - all', () => {
+  const { createGame, nextStage, allVoteTo } = testSuite();
+
+  const characters = [Werewolf, Predictor, Villager, Villager, Villager, Villager];
+  createGame({ numOfPlayers: characters.length, characters });
+
+  nextStage('Night');
+  expect(predictors[0]).toBeInstanceOf(Predictor);
+  werewolfs[0].kill(villagers[0]);
+
+  predictors[0].predicted = Array.from(game.players, ([id]) => id);
+
+  nextStage('Predictor');
+
+  expect(() => predictors[0].predict(werewolfs[0])).toThrowError(t(`PredictedAll`));
+
+  nextStage('Daytime');
+  allVoteTo(villagers[1]);
+  nextStage('Voted');
+
+  nextStage('Night');
+  werewolfs[0].idle();
+
+  nextStage('Predictor');
+});

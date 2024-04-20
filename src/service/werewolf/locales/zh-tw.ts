@@ -183,12 +183,14 @@ export default defineMessages(
     Rescued: `沒有傷藥了`,
     Poisoned: `沒有毒藥了`,
     PoisonSelf: ['這不是正常操作，選別人吧'],
+    NoMoreMedicine: `你沒有藥了，系統會默認你已操作完成`,
 
     IamPredictorGroup: [`看，這裏有個神棍`, `請給我下期的彩票號碼，拜託了`],
     PredictResultGood: `{0}是好人`,
     PredictResultBad: `{0}是壞人`,
     Predicted: `你已經知道「{0}」的身份是【{1}】，偷窺其他人吧`,
     PredictSelf: [`{0}是【神棍】`, `{0}是【偷窺狂】`],
+    PredictedAll: `還活著的都被你查看過了，系統會默認你完成操作`,
 
     IamHunterGroup: [`你是正式錄用的獵人嗎`, `我是好人，不要射我`],
     ShootSuccess: `好`,

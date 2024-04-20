@@ -9,8 +9,11 @@ export class Predictor extends Character {
   readonly good = true;
 
   predicted: string[] = [];
+  predictedAll = false;
 
-  @Action(() => PredictorStage)
+  @Action(() => PredictorStage, {
+    turnEnded: (character: Predictor) => (character.predictedAll ? t(`PredictedAll`) : t(`TurnEnded`))
+  })
   predict(character: Character) {
     const self = this.id === character.id;
     if (character.isDead) throw self ? t('YouDead') : t('TargetIsDead', character.nickname);

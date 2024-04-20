@@ -33,7 +33,6 @@ export class Hunter extends Character {
 
   @Action(() => HunterStage)
   noShoot() {
-    // delete this.shot;
     this._canShoot = false;
     return t(`NoShootSuccess`);
   }

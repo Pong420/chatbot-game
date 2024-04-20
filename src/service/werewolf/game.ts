@@ -100,14 +100,14 @@ export class Game extends GameInstance {
     }
   }
 
-  protected nextStage(NextStage: typeof Stage) {
+  protected transition(NextStage: typeof Stage) {
     const { data } = this.serialize();
     const stage = this.stage;
     this.stage = plainToInstance(NextStage, data) as Stage;
     this.stage.onStart(stage);
   }
 
-  getNextStage(CurrStage = this.stage.constructor as typeof Stage): typeof Stage {
+  protected getNextStage(CurrStage = this.stage.constructor as typeof Stage): typeof Stage {
     if (CurrStage === Init) return Start;
 
     const stages: (typeof Stage)[] = [
@@ -123,23 +123,20 @@ export class Game extends GameInstance {
     const nextIndex = (stages.indexOf(CurrStage) + 1) % stages.length;
     const NextStage = stages[nextIndex];
 
+    if (!NextStage) {
+      throw `cannot get next stage from ${this.stage.name}`;
+    }
+
     if ((NextStage === Daytime || CurrStage === Voted) && Hunter.available(this.stage)) {
       return Hunter;
     }
 
     if (this.stage instanceof Hunter) {
-      if (this.stage.ref === 'vote') return this.getNextStage(Voted);
-      return Daytime;
+      return this.stage.ref === 'vote' ? this.getNextStage(Voted) : Daytime;
     }
 
-    if (!NextStage) {
-      throw `cannot get next stage from ${this.stage.name}`;
-    }
-
-    if (typeof NextStage.available === 'function') {
-      if (!NextStage.available(this.stage)) {
-        return this.getNextStage(NextStage);
-      }
+    if (typeof NextStage.available === 'function' && !NextStage.available(this.stage)) {
+      return this.getNextStage(NextStage);
     }
 
     return NextStage;
@@ -150,10 +147,10 @@ export class Game extends GameInstance {
     this.stage.onEnd();
 
     const NextStage = this.getNextStage();
-    this.nextStage(NextStage);
+    this.transition(NextStage);
 
     if (this.shouldEndGame()) {
-      this.nextStage(End);
+      this.transition(End);
     }
 
     return this.stage;

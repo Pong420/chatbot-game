@@ -10,7 +10,7 @@ const IsGuard = createWerewolfFilter(Guard);
 
 export default [
   createHandler(Group, TextEqual(t('IamGuard')), IsPlayer, () => t(`IamGuardGroup`)),
-  createHandler(Single, TextEqual(t('IamGuard')), IsGuard(), ({ game }) => board.guard(game)),
+  createHandler(Single, TextEqual(t('IamGuard')), IsGuard({ yourAreNotError: true }), ({ game }) => board.guard(game)),
   createHandler(Single, IsGuard({ target: t('Protect') }), async ({ game, target, character }) => {
     const message = character.protect(target);
     await updateGame(game);

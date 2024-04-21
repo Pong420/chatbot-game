@@ -1,10 +1,10 @@
 import { WebhookEvent } from '@line/bot-sdk';
 import { Constructable } from '@/types';
 import { createFilter, Game, TextMatch, UserId } from '@line/filter';
+import { isSingleEvent } from '@line/types';
 import { Werewolf } from '@werewolf/game';
 import { Character } from '@werewolf/character';
 import { t } from '@werewolf/locales';
-import { isSingleEvent } from '@line/types';
 
 export const WerewolfGame = Game(Werewolf);
 
@@ -33,12 +33,14 @@ export function createWerewolfFilter<C extends Character>(CharacterConstructor: 
 
   interface Options {
     target?: RegExp | string;
+    yourAreNotError?: boolean;
   }
 
   function filter(): RR<R>;
   function filter(options: Options & { target: RegExp | string }): RR<R & { target: Character }>;
+  function filter(options: Options): RR<R>;
   function filter(options: Options = {}): RR<R> {
-    const { target } = options;
+    const { target, yourAreNotError } = options;
 
     return createFilter(
       target ? TextMatch(target) : () => [] as string[],
@@ -51,7 +53,7 @@ export function createWerewolfFilter<C extends Character>(CharacterConstructor: 
           return { ...d, target, character: d.character as C };
         }
 
-        if (isSingleEvent(event)) throw t(`YouAreNot`);
+        if (isSingleEvent(event) && yourAreNotError) throw t(`YouAreNot`);
 
         throw false;
       }

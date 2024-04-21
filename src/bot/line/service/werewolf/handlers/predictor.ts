@@ -10,7 +10,7 @@ const IsPredictor = createWerewolfFilter(Predictor);
 
 export default [
   createHandler(Group, TextEqual(t('IamPredictor')), IsPlayer, () => t(`IamPredictorGroup`)),
-  createHandler(Single, TextEqual(t('IamPredictor')), IsPredictor(), ({ game, character }) =>
+  createHandler(Single, TextEqual(t('IamPredictor')), IsPredictor({ yourAreNotError: true }), ({ game, character }) =>
     board.predictor(game, character.id)
   ),
   createHandler(Single, IsPredictor({ target: t('Predict') }), async ({ target, game, character }) => {

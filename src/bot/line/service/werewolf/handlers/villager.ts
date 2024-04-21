@@ -8,5 +8,5 @@ const IsVillager = createWerewolfFilter(Villager);
 
 export default [
   createHandler(Group, TextEqual(t('IamVillager')), IsPlayer, () => t(`IamVillagerGroup`)),
-  createHandler(Single, TextEqual(t('IamVillager')), IsVillager(), () => t(`YouAreVillager`))
+  createHandler(Single, TextEqual(t('IamVillager')), IsVillager({ yourAreNotError: true }), () => t(`YouAreVillager`))
 ];

@@ -9,6 +9,7 @@ export class Vote extends VoteBaseStage {
     this.updateSurvivors();
     this.survivors.forEach(survivor => {
       this.candidates.set(survivor.id, []);
+      this.voter.push(survivor.id);
       survivor.endTurn = false;
     });
   }

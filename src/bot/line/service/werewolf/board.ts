@@ -2,7 +2,7 @@ import { Action } from '@line/bot-sdk';
 import { Character, Predictor, Villager, Witcher } from '@werewolf/character';
 import { t } from '@werewolf/locales';
 import { Werewolf } from '@werewolf/game';
-import { Stage } from '@werewolf/stage';
+import { Stage, VoteBaseStage } from '@werewolf/stage';
 import {
   messageAction,
   sendTextToBot,
@@ -128,9 +128,8 @@ export function daytime(stage: Stage) {
   }
 }
 
-export function voting(votes: Record<string, Character[]>, count: number) {
-  const entries = Object.entries(votes);
-  const rows = entries.map<Payload[]>(([name, list]) => {
+export function vote(stage: VoteBaseStage) {
+  const rows = Array.from(stage.candidates, ([name, list]): Payload[] => {
     return [
       wrapedText(name, { flex: 9, action: messageAction(t(`Vote`, name)) }),
       createFlexText({ flex: 0, align: 'end' })(String(list.length))
@@ -138,16 +137,39 @@ export function voting(votes: Record<string, Character[]>, count: number) {
   });
 
   return tableMessage({
-    title: [wrapAndCenterText(t(`VoteBoard`, count, entries.length)), wrapAndCenterText(t(`ClickToVote`))],
+    title: [
+      wrapAndCenterText(t(`VoteBoard`, stage.voted.length, stage.voter.length)),
+      wrapAndCenterText(t(`ClickToVote`))
+    ],
     rows: rows,
     buttons: [primaryButton(messageAction(t(`WhoNotVoted`))), secondaryButton(messageAction(t(`Waive`)))]
   });
 }
 
-export function voted(text: string) {
+export function revote(stage: VoteBaseStage) {
+  const rows = Array.from(stage.candidates, ([name, list]): Payload[] => {
+    return [
+      wrapedText(name, { flex: 9, action: messageAction(t(`Vote`, name)) }),
+      createFlexText({ flex: 0, align: 'end' })(String(list.length))
+    ];
+  });
+
+  return tableMessage({
+    title: [
+      wrapAndCenterText(t(`ReVoteBoard`, stage.voted.length, stage.voter.length)),
+      wrapAndCenterText(t(`ClickToVote`))
+    ],
+    rows: rows,
+    footer: [wrapedText(t(`ReVoteBoardFooter`))],
+    buttons: [primaryButton(messageAction(t(`WhoNotVoted`))), secondaryButton(messageAction(t(`Waive`)))]
+  });
+}
+
+export function voted(stage: Stage) {
+  const names = stage.death.map(character => character.nickname);
   return tableMessage({
     title: [centeredText(t(`VoteEndBoard`))],
-    rows: [[wrapAndCenterText(text)]]
+    rows: [[names.length ? wrapAndCenterText(t(`Banishment`, names.join(', '))) : wrapAndCenterText(t(`NoOneDead`))]]
   });
 }
 

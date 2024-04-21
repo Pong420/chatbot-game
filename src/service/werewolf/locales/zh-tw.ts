@@ -45,10 +45,11 @@ export const HostCommand = {
   Initiate: `開啟狼人殺`,
   Open: `狼人殺設定完畢`,
   Start: `狼人殺開始`,
-  End: `狼人殺結束`,
-  Survivor: `狼人殺倖存者`,
-  'DeathReport': '死亡報告',
-  HostCommands: `主持指令`
+  End: `狼人殺結束`, // TODO:
+  Survivor: `狼人殺倖存者`, // TODO:
+  'DeathReport': '狼人殺死亡報告', // TODO:
+  WhoNotVoted: `誰未投票`,
+  HostCommands: `主持指令` // TODO:
 };
 
 export const StageCommand = {
@@ -94,8 +95,7 @@ export const CommonCommand = {
   Intro: '狼人殺介紹',
   MyCharacter: `我的狼人殺角色`,
   Vote: `^我投(.*)`,
-  Waive: `棄權`,
-  WhoNotVoted: `誰未投票`
+  Waive: `棄權`
 };
 
 export default defineMessages(
@@ -158,6 +158,7 @@ export default defineMessages(
     DuplicatedKill: '知道了，你們是有多大仇!?',
     DuplicatedSuicide: '知道了，你就這麼想死嗎?',
     CantKillDeadTarget: ['{0}已經死了，你們是有多大仇!?', '{0}已經死了，放過他吧'],
+    ClickToSelect: '點擊名稱選擇目標',
 
     IamGuardGroup: `你是好人，請守護我(\´▽\`ʃ♡ƪ)`,
     ProtectSuccess: [`好`, `你是好人`],
@@ -213,10 +214,14 @@ export default defineMessages(
     SilenceForTheDeceased: `我們一起默哀一秒`,
 
     VoteBoard: `投票階段, {0}/{1}`,
-    VoteEndBoard: `投票結束`,
-
     ClickToVote: '點擊名稱即可進行投票',
-    ClickToSelect: '點擊名稱選擇目標'
+    ReVoteBoard: `第二輪投票, {0}/{1}`,
+    ReVoteBoardFooter: `平票者不能投票，其餘玩家只能投票給平票者`,
+    CandidateCantVote: `平票者不能投票`,
+    WhoNotVotedReply: `{0}未投票`,
+
+    VoteEndBoard: `投票結束`,
+    Banishment: `{0}被處死了`
 
     // TODO:
     // 遇到錯誤時，請主持人輸入【${Command}】,

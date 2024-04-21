@@ -66,12 +66,13 @@ test('basic', () => {
   vote = nextStage('ReVote');
 
   expect(vote.candidates.size).toBe(2);
+  expect(vote.voter).toHaveLength(3);
 
   expect(() => game.next()).toThrowError(t('StageNotEnded'));
   expect(() => villagers[2].vote(villagers[0])).toThrowError(t('CantKillDeadTarget', villagers[0].nickname)); // expecet not to VoteOutOfRange
 
-  expect(() => villagers[1].vote(werewolfs[0])).toThrowError(t(`TurnEnded`));
-  expect(() => werewolfs[0].vote(villagers[1])).toThrowError(t(`TurnEnded`));
+  expect(() => villagers[1].vote(werewolfs[0])).toThrowError(t(`CandidateCantVote`));
+  expect(() => werewolfs[0].vote(villagers[1])).toThrowError(t(`CandidateCantVote`));
 
   allWaive();
 

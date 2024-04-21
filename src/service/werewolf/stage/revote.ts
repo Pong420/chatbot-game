@@ -16,6 +16,7 @@ export class ReVote extends VoteBaseStage {
     super.onStart(stage);
     this.survivors.forEach(survivor => {
       survivor.endTurn = this.candidates.has(survivor.id);
+      !survivor.endTurn && this.voter.push(survivor.id);
     });
   }
 }

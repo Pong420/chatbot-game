@@ -2,6 +2,7 @@
 import { test } from 'vitest';
 import { Werewolf as WerewolfGame } from '@werewolf/game';
 import { t } from '@werewolf/locales';
+import { VoteBaseStage } from '@werewolf/stage';
 import { testSuite, WerewolfPlayer } from '../test';
 import * as board from '../board';
 
@@ -59,5 +60,15 @@ test('main', async () => {
 
   // --------------------------------------------------------------------------------
 
+  // Daytime
   await next({ type: 'flex' });
+
+  // --------------------------------------------------------------------------------
+
+  // Vote
+  await next({ type: 'flex' });
+
+  await host
+    .g(t(`WhoNotVoted`))
+    .toTextMessage(t(`WhoNotVotedReply`, game.stage.survivors.map(s => s.nickname).join('，')));
 });

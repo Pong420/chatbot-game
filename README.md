@@ -9,9 +9,10 @@
     [ ] Game Room
 
 - TODO:
-  - cache response
   - check group members
     - leave if too many people
+  - refactor number of players
+    - allow to set characters after player joined
 
 ## Development
 

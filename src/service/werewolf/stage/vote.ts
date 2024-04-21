@@ -6,6 +6,7 @@ export class Vote extends VoteBaseStage {
 
   onStart(stage: Stage): void {
     super.onStart(stage);
+    this.updateSurvivors();
     this.survivors.forEach(survivor => {
       this.candidates.set(survivor.id, []);
       survivor.endTurn = false;

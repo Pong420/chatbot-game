@@ -2,6 +2,7 @@ import { Action } from '@line/bot-sdk';
 import { Character, Predictor, Villager, Witcher } from '@werewolf/character';
 import { t } from '@werewolf/locales';
 import { Werewolf } from '@werewolf/game';
+import { Stage } from '@werewolf/stage';
 import {
   messageAction,
   sendTextToBot,
@@ -22,6 +23,7 @@ interface PlayerListProps {
   names: string[];
   title?: CreateTableMessageProps['title'];
   buttons?: CreateTableMessageProps['buttons'];
+  footer?: CreateTableMessageProps['footer'];
   action?: (name: string) => Action;
 }
 
@@ -113,9 +115,17 @@ export function hunterGroup() {
   return _light(t(`HunterDM`), t(`IamHunter`));
 }
 
-export function daytime(text: string) {
-  // TODO:
-  return _light(text);
+export function daytime(stage: Stage) {
+  const names = stage.death.map(survivor => survivor.nickname);
+  if (names.length) {
+    return playerList({
+      names,
+      title: [centeredText(t(`DaytimeBoard`)), centeredText(t(`SomeOneDead`))],
+      footer: [centeredText(t('SilenceForTheDeceased'))]
+    });
+  } else {
+    return _light(t(`NoOneDead`));
+  }
 }
 
 export function voting(votes: Record<string, Character[]>, count: number) {
@@ -141,7 +151,7 @@ export function voted(text: string) {
   });
 }
 
-function playerList({ title = [], names, action, buttons }: PlayerListProps) {
+function playerList({ title = [], names, action, buttons, footer }: PlayerListProps) {
   return tableMessage({
     title,
     rows: names.map((name, idx) => [
@@ -153,7 +163,8 @@ function playerList({ title = [], names, action, buttons }: PlayerListProps) {
         action: action && action(name)
       })
     ]),
-    buttons
+    buttons,
+    footer
   });
 }
 
@@ -167,11 +178,7 @@ export function werewolf(game: Werewolf, killerId: string) {
     names,
     title: [centeredText(t(`ClickToSelect`))],
     action: name => postBackTextAction(t.regex(`Kill`, name)),
-    buttons: [
-      primaryButton(messageAction(t('Idle'))),
-      // TODO:
-      secondaryButton(messageAction(t('Suicide'), `請再輸入「${t('Suicide')}」確認`))
-    ]
+    buttons: [primaryButton(messageAction(t('Idle'))), secondaryButton(messageAction(t('Suicide')))]
   });
 }
 
@@ -181,11 +188,7 @@ export function guard(game: Werewolf) {
     names,
     title: [centeredText(t(`GuardBoard`))],
     action: name => messageAction(t.regex(`Protect`, name)),
-    buttons: [
-      // TODO:
-      primaryButton(messageAction(t('ProtectSelf'))),
-      secondaryButton(messageAction(t(`NoProtect`)))
-    ]
+    buttons: [primaryButton(messageAction(t('ProtectSelf'))), secondaryButton(messageAction(t(`NoProtect`)))]
   });
 }
 

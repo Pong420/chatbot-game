@@ -208,6 +208,9 @@ export default defineMessages(
     HunterBoard: `點擊名稱選擇要射擊的目標`,
 
     DaytimeBoard: '現在是白天',
+    SomeOneDead: `以下玩家死了`,
+    NoOneDead: `沒有人死去`,
+    SilenceForTheDeceased: `我們一起默哀一秒`,
 
     VoteBoard: `投票階段, {0}/{1}`,
     VoteEndBoard: `投票結束`,

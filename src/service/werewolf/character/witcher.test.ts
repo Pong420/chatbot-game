@@ -50,6 +50,7 @@ test('witcher', () => {
   expect(() => witchers[0].rescue(villagers[0])).toThrowError(t(`TurnEnded`));
 
   nextStage('Daytime');
+  expect(stage.death).toHaveLength(1);
 
   nextStage('Vote');
   allWaive();
@@ -64,6 +65,7 @@ test('witcher', () => {
 
   nextStage('Daytime');
   expect(villagers[1].isDead).toBeFalse();
+  expect(stage.death).toHaveLength(0);
 
   nextStage('Vote');
   allWaive();
@@ -77,8 +79,10 @@ test('witcher', () => {
   nextStage('Witcher');
   expect(() => witchers[0].rescue(villagers[1])).toThrowError(t(`Rescued`));
   witchers[0].idle();
+  expect(stage.death).toHaveLength(0);
 
   nextStage('Daytime');
+  expect(stage.death).toHaveLength(1);
 
   nextStage('Vote');
   allWaive();
@@ -95,6 +99,7 @@ test('witcher', () => {
   nextStage('End');
   expect(survivors).toHaveLength(2);
   expect(survivors).toSatisfyAll((survivor: Character) => survivor instanceof Villager);
+  expect(stage.death).toHaveLength(2);
 });
 
 test('witcher - no medicine', () => {

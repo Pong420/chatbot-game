@@ -30,7 +30,7 @@ function getStageMessage(stage: Stage) {
   if (stage instanceof Witcher) return board.witcherGroup();
   if (stage instanceof Predictor) return board.predictorGroup();
   if (stage instanceof Hunter) return board.hunterGroup();
-  if (stage instanceof Daytime) return board.daytime('');
+  if (stage instanceof Daytime) return board.daytime(stage);
   if (stage instanceof Vote) return board.voting({}, 0);
   if (stage instanceof Voted) return board.voted('');
   if (stage instanceof End) return null;

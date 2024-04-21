@@ -31,12 +31,14 @@ test('basic', () => {
   expect(() => werewolfs[0].kill(villagers[0])).toThrowError(t(`TurnEnded`));
   expect(() => werewolfs[0].vote(villagers[0])).toThrowError(t('VoteNotStarted'));
   expect(stage.nearDeath).toHaveLength(1);
+  expect(stage.death).toHaveLength(0);
 
   // --------------------------------------------------------------------------------
 
   nextStage('Daytime');
   expect(survivors).toHaveLength(5);
   expect(survivors).not.toContainEqual(villagers[0]);
+  expect(stage.death).toHaveLength(1);
 
   // --------------------------------------------------------------------------------
 
@@ -52,12 +54,15 @@ test('basic', () => {
   werewolfs[0].vote(villagers[1]);
 
   expect(() => game.next()).toThrowError(t('StageNotEnded'));
+
   allWaive();
+
   expect(vote.countResults()).toMatchObject({ numberOfVotes: 2, count: 1 });
+  expect(stage.death).toHaveLength(0);
 
   // --------------------------------------------------------------------------------
 
-  // two players got one vote, enter second round
+  // two players got one vote, enter re-vote
   vote = nextStage('ReVote');
 
   expect(vote.candidates.size).toBe(2);
@@ -71,11 +76,13 @@ test('basic', () => {
   allWaive();
 
   expect(vote.countResults()).toMatchObject({ numberOfVotes: 0, count: 0 });
+  expect(stage.death).toHaveLength(0);
 
   // --------------------------------------------------------------------------------
 
   const voted = nextStage('Voted');
   expect(survivors).toHaveLength(5);
+  expect(stage.death).toHaveLength(0);
 
   expect(voted.results).toEqual({
     numberOfVotes: 0,
@@ -90,10 +97,12 @@ test('basic', () => {
 
   expect(werewolfs[0].kill(villagers[1])).toEqual(t(`KillSuccss`));
   expect(stage.nearDeath).toHaveLength(1);
+  expect(stage.death).toHaveLength(0);
 
   // --------------------------------------------------------------------------------
 
   nextStage('Daytime');
+  expect(stage.death).toHaveLength(1);
 
   // --------------------------------------------------------------------------------
 
@@ -106,4 +115,5 @@ test('basic', () => {
 
   expect(werewolfs[0].isDead).toBeTrue();
   expect(werewolfs[0].causeOfDeath[0]).toBeInstanceOf(Voting);
+  expect(stage.death).toHaveLength(1);
 });

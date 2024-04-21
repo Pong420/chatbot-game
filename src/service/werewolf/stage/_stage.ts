@@ -36,11 +36,18 @@ export class Stage {
   @Exclude()
   playersByName: Record<string, Character> = {};
 
-  _survivors: string[] = [];
+  protected _survivors: string[] = [];
 
   @Exclude()
   get survivors() {
     return this._survivors.map(id => this.players.get(id)!);
+  }
+
+  protected _death: string[] = [];
+
+  @Exclude()
+  get death() {
+    return this._death.map(id => this.players.get(id)!);
   }
 
   @Exclude()
@@ -80,10 +87,19 @@ export class Stage {
    * Since players could be rescued, we cannot update survivors on each stage
    */
   updateSurvivors() {
+    const _survivors = [...this._survivors];
+
+    this._death = [];
     this._survivors = [];
+
     this.players.forEach(player => {
       player.isDead = player.causeOfDeath.length > 0;
-      !player.isDead && this._survivors.push(player.id);
+
+      if (player.isDead) {
+        _survivors.includes(player.id) && this._death.push(player.id);
+      } else {
+        this._survivors.push(player.id);
+      }
     });
   }
 

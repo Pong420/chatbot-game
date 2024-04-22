@@ -94,6 +94,7 @@ test('witcher', () => {
   werewolfs[0].kill(witchers[0]);
 
   nextStage('Witcher');
+  expect(() => witchers[0].poison(witchers[0])).toThrowError(t(`PoisonSelf`));
   expect(witchers[0].poison(werewolfs[0])).toEqual(t(`PoisonSuccess`));
 
   nextStage('End');

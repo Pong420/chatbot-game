@@ -51,13 +51,17 @@ test('main', async () => {
   // await hunter.s(t(`IamHunter`)).toTextMessage(t(`NotReadyForShoot`));
   await hunter.s(t.regex(`Shoot`, werewolfs[0].name)).toTextMessage(t(`NotReadyForShoot`));
 
-  // Wicther --------------------------------------------------------------------------------
+  // Witcher --------------------------------------------------------------------------------
 
   await next(board.witcherGroup());
 
   await witcher.s(t(`IamWitcher`)).toEqual(board.rescue(stage));
+  await witcher.s(t(`ShowRescueBoard`)).toEqual(board.rescue(stage));
+  await witcher.s(t(`ShowPoisonBoard`)).toEqual(board.poison(stage, witcher.userId));
   await witcher.s(t.regex(`Rescue`, villagers[0].name)).toTextMessage(t(`RescueSuccess`));
   await witcher.s(t.regex(`Rescue`, villagers[0].name)).toTextMessage(t(`TurnEnded`));
+  await werewolfs[0].s(t(`ShowRescueBoard`)).toBeUndefined();
+  await werewolfs[0].s(t(`ShowPoisonBoard`)).toBeUndefined();
 
   // Predictor --------------------------------------------------------------------------------
 
@@ -99,11 +103,12 @@ test('main', async () => {
   await werewolfs[1].s(t.regex(`Kill`, werewolfs[1].name)).toTextMessage(t(`KillSuccss`));
   await werewolfs[2].s(t.regex(`Idle`)).toTextMessage(t(`WerewolfIdleSuccess`));
 
-  // Wicther --------------------------------------------------------------------------------
+  // Witcher --------------------------------------------------------------------------------
 
   await next(() => board.witcherGroup());
   await witcher.s(t(`IamWitcher`)).toEqual(board.poison(stage, witcher.userId));
-  await witcher.s(t(`NoPoison`)).toTextMessage(t(`WitcherIdleSuccess`));
+  await witcher.s(t(`ShowRescueBoard`)).toTextMessage(t(`Rescued`));
+  await witcher.s(t(`NotUseMedicine`)).toTextMessage(t(`NotUseMedicineSuccessSuccess`));
 
   // Predictor --------------------------------------------------------------------------------
 

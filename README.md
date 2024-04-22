@@ -14,6 +14,7 @@
   - refactor handles the number of players
     - allow set characters after players joined
   - vote set to postback or private
+  - hunter should after daytime
 
 ## Development
 

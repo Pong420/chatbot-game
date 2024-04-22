@@ -38,16 +38,15 @@ export class Witcher extends Character {
   poison(character: Character) {
     if (this.poisoned) throw t(`Poisoned`);
     if (character.isDead) throw t(`CantKillDeadTarget`, character.nickname);
-
-    const self = this.id === character.id;
+    if (this.id === character.id) throw t(`PoisonSelf`);
 
     this.poisoned = character.id;
     character.dead(Poisoned, { userId: this.id });
-    return self ? t(`PoisonSelf`) : t('PoisonSuccess');
+    return t('PoisonSuccess');
   }
 
   @Action(() => WitcherStage, { turnEnded: () => false })
   idle() {
-    return t(`WitcherIdleSuccess`);
+    return t(`NotUseMedicineSuccessSuccess`);
   }
 }

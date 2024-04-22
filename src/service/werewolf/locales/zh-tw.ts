@@ -74,10 +74,11 @@ export const GuardCommand = {
 
 export const WitcherCommand = {
   IamWitcher: `我是女巫`,
-  Rescue: `^我要救(.*)`,
-  NoRescue: `不救`,
-  Poison: `對(.*)使用毒藥`,
-  NoPoison: `不使用毒藥`
+  Rescue: `^為(.*)治療`,
+  Poison: `^對(.*)下毒`,
+  NotUseMedicine: `不使用藥物`,
+  ShowRescueBoard: `我要救人`,
+  ShowPoisonBoard: `我要下毒`
 };
 
 export const PredictorCommand = {
@@ -191,7 +192,8 @@ export default defineMessages(
     NoMoreMedicine: `你沒有藥了，系統會默認你已操作完成`,
     RescueBoard: '點擊名稱選擇你要救的玩家',
     PoisonBoard: '點擊名稱選擇你要毒殺的玩家',
-    WitcherIdleSuccess: `好`,
+    NotUseMedicineSuccessSuccess: `好`,
+    NoOneHurt: `沒有人受傷`,
 
     IamPredictorGroup: [`看，這裏有個神棍`, `請給我下期的彩票號碼，拜託了`],
     PredictResult: `{0}是【{1}】`,

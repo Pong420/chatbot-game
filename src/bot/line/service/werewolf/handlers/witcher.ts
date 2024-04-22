@@ -11,9 +11,15 @@ const IsWitcher = createWerewolfFilter(Witcher);
 export default [
   createHandler(Group, TextEqual(t('IamWitcher')), IsPlayer, () => t(`IamWitcherGroup`)),
   createHandler(Single, TextEqual(t('IamWitcher')), IsWitcher({ yourAreNotError: true }), ({ game, character }) => {
-    return (
-      (character.rescued ? board.poison(game.stage, character.id) : board.rescue(game.stage)) || t(`NoMoreMedicine`)
-    );
+    if (!character.rescued) {
+      return board.rescue(game.stage);
+    }
+
+    if (!character.poisoned) {
+      return board.poison(game.stage, character.id);
+    }
+
+    return t(`NoMoreMedicine`);
   }),
   createHandler(Single, IsWitcher({ target: t(`Rescue`) }), async ({ game, target, character }) => {
     const message = character.rescue(target);
@@ -25,9 +31,15 @@ export default [
     await updateGame(game);
     return message;
   }),
-  createHandler(Single, TextEqual([t(`NoRescue`), t(`NoPoison`)]), IsWitcher(), async ({ game, character }) => {
+  createHandler(Single, TextEqual(t(`NotUseMedicine`)), IsWitcher(), async ({ game, character }) => {
     const message = character.idle();
     await updateGame(game);
     return message;
+  }),
+  createHandler(Single, TextEqual(t(`ShowRescueBoard`)), IsWitcher(), async ({ game, character }) => {
+    return character.rescued ? t(`Rescued`) : board.rescue(game.stage);
+  }),
+  createHandler(Single, TextEqual(t(`ShowPoisonBoard`)), IsWitcher(), async ({ game, character }) => {
+    return character.rescued ? t(`Poisoned`) : board.poison(game.stage, character.id);
   })
 ];

@@ -241,14 +241,17 @@ export function rescue(stage: Stage) {
   const nearDeath = stage.nearDeath.map(character => character.nickname);
 
   if (!nearDeath.length) {
-    return null;
+    return tableMessage({
+      rows: [[wrapAndCenterText(t(`NoOneHurt`))]],
+      buttons: [primaryButton(messageAction(t(`ShowPoisonBoard`))), secondaryButton(messageAction(t(`NotUseMedicine`)))]
+    });
   }
 
   return playerList({
     names: nearDeath,
     title: [centeredText(t(`RescueBoard`))],
     action: name => messageAction(t.regex(`Rescue`, name)),
-    buttons: [primaryButton(messageAction(t(`NoRescue`)))]
+    buttons: [primaryButton(messageAction(t(`ShowPoisonBoard`))), secondaryButton(messageAction(t(`NotUseMedicine`)))]
   });
 }
 
@@ -261,7 +264,7 @@ export function poison(stage: Stage, witcherId: string) {
     names,
     title: [centeredText(t(`PoisonBoard`))],
     action: name => messageAction(t.regex(`Poison`, name)),
-    buttons: [primaryButton(messageAction(t(`NoPoison`)))]
+    buttons: [secondaryButton(messageAction(t(`ShowRescueBoard`))), secondaryButton(messageAction(t(`NotUseMedicine`)))]
   });
 }
 

@@ -20,7 +20,7 @@ export function createHandler<FilterFunctions extends FilterFunction[]>(
         return error.message;
       }
       // ignore other type of error
-      process.env.NODE_ENV !== 'test' && console.warn('Except error to be string or Error, but receive', error);
+      process.env.NODE_ENV !== 'test' && console.warn('Expect error to be string or Error, but receive', error);
     });
   };
 }

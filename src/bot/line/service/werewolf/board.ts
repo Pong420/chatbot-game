@@ -1,5 +1,5 @@
 import { Action } from '@line/bot-sdk';
-import { Character, Predictor, Villager, Witcher } from '@werewolf/character';
+import { Character, Predictor, Villager } from '@werewolf/character';
 import { t } from '@werewolf/locales';
 import { Werewolf } from '@werewolf/game';
 import { Stage, VoteBaseStage } from '@werewolf/stage';
@@ -237,10 +237,10 @@ export function predictor(game: Werewolf, predictorId: string) {
   });
 }
 
-export function rescue(game: Werewolf, witcherId: string) {
-  const nearDeath = game.stage.nearDeath.map(character => character.nickname);
-  const witcher = game.getPlayer<Witcher>(witcherId);
-  if (!nearDeath.length || witcher.rescued) {
+export function rescue(stage: Stage) {
+  const nearDeath = stage.nearDeath.map(character => character.nickname);
+
+  if (!nearDeath.length) {
     return null;
   }
 
@@ -252,10 +252,9 @@ export function rescue(game: Werewolf, witcherId: string) {
   });
 }
 
-export function poison(game: Werewolf, witcherId: string) {
-  const character = game.getPlayer(witcherId);
-  const names = game.stage.survivors.reduce(
-    (res, survivor) => (survivor.id === witcherId ? res : [...res, character.nickname]),
+export function poison(stage: Stage, witcherId: string) {
+  const names = stage.survivors.reduce(
+    (res, survivor) => (survivor.id === witcherId ? res : [...res, survivor.nickname]),
     [] as string[]
   );
   return playerList({
@@ -266,7 +265,11 @@ export function poison(game: Werewolf, witcherId: string) {
   });
 }
 
-export function hunter(names: string[]) {
+export function hunter(stage: Stage, hunterId: string) {
+  const names = stage.survivors.reduce(
+    (res, survivor) => (survivor.id === hunterId ? res : [...res, survivor.nickname]),
+    [] as string[]
+  );
   return playerList({
     names,
     title: [centeredText(t(`HunterBoard`))],

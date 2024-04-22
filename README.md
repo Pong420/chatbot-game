@@ -11,8 +11,9 @@
 - TODO:
   - check group members
     - leave if too many people
-  - refactor number of players
-    - allow to set characters after player joined
+  - refactor handles the number of players
+    - allow set characters after players joined
+  - vote set to postback or private
 
 ## Development
 

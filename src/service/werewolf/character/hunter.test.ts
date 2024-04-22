@@ -25,8 +25,8 @@ test.each(['', 'not '])('hunter was killed - %sshot', shot => {
 
   nextStage('Night');
   werewolfs[0].kill(villagers[0]);
-  expect(() => hunters[0].shoot(hunters[0])).toThrowError(t(`NotYourTurn`));
-  expect(() => hunters[0].shoot(villagers[0])).toThrowError(t(`NotYourTurn`));
+  expect(() => hunters[0].shoot(hunters[0])).toThrowError(t(`NotReadyForShoot`));
+  expect(() => hunters[0].shoot(villagers[0])).toThrowError(t(`NotReadyForShoot`));
 
   nextStage('Daytime');
   nextStage('Vote');
@@ -41,7 +41,7 @@ test.each(['', 'not '])('hunter was killed - %sshot', shot => {
 
   expect(() => hunters[0].shoot(hunters[0])).toThrowError(t(`ShootSelf`));
   expect(() => hunters[0].shoot(villagers[0])).toThrowError(t(`CantKillDeadTarget`, villagers[0].nickname));
-  expect(() => hunters[1].shoot(hunters[0])).toThrowError(t(`NotYourTurn`));
+  expect(() => hunters[1].shoot(hunters[0])).toThrowError(t(`NotReadyForShoot`));
 
   if (shot === '') {
     hunters[0].shoot(werewolfs[0]);

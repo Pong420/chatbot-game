@@ -10,8 +10,8 @@ const IsHunter = createWerewolfFilter(Hunter);
 
 export default [
   createHandler(Group, TextEqual(t('IamHunter')), IsPlayer, () => t(`IamHunterGroup`)),
-  createHandler(Single, TextEqual(t('IamHunter')), IsHunter({ yourAreNotError: true }), ({ game }) =>
-    board.hunter(game.stage.survivors.map(survivor => survivor.nickname))
+  createHandler(Single, TextEqual(t('IamHunter')), IsHunter({ yourAreNotError: true }), ({ game, character }) =>
+    board.hunter(game.stage, character.id)
   ),
   createHandler(Single, IsHunter({ target: t('Shoot') }), async ({ game, target, character }) => {
     const message = character.shoot(target);

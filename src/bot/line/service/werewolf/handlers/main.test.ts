@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { test } from 'vitest';
+import { expect, test } from 'vitest';
 import { Werewolf as WerewolfGame } from '@werewolf/game';
 import { t } from '@werewolf/locales';
 import { VoteBaseStage } from '@werewolf/stage';
@@ -7,6 +7,7 @@ import { testSuite, WerewolfPlayer } from '../test';
 import * as board from '../board';
 
 declare let game: WerewolfGame;
+declare let stage: WerewolfGame['stage'];
 declare let survivors: WerewolfPlayer[];
 declare let villagers: WerewolfPlayer[];
 declare let werewolfs: WerewolfPlayer[];
@@ -23,33 +24,42 @@ declare let players: WerewolfPlayer[];
 declare let host: WerewolfPlayer;
 
 test('main', async () => {
-  const { createGame, next } = testSuite();
+  const { createGame, next, update, allVoteTo } = testSuite();
   await createGame();
 
-  // --------------------------------------------------------------------------------
+  // Guard --------------------------------------------------------------------------------
 
   await next(board.guardGroup());
 
   await guard.s(t('IamGuard')).toEqual(board.guard(game));
   await guard.s(t.regex('Protect', villagers[0].name)).toTextMessage(t(`ProtectSuccess`));
+  await guard.s(t.regex('Protect', villagers[0].name)).toTextMessage(t(`TurnEnded`));
 
-  // --------------------------------------------------------------------------------
+  // Night --------------------------------------------------------------------------------
 
   await next(board.werewolfGroup());
 
-  for (const werewolf of werewolfs) {
+  for (const werewolf of werewolfs.slice(0, -1)) {
     await werewolf.s(t(`IamWerewolf`)).toEqual(board.werewolf(game, werewolf.userId));
     await werewolf.s(t.regex(`Kill`, villagers[0].name)).toTextMessage(t(`KillSuccss`));
+    await werewolf.s(t.regex(`Kill`, villagers[0].name)).toTextMessage(t(`TurnEnded`));
   }
 
-  // --------------------------------------------------------------------------------
+  await werewolfs.slice(-1)[0].s(t(`Idle`)).toTextMessage(t(`WerewolfIdleSuccess`));
+
+  // TODO:
+  // await hunter.s(t(`IamHunter`)).toTextMessage(t(`NotReadyForShoot`));
+  await hunter.s(t.regex(`Shoot`, werewolfs[0].name)).toTextMessage(t(`NotReadyForShoot`));
+
+  // Wicther --------------------------------------------------------------------------------
 
   await next(board.witcherGroup());
 
-  await witcher.s(t(`IamWitcher`)).toEqual(board.rescue(game, witcher.userId));
+  await witcher.s(t(`IamWitcher`)).toEqual(board.rescue(stage));
   await witcher.s(t.regex(`Rescue`, villagers[0].name)).toTextMessage(t(`RescueSuccess`));
+  await witcher.s(t.regex(`Rescue`, villagers[0].name)).toTextMessage(t(`TurnEnded`));
 
-  // --------------------------------------------------------------------------------
+  // Predictor --------------------------------------------------------------------------------
 
   await next(board.predictorGroup());
 
@@ -58,17 +68,57 @@ test('main', async () => {
     .s(t.regex(`Predict`, villagers[0].name))
     .toTextMessage(t(`PredictResult`, villagers[0].name, t('PredictedGoodGuy')));
 
-  // --------------------------------------------------------------------------------
+  // Daytime --------------------------------------------------------------------------------
 
-  // Daytime
-  await next({ type: 'flex' });
+  await next(() => board.daytime(game.stage));
 
-  // --------------------------------------------------------------------------------
+  // Vote --------------------------------------------------------------------------------
 
-  // Vote
-  await next({ type: 'flex' });
-
+  await next(() => board.vote(game.stage as VoteBaseStage));
   await host
     .g(t(`WhoNotVoted`))
     .toTextMessage(t(`WhoNotVotedReply`, game.stage.survivors.map(s => s.nickname).join('，')));
+  await next(() => board.vote(game.stage as VoteBaseStage));
+  await allVoteTo(werewolfs[3]);
+
+  // Voted --------------------------------------------------------------------------------
+
+  await next(() => board.voted(game.stage as VoteBaseStage));
+  expect(survivors).toHaveLength(10);
+
+  // Guard --------------------------------------------------------------------------------
+
+  await next(() => board.guardGroup());
+  await guard.s(t.regex('Protect', villagers[0].name)).toTextMessage(t(`TargetIsDead`, villagers[0].name));
+  await guard.s(t('ProtectSelf')).toTextMessage(t(`ProtectSelfSuccess`));
+
+  // Night --------------------------------------------------------------------------------
+
+  await next(board.werewolfGroup());
+  await werewolfs[0].s(t.regex(`Kill`, hunter.name)).toTextMessage(t(`KillSuccss`));
+  await werewolfs[1].s(t.regex(`Kill`, werewolfs[1].name)).toTextMessage(t(`KillSuccss`));
+  await werewolfs[2].s(t.regex(`Idle`)).toTextMessage(t(`WerewolfIdleSuccess`));
+
+  // Wicther --------------------------------------------------------------------------------
+
+  await next(() => board.witcherGroup());
+  await witcher.s(t(`IamWitcher`)).toEqual(board.poison(stage, witcher.userId));
+  await witcher.s(t(`NoPoison`)).toTextMessage(t(`WitcherIdleSuccess`));
+
+  // Predictor --------------------------------------------------------------------------------
+
+  await next(() => board.predictorGroup());
+  await predictor.s(t(`IamPredictor`)).toEqual(board.predictor(game, predictor.userId));
+  await predictor
+    .s(t.regex(`Predict`, witcher.name))
+    .toTextMessage(t(`PredictResult`, witcher.name, t(`PredictedGoodGuy`)));
+
+  // Hunter --------------------------------------------------------------------------------
+
+  await next(() => board.hunterGroup());
+  await hunter.s(t(`IamHunter`)).toEqual(board.hunter(stage, hunter.userId));
+  await hunter.s(t.regex(`Shoot`, hunter.name)).toTextMessage(t('ShootSelf'));
+  await hunter.s(t.regex(`Shoot`, werewolfs[1].name)).toTextMessage(t('ShootSuccess'));
+
+  // Daytime
 });

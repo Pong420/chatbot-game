@@ -1,16 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { vi } from 'vitest';
+import { expect, vi } from 'vitest';
 import { nanoid } from 'nanoid';
-import { createExpectEvent, LineUser, createLineEventTestSuite } from '@line/test';
+import { LineUser, createLineEventTestSuite } from '@line/test';
 import { t as lt } from '@line/locales';
 import { textMessage } from '@line/utils/createMessage';
 import { characters } from '@werewolf/character';
 import { Werewolf as Game } from '@werewolf/game';
-import { Stage } from '@werewolf/stage';
+import { Stage, VoteBaseStage } from '@werewolf/stage';
 import { Character, Villager, Werewolf, Hunter, Guard, Predictor, Witcher } from '@werewolf/character';
 import { t } from '@werewolf/locales';
 import { getGame } from '@/supabase/game';
-import { Constructable } from '@/types';
 import { default as handlers } from './handler';
 import * as board from './board';
 
@@ -23,13 +22,10 @@ export const getPlayersByCharacter = <C extends LineUser>(game: Game, clients: C
     {} as Record<`${Lowercase<keyof typeof characters>}s`, C[]>
   );
 
-export const expectEvent = createExpectEvent(handlers);
-
-export const { createLineUser } = createLineEventTestSuite(handlers);
+export const { createLineUser, expectEvent } = createLineEventTestSuite(handlers);
 
 export const groupId = nanoid();
 export type WerewolfPlayer = ReturnType<typeof createLineUser>;
-// export const players = Array.from({ length: 12 }, () => createLineUser({ groupId }));
 
 interface CreateGameOptions {
   numOfPlayers?: number;
@@ -74,12 +70,10 @@ export function testSuite() {
   const getPlayersByCharacter = (CharacterConstructor: typeof Character) =>
     players.filter(p => game.players.get(p.userId) instanceof CharacterConstructor);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const next = async (message: any) => {
-    await host.g(t(`Next`)).toMatchObject(message);
-
+  const update = async () => {
     const data = await getGame(players[0].groupId);
     game = Game.create(data!);
+    stage = game.stage;
 
     survivors = game.stage.survivors.map(p => players.find(player => player.userId === p.id)!).filter(Boolean);
     villagers = getPlayersByCharacter(Villager);
@@ -92,6 +86,15 @@ export function testSuite() {
     predictor = predictors[0];
     witchers = getPlayersByCharacter(Witcher);
     witcher = witchers[0];
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const next = async (paylaod: any) => {
+    const event = await host.gr(t(`Next`));
+
+    await update();
+
+    expect(event).toEqual(typeof paylaod === 'function' ? paylaod() : paylaod);
   };
 
   const createGame = async ({ numOfPlayers = 12, characters = [] }: CreateGameOptions = {}) => {
@@ -127,9 +130,21 @@ export function testSuite() {
     await clientInOthersGroup.g(t('Join')).toTextMessage(lt('JoinedOtherGroupsGame', clientInOthersGroup.name));
   };
 
-  const allVoteTo = (character: Character) => {};
+  const allVoteTo = async (character: WerewolfPlayer) => {
+    for (const survivor of survivors) {
+      const event = await survivor.gr(t.regex(`Vote`, character.name));
+      await update();
+      expect(event).toMatchObject(board.vote(game.stage as VoteBaseStage));
+    }
+  };
 
-  const allWaive = () => {};
+  const allWaive = async () => {
+    for (const survivor of survivors) {
+      const event = await survivor.gr(t.regex(`Waive`));
+      await update();
+      expect(event).toMatchObject(board.vote(game.stage as VoteBaseStage));
+    }
+  };
 
-  return { createGame, next, getPlayersByCharacter, allVoteTo, allWaive };
+  return { createGame, next, update, getPlayersByCharacter, allVoteTo, allWaive };
 }

@@ -5,7 +5,8 @@ import { Hunter as HunterStage } from '../stage';
 import { Character } from './_character';
 
 const HunterAction = Action(() => HunterStage, {
-  turnEnded: (character: Hunter) => (character._canShoot === undefined ? t(`NotYourTurn`) : t(`TurnEnded`))
+  notYourTurn: () => t(`NotReadyForShoot`),
+  turnEnded: (character: Hunter) => (character._canShoot === undefined ? t(`NotReadyForShoot`) : t(`TurnEnded`))
 });
 
 export class Hunter extends Character {
@@ -26,7 +27,6 @@ export class Hunter extends Character {
 
   @HunterAction
   shoot(character: Character) {
-    if (!this._canShoot) throw t(`NotReadyForShoot`);
     if (character.isDead) throw t(`CantKillDeadTarget`, character.nickname);
     if (this.id === character.id) throw t(`ShootSelf`);
     this._canShoot = false;

@@ -48,6 +48,6 @@ export class Witcher extends Character {
 
   @Action(() => WitcherStage, { turnEnded: () => false })
   idle() {
-    //
+    return t(`WitcherIdleSuccess`);
   }
 }

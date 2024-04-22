@@ -13,11 +13,6 @@ type BuilderUtils = {
   s: ReturnType<typeof createBuilderUtil>;
 };
 
-export function createExpectEvent(handlers: Handler[]) {
-  const handleEvent = createEventHandler(handlers);
-  return (event: WebhookEvent) => expect(handleEvent(event)).resolves;
-}
-
 const createBuilderUtil = (type: 'group' | 'single') => {
   return <C extends CreateMessage>(create: C) =>
     (client: LineUser, ...args: C extends AnyFunction ? Parameters<C> : []): WebhookEvent => {
@@ -29,7 +24,8 @@ const createBuilderUtil = (type: 'group' | 'single') => {
 export function createLineEventTestSuite<
   Messages extends Record<string, (client: LineUser, ...args: any[]) => WebhookEvent>
 >(handlers: Handler[], builder: (options: BuilderUtils) => Messages = () => ({}) as any) {
-  const expectEvent = createExpectEvent(handlers);
+  const handleEvent = createEventHandler(handlers);
+  const expectEvent = (event: WebhookEvent) => expect(handleEvent(event)).resolves;
   const messages = builder({ g: createBuilderUtil('group'), s: createBuilderUtil('single') });
 
   const createLineUser = (payload?: LineUser | ConstructorParameters<typeof LineUser>[0]) => {
@@ -40,7 +36,9 @@ export function createLineEventTestSuite<
 
     const general = {
       g: (...params: Parameters<LineUser['groupMessage']>) => expectEvent(client.groupMessage(...params)),
-      s: (...params: Parameters<LineUser['singleMessage']>) => expectEvent(client.singleMessage(...params))
+      s: (...params: Parameters<LineUser['singleMessage']>) => expectEvent(client.singleMessage(...params)),
+      gr: (...params: Parameters<LineUser['groupMessage']>) => handleEvent(client.groupMessage(...params)),
+      sr: (...params: Parameters<LineUser['singleMessage']>) => handleEvent(client.singleMessage(...params))
     };
 
     for (const k in messages) {
@@ -49,5 +47,5 @@ export function createLineEventTestSuite<
     return Object.assign(client, api, general) as LineUser & typeof api & typeof general;
   };
 
-  return { createLineUser, expectEvent };
+  return { createLineUser, handleEvent, expectEvent };
 }

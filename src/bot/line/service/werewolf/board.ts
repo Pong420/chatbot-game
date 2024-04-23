@@ -18,6 +18,7 @@ import {
   Payload,
   postBackTextAction
 } from '@line/utils/createMessage';
+import { HunterEnd } from '@werewolf/stage/hunter-end';
 
 interface PlayerListProps {
   names: string[];
@@ -87,10 +88,10 @@ function _night(text: string, command?: string) {
   });
 }
 
-function _light(text: string, command?: string) {
+function _light(text: string[], command?: string) {
   return tableMessage({
     title: [wrapAndCenterText(t(`DaytimeBoard`))],
-    rows: [[wrapAndCenterText(text)]],
+    rows: [text.map(t => wrapAndCenterText(t))],
     buttons: command ? [primaryButton(sendTextToBot(command))] : undefined
   });
 }
@@ -112,7 +113,7 @@ export function predictorGroup() {
 }
 
 export function hunterGroup() {
-  return _light(t(`HunterDM`), t(`IamHunter`));
+  return _light([t(`HunterBoardSubtitle`), t(`HunterDM`)], t(`IamHunter`));
 }
 
 export function daytime(stage: Stage) {
@@ -124,7 +125,7 @@ export function daytime(stage: Stage) {
       footer: [centeredText(t('SilenceForTheDeceased'))]
     });
   } else {
-    return _light(t(`NoOneDead`));
+    return _light([t(`NoOneDead`)]);
   }
 }
 
@@ -278,5 +279,25 @@ export function hunter(stage: Stage, hunterId: string) {
     title: [centeredText(t(`HunterBoard`))],
     action: name => messageAction(t.regex(`Shoot`, name)),
     buttons: [secondaryButton(messageAction(t(`NoShoot`)))]
+  });
+}
+
+export function hunterEnd(stage: Stage) {
+  if (!(stage instanceof HunterEnd)) {
+    return null;
+  }
+
+  if (stage.shot.length) {
+    return playerList({
+      names: stage.shot.map(s => s.nickname),
+      title: [wrapAndCenterText(stage.shot.map(() => t(`ShootingSound`)).join('!')), centeredText(t(`SomeOneDead`))],
+      footer: [centeredText(t('SilenceForTheDeceased'))]
+    });
+  }
+
+  return tableMessage({
+    title: [centeredText(t('Tips'))],
+    rows: orderList(t.paragraph('ShortIntro', t('HostCommands'))),
+    buttons: startButtons
   });
 }

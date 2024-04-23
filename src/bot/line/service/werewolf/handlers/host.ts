@@ -12,6 +12,7 @@ import {
   Witcher,
   Predictor,
   Hunter,
+  HunterEnd,
   Vote,
   Voted,
   End,
@@ -29,6 +30,7 @@ export function getStageMessage(stage: Stage) {
   if (stage instanceof Witcher) return board.witcherGroup();
   if (stage instanceof Predictor) return board.predictorGroup();
   if (stage instanceof Hunter) return board.hunterGroup();
+  if (stage instanceof HunterEnd) return board.hunterEnd(stage);
   if (stage instanceof Daytime) return board.daytime(stage);
   if (stage instanceof Vote) return board.vote(stage);
   if (stage instanceof ReVote) return board.revote(stage);

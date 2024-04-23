@@ -209,7 +209,13 @@ export default defineMessages(
     NoShootSuccess: `好`,
     ShootSelf: `你要死了，這一槍留給別人吧`,
     NotReadyForShoot: '再等等，還未到開槍的時候',
+    HunterBoardSubtitle: [
+      '應該死了的獵人忽然動了，舉著獵槍指向你們',
+      '「喀嚓」，大家一起看向聲音的來源，垂死的獵人舉著獵槍指向你們'
+    ],
     HunterBoard: `點擊名稱選擇要射擊的目標`,
+    ShootingSound: `砰`,
+    NoOneWasShot: [`不知過了多久，獵人最終沒有開槍，然後倒下了`],
 
     DaytimeBoard: '現在是白天',
     SomeOneDead: `以下玩家死了`,

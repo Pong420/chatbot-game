@@ -127,5 +127,13 @@ test('main', async () => {
   await next(board.hunterGroup());
   await hunter.s(t(`IamHunter`)).toEqual(board.hunter(stage, hunter.userId));
   await hunter.s(t.regex(`Shoot`, hunter.name)).toTextMessage(t('ShootSelf'));
-  await hunter.s(t.regex(`Shoot`, werewolfs[1].name)).toTextMessage(t('ShootSuccess'));
+  await hunter.s(t.regex(`Shoot`, werewolfs[2].name)).toTextMessage(t('ShootSuccess'));
+
+  // HunterEnd --------------------------------------------------------------------------------
+
+  await next(() => board.hunterEnd(stage));
+
+  // Vote --------------------------------------------------------------------------------
+
+  await next(() => board.vote(game.stage as VoteBaseStage));
 });

@@ -52,7 +52,7 @@ test.each(['', 'not '])('hunter was killed - %sshot', shot => {
     expect(survivors).not.toContain(werewolfs[0]);
   } else {
     hunters[0].noShoot();
-    nextStage('Daytime');
+    nextStage('HunterEnd');
     nextStage('Vote');
   }
 

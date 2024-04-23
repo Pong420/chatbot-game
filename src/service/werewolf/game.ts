@@ -15,7 +15,8 @@ import {
   Daytime,
   Vote,
   ReVote,
-  Voted
+  Voted,
+  HunterEnd
 } from './stage';
 import { Character, Werewolf } from './character';
 import { t } from './locales';
@@ -134,7 +135,11 @@ export class Game extends GameInstance {
     }
 
     if (this.stage instanceof Hunter) {
-      return this.stage.ref === 'vote' ? this.getNextStage(Voted) : Daytime;
+      return HunterEnd;
+    }
+
+    if (this.stage instanceof HunterEnd) {
+      return this.stage.ref === 'vote' ? this.getNextStage(Voted) : Vote;
     }
 
     if (typeof NextStage.available === 'function' && !NextStage.available(this.stage)) {

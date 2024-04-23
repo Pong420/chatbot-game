@@ -49,14 +49,14 @@ export const HostCommand = {
   Survivor: `狼人殺倖存者`, // TODO:
   'DeathReport': '狼人殺死亡報告', // TODO:
   WhoNotVoted: `誰未投票`,
-  HostCommands: `主持指令` // TODO:
+  HostCommands: `主持指令`, // TODO:
+  PlayerReport: `^(.*)的報告` // TODO:
 };
 
 export const StageCommand = {
-  // PlayerReport = `^(.*)的報告`,
   NextShort: 'n',
   Next: '/next',
-  Skip: '/skip'
+  Skip: '/skip' // TODO:
 };
 
 export const KillerCommand = {

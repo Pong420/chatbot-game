@@ -5,7 +5,7 @@ export const Commands = {
   GetUserId: 'My User ID',
 
   NickNameIntro: '暱稱系統介紹',
-  MyNickName: '/我的暱稱',
+  MyNickName: '我的暱稱',
   SetNickName: '^/我的暱稱 (.*)'
 };
 

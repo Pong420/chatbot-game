@@ -1,8 +1,8 @@
 import { Action } from '@line/bot-sdk';
-import { Character, Predictor, Villager } from '@werewolf/character';
 import { t } from '@werewolf/locales';
 import { Werewolf } from '@werewolf/game';
-import { Stage, VoteBaseStage } from '@werewolf/stage';
+import { Stage, VoteBaseStage, HunterEnd } from '@werewolf/stage';
+import { Character, Predictor, Villager } from '@werewolf/character';
 import {
   messageAction,
   sendTextToBot,
@@ -18,7 +18,6 @@ import {
   Payload,
   postBackTextAction
 } from '@line/utils/createMessage';
-import { HunterEnd } from '@werewolf/stage/hunter-end';
 
 interface PlayerListProps {
   names: string[];

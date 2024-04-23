@@ -83,6 +83,8 @@ test('predictor', () => {
   nextStage('Vote');
   allVoteTo(werewolfs[0]);
 
+  nextStage('Voted');
+
   nextStage('End');
 });
 

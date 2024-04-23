@@ -97,6 +97,8 @@ test('witcher', () => {
   expect(() => witchers[0].poison(witchers[0])).toThrowError(t(`PoisonSelf`));
   expect(witchers[0].poison(werewolfs[0])).toEqual(t(`PoisonSuccess`));
 
+  nextStage('Daytime');
+
   nextStage('End');
   expect(survivors).toHaveLength(2);
   expect(survivors).toSatisfyAll((survivor: Character) => survivor instanceof Villager);

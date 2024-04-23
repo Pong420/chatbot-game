@@ -9,7 +9,7 @@ import { stages } from '../stage';
 import { t } from '../locales';
 
 declare let game: Game;
-declare let survivors: Character;
+declare let survivors: Character[];
 declare let werewolfs: Werewolf[];
 declare let villagers: Villager[];
 declare let guards: Guard[];
@@ -78,6 +78,8 @@ test('guard', () => {
 
   nextStage('Night');
   werewolfs[0].kill(guards[0]);
+
+  nextStage('Daytime');
 
   nextStage('End');
 });

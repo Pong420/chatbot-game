@@ -289,7 +289,7 @@ export function hunterEnd(stage: Stage) {
 
   if (stage.shot.length) {
     return playerList({
-      names: stage.shot.map(s => s.nickname),
+      names: stage.shot.map(id => stage.players.get(id)!.nickname),
       title: [wrapAndCenterText(stage.shot.map(() => t(`ShootingSound`)).join('!')), centeredText(t(`SomeOneDead`))],
       footer: [centeredText(t('SilenceForTheDeceased'))]
     });

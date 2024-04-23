@@ -112,6 +112,8 @@ test('basic', () => {
 
   // --------------------------------------------------------------------------------
 
+  nextStage('Voted');
+
   nextStage('End');
 
   expect(werewolfs[0].isDead).toBeTrue();

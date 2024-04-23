@@ -1,4 +1,3 @@
-import { Character } from '@werewolf/character';
 import { Stage } from './_stage';
 import { Hunter } from './hunter';
 
@@ -7,11 +6,11 @@ export class HunterEnd extends Stage {
 
   ref: Hunter['ref'];
 
-  shot: Character[];
+  shot: string[];
 
   onStart(stage: Stage): void {
     super.onStart(stage);
-    this.shot = this.nearDeath;
+    this.shot = this.nearDeath.map(character => character.id);
     this.updateSurvivors();
   }
 }

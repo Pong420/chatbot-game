@@ -84,9 +84,6 @@ export class Game extends GameInstance {
   }
 
   protected shouldEndGame() {
-    if (this.stage instanceof Init) return;
-    if (this.stage instanceof Start) return;
-
     const survivors = this.stage.survivors;
     const werewolfs = this.getPlayersByCharacter(Werewolf, survivors);
     const allDead = survivors.length === 0;
@@ -111,6 +108,10 @@ export class Game extends GameInstance {
 
   getNextStage(CurrStage = this.stage.constructor as typeof Stage): typeof Stage {
     if (CurrStage === Init) return Start;
+
+    if (this.shouldEndGame()) {
+      return End;
+    }
 
     const stages: (typeof Stage)[] = [
       Guard,
@@ -155,10 +156,6 @@ export class Game extends GameInstance {
 
     const NextStage = this.getNextStage();
     this.transition(NextStage);
-
-    if (this.shouldEndGame()) {
-      this.transition(End);
-    }
 
     return this.stage;
   }

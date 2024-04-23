@@ -129,7 +129,7 @@ export class Game extends GameInstance {
       throw `cannot get next stage from ${this.stage.name}`;
     }
 
-    if ((NextStage === Daytime || CurrStage === Voted) && Hunter.available(this.stage)) {
+    if ((CurrStage === Daytime || CurrStage === Voted) && Hunter.available(this.stage)) {
       return Hunter;
     }
 

@@ -83,7 +83,7 @@ export const WitcherCommand = {
 
 export const PredictorCommand = {
   IamPredictor: `我是預言家`,
-  Predict: `^我要預測(.*)`
+  Predict: `^我要檢查(.*)`
 };
 
 export const HunterCommand = {
@@ -149,9 +149,9 @@ export default defineMessages(
     GettingDark: '天快黑了',
     WerewolfEnd: `狼人已選擇目標`,
 
-    IamVillagerGroup: [`【{0}你確定你【村民】而不是【暴民】嗎?`, `我是信你的`, `我是機器人`],
+    IamVillagerGroup: [`你確定你【村民】不是【暴民】嗎?`],
 
-    IamWerewolfGroup: [`喂，是警察叔叔嗎，這裏有狼人哇`, `欸，我也是耶，【嗷嗚~~】`, `【嗷嗚~~】(暗號呢`],
+    IamWerewolfGroup: [`喂，警察叔叔嗎，這裏有狼人哇`, `欸，我也是耶`, `嗷嗚~~`, `啊，我好怕啊`],
     KillSuccss: '好',
     SuicideSuccss: [`你就這麼有信心有人救你？`, `希望你能賭贏吧！`],
     WerewolfIdleSuccess: `'你竟然忍住了!? 但你下一晚不可能再忍受饑餓，快想明天的晚餐吧!`,
@@ -161,7 +161,7 @@ export default defineMessages(
     CantKillDeadTarget: ['{0}已經死了，你們是有多大仇!?', '{0}已經死了，放過他吧'],
     ClickToSelect: '點擊名稱選擇目標',
 
-    IamGuardGroup: `你是好人，請守護我(\´▽\`ʃ♡ƪ)`,
+    IamGuardGroup: `請守護我(\´▽\`ʃ♡ƪ)`,
     ProtectSuccess: [`好`, `你是好人`],
     ProtectSelfSuccess: [
       `只有自己可以救自己`,

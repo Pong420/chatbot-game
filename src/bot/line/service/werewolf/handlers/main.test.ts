@@ -92,7 +92,7 @@ test('main', async () => {
 
   // Guard --------------------------------------------------------------------------------
 
-  await next(() => board.guardGroup());
+  await next(board.guardGroup());
   await guard.s(t.regex('Protect', villagers[0].name)).toTextMessage(t(`TargetIsDead`, villagers[0].name));
   await guard.s(t('ProtectSelf')).toTextMessage(t(`ProtectSelfSuccess`));
 
@@ -105,25 +105,27 @@ test('main', async () => {
 
   // Witcher --------------------------------------------------------------------------------
 
-  await next(() => board.witcherGroup());
+  await next(board.witcherGroup());
   await witcher.s(t(`IamWitcher`)).toEqual(board.poison(stage, witcher.userId));
   await witcher.s(t(`ShowRescueBoard`)).toTextMessage(t(`Rescued`));
   await witcher.s(t(`NotUseMedicine`)).toTextMessage(t(`NotUseMedicineSuccessSuccess`));
 
   // Predictor --------------------------------------------------------------------------------
 
-  await next(() => board.predictorGroup());
+  await next(board.predictorGroup());
   await predictor.s(t(`IamPredictor`)).toEqual(board.predictor(game, predictor.userId));
   await predictor
     .s(t.regex(`Predict`, witcher.name))
     .toTextMessage(t(`PredictResult`, witcher.name, t(`PredictedGoodGuy`)));
 
+  // Daytime --------------------------------------------------------------------------------
+
+  await next(() => board.daytime(stage));
+
   // Hunter --------------------------------------------------------------------------------
 
-  await next(() => board.hunterGroup());
+  await next(board.hunterGroup());
   await hunter.s(t(`IamHunter`)).toEqual(board.hunter(stage, hunter.userId));
   await hunter.s(t.regex(`Shoot`, hunter.name)).toTextMessage(t('ShootSelf'));
   await hunter.s(t.regex(`Shoot`, werewolfs[1].name)).toTextMessage(t('ShootSuccess'));
-
-  // Daytime
 });

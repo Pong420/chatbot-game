@@ -13,8 +13,10 @@
     - leave if too many people
   - refactor handles the number of players
     - allow set characters after players joined
-  - vote set to postback or private
-  - hunter should after daytime
+  - options
+    - set vote to postback message or private
+    - werewolfs know each others
+      - kill one or idle
 
 ## Development
 

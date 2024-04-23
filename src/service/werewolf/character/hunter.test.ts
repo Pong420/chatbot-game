@@ -37,6 +37,8 @@ test.each(['', 'not '])('hunter was killed - %sshot', shot => {
   nextStage('Night');
   werewolfs[0].kill(hunters[0]);
 
+  nextStage('Daytime');
+
   nextStage('Hunter');
 
   expect(() => hunters[0].shoot(hunters[0])).toThrowError(t(`ShootSelf`));

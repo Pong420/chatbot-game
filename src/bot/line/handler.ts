@@ -1,6 +1,7 @@
 import { Message, WebhookEvent } from '@line/bot-sdk';
 import { client } from './client';
 import { textMessage } from './utils/createMessage';
+import { saveMessages } from './utils/saveMessages';
 import { createFilter, FilterFunction, OutputFunction } from './filter';
 
 export type Result = void | undefined | null | string | Message | Message[];
@@ -32,13 +33,20 @@ export function createEventHandler(...payload: Handler[][]) {
 
     for (const handler of handlers) {
       const message = await handler(event);
-      if (message) {
-        return client.replyMessage({
-          replyToken: event.replyToken,
-          messages: typeof message === 'string' ? [textMessage(message)] : Array.isArray(message) ? message : [message],
-          notificationDisabled: true
-        });
+      if (!message) continue;
+
+      const messages =
+        typeof message === 'string' ? [textMessage(message)] : Array.isArray(message) ? message : [message];
+
+      if (process.env.NODE_ENV === 'test') {
+        await saveMessages(messages);
       }
+
+      return client.replyMessage({
+        replyToken: event.replyToken,
+        notificationDisabled: true,
+        messages
+      });
     }
   };
 }

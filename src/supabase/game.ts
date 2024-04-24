@@ -8,6 +8,7 @@ export enum GameStatus {
   OPEN,
   CLOSE
 }
+type GameProps = Omit<Game, 'created_at' | 'data' | 'groupId' | 'id' | 'type' | 'updated_at'>;
 
 /**
  * memo for multiple Game filter
@@ -37,13 +38,18 @@ export async function createGame(data: TablesInsert<'games'>) {
 }
 
 export async function updateGame(
-  ...payload: [groupId: string, data: TablesUpdate<'games'>] | [game: GameInstance]
+  ...payload:
+    | [groupId: string, data: TablesUpdate<'games'>, props?: Partial<GameProps>]
+    | [game: GameInstance, props?: Partial<GameProps>]
 ): Promise<Game | null> {
-  const [data, groupId] =
-    typeof payload[0] === 'string' ? [payload[1], payload[0]] : [payload[0].serialize(), payload[0].groupId];
+  const [data, groupId, props] =
+    typeof payload[0] === 'string'
+      ? [payload[1], payload[0], payload[2]]
+      : [payload[0].serialize(), payload[0].groupId, payload[1]];
+
   const updated = await supabase
     .from('games')
-    .update(data)
+    .update({ ...data, ...props })
     .eq('groupId', groupId)
     .select()
     .single()

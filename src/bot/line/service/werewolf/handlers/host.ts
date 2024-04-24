@@ -1,5 +1,5 @@
 import { createHandler } from '@line/handler';
-import { Group, TextEqual } from '@line/filter';
+import { Group, TextEqual, TextMatch } from '@line/filter';
 import { GameStatus, updateGame } from '@/supabase/game';
 import { t } from '@werewolf/locales';
 import { Werewolf } from '@werewolf/game';
@@ -19,6 +19,7 @@ import {
   ReVote
 } from '@werewolf/stage';
 import { IsHost } from '../filter';
+import { getDeathReport, getDetailReport } from '../report';
 import * as board from '../board';
 
 export function getStageMessage(game: Werewolf) {
@@ -53,7 +54,7 @@ export default [
   createHandler(Group, TextEqual([t('Next'), t('NextShort')]), IsHost, async ({ game }) => {
     try {
       game.next();
-      await updateGame(game);
+      await updateGame(game, game.stage instanceof End ? { status: GameStatus.CLOSE } : {});
     } catch (error) {
       if (error !== t(`StageNotEnded`)) throw error;
     }
@@ -65,5 +66,15 @@ export default [
     return getStageMessage(game);
   }),
   createHandler(Group, TextEqual(t(`WhoNotVoted`)), IsHost, async ({ game }) => board.notVoted(game.stage)),
-  createHandler(Group, TextEqual(t(`Survivors`)), IsHost, async ({ game }) => board.survivors(game.stage))
+  createHandler(Group, TextEqual(t(`Survivors`)), IsHost, async ({ game }) => board.survivors(game.stage)),
+  createHandler(Group, TextEqual(t(`\bDeathReport`)), IsHost, async ({ game }) => {
+    if (!(game.stage instanceof End)) return t(`CannotShowReport`);
+    return getDeathReport(game);
+  }),
+  createHandler(Group, TextMatch(t(`PlayerReport`)), IsHost, async ([, name], { game }) => {
+    if (!(game.stage instanceof End)) return t(`CannotShowReport`);
+    const target = game.getPlayer(name);
+    if (!target) return t(`TargetNoExists`, name);
+    return getDetailReport(target, game);
+  })
 ];

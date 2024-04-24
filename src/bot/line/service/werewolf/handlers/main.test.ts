@@ -167,4 +167,10 @@ test('main', async () => {
   // Ended --------------------------------------------------------------------------------
 
   await next(() => board.ended(stage));
+
+  await host.g(t(`\bDeathReport`)).toMatchObject({ type: 'flex' });
+
+  for (const [, player] of game.players) {
+    await host.g(t.regex(`PlayerReport`, player.nickname)).toMatchObject({ type: 'flex' });
+  }
 });

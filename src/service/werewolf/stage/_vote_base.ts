@@ -39,7 +39,6 @@ export class VoteBaseStage extends Stage {
     this.voted = [];
     this.voter = [];
     this.results = { ...intialResults };
-    this.turn += 1;
   }
 
   onEnd(): void {

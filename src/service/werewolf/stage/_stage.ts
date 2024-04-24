@@ -9,7 +9,7 @@ export class Stage {
 
   host: string; // host's userId
 
-  turn = 0;
+  turn = 1;
 
   numOfPlayers: number | 'flexible' = 'flexible';
 

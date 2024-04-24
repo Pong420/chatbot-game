@@ -37,10 +37,12 @@ function tableMessage({ title = [], ...props }: CreateTableMessageProps) {
 
 export function initiate(groupId: string) {
   return tableMessage({
-    title: [centeredText(t('Tips'))],
     rows: orderList(t.paragraph('ShortIntro')),
     // TODO:
-    buttons: [primaryButton(messageAction(`使用預設`)), secondaryButton(uriAction(`自訂義`, `/${groupId}/`))]
+    buttons: [
+      primaryButton(messageAction(`使用預設`)),
+      secondaryButton(uriAction(`自訂`, `http://google.com/${groupId}/`))
+    ]
   });
 }
 

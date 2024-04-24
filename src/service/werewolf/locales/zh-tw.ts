@@ -130,8 +130,9 @@ export default defineMessages(
     Tips: `遊戲提示`,
 
     ShortIntro: `
-      遊戲人數最少6人，最多12人,
+      遊戲人數最少6人，最多12人
       謹記！友誼第一，這只是遊戲，不要太認真
+      主持人請點擊下方按鈕，選擇遊戲設定
     `,
 
     Players: '參賽者',
@@ -230,7 +231,9 @@ export default defineMessages(
     CandidateCantVote: `平票者不能投票`,
 
     VoteEndBoard: `投票結束`,
-    Banishment: `{0}被處死了`
+    Banishment: `{0}被處死了`,
+
+    CannotShowReport: `遊戲未完結，無法顯示`
 
     // TODO:
     // 遇到錯誤時，請主持人輸入【${Command}】,

@@ -11,6 +11,9 @@ export class Guard extends Character {
   protected: string[] = []; // a history for who is protected
   protecting?: string;
 
+  selfProtected = false;
+  protectedSomeone = false;
+
   @Action(() => GuardStage)
   protect(character: Character) {
     const self = character.id === this.id;
@@ -20,6 +23,8 @@ export class Guard extends Character {
     }
     this.protecting = character.id;
     this.protected.push(this.protecting);
+    this.protectedSomeone = this.protectedSomeone || !self;
+    this.selfProtected = this.selfProtected || self;
     character.isProtected.push(this.id);
     return self ? t('ProtectSelfSuccess') : t(`ProtectSuccess`);
   }

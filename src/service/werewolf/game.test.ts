@@ -29,7 +29,7 @@ test('basic', () => {
   werewolfs[0].kill(villagers[0]);
   werewolfs.forEach(w => !w.endTurn && w.idle());
   expect(() => werewolfs[0].kill(villagers[0])).toThrowError(t(`TurnEnded`));
-  expect(() => werewolfs[0].vote(villagers[0])).toThrowError(t('VoteNotStarted'));
+  expect(() => villagers[0].vote(villagers[1])).toThrowError(t('VoteNotStarted'));
   expect(stage.nearDeath).toHaveLength(1);
   expect(stage.death).toHaveLength(0);
 

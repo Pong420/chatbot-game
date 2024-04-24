@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { WebhookEvent } from '@line/bot-sdk';
-import { getGame } from '@/supabase/game';
+import { GameStatus, getGame } from '@/supabase/game';
 import { GameConstructor, GameInstance } from '@/types';
 import { isGroupEvent, isSingleEvent } from '@line/types';
 import { createFilter, GroupId } from '@line/filter';
@@ -30,6 +30,6 @@ export const Game = <G extends GameInstance>(GameConstructor: GameConstructor<G>
 
 export const CanStartGame = createFilter(GroupId, async groupId => {
   const data = await getGame(groupId);
-  if (data) throw t('OtherGameRuning', data.type);
+  if (data && data.status !== GameStatus.CLOSE) throw t('OtherGameRuning', data.type);
   return groupId;
 });

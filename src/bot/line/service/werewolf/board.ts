@@ -15,8 +15,7 @@ import {
   centeredText,
   wrapedText,
   createFlexText,
-  Payload,
-  postBackTextAction
+  Payload
 } from '@line/utils/createMessage';
 
 interface PlayerListProps {
@@ -79,10 +78,10 @@ export function myCharacter(character: Character) {
   });
 }
 
-function _night(text: string, command?: string) {
+function _night(text: string[], command?: string) {
   return tableMessage({
     title: [wrapAndCenterText(t('NightBoard'))],
-    rows: [[wrapAndCenterText(text)]],
+    rows: text.map(t => [wrapAndCenterText(t, { lineSpacing: `5px` })]),
     buttons: command ? [primaryButton(sendTextToBot(command))] : undefined
   });
 }
@@ -90,25 +89,25 @@ function _night(text: string, command?: string) {
 function _light(text: string[], command?: string) {
   return tableMessage({
     title: [wrapAndCenterText(t(`DaytimeBoard`))],
-    rows: [text.map(t => wrapAndCenterText(t))],
+    rows: text.map(t => [wrapAndCenterText(t, { lineSpacing: `5px` })]),
     buttons: command ? [primaryButton(sendTextToBot(command))] : undefined
   });
 }
 
 export function werewolfGroup() {
-  return _night(t(`WerewolfDM`), t(`IamWerewolf`));
+  return _night([t(`WerewolfDM`)], t(`IamWerewolf`));
 }
 
 export function guardGroup() {
-  return _night(t(`GuardDM`), t(`IamGuard`));
+  return _night([t(`GuardDM`)], t(`IamGuard`));
 }
 
 export function witcherGroup() {
-  return _night(t(`WitcherDM`), t(`IamWitcher`));
+  return _night([t(`WitcherDM`)], t(`IamWitcher`));
 }
 
 export function predictorGroup() {
-  return _night(t(`PredictorDM`), t(`IamPredictor`));
+  return _night([t(`PredictorDM`)], t(`IamPredictor`));
 }
 
 export function hunterGroup() {
@@ -120,7 +119,7 @@ export function daytime(stage: Stage) {
   if (names.length) {
     return playerList({
       names,
-      title: [centeredText(t(`DaytimeBoard`)), centeredText(t(`SomeOneDead`))],
+      title: [centeredText(t(`DaytimeBoard`))],
       footer: [centeredText(t('SilenceForTheDeceased'))]
     });
   } else {
@@ -130,38 +129,36 @@ export function daytime(stage: Stage) {
 
 export function vote(stage: Stage) {
   if (!(stage instanceof VoteBaseStage)) return null;
-  const rows = Array.from(stage.candidates, ([name, list]): Payload[] => {
-    return [
-      wrapedText(name, { flex: 9, action: messageAction(t(`Vote`, name)) }),
-      createFlexText({ flex: 0, align: 'end' })(String(list.length))
-    ];
-  });
 
   return tableMessage({
     title: [
       wrapAndCenterText(t(`VoteBoard`, stage.voted.length, stage.voter.length)),
       wrapAndCenterText(t(`ClickToVote`))
     ],
-    rows: rows,
+    rows: Array.from(stage.candidates, ([name, list]): Payload[] => {
+      return [
+        wrapedText(name, { flex: 9, action: messageAction(t.regex(`Vote`, name)) }),
+        createFlexText({ flex: 0, align: 'end' })(String(list.length))
+      ];
+    }),
     buttons: [primaryButton(messageAction(t(`WhoNotVoted`))), secondaryButton(messageAction(t(`Waive`)))]
   });
 }
 
 export function revote(stage: Stage) {
   if (!(stage instanceof VoteBaseStage)) return null;
-  const rows = Array.from(stage.candidates, ([name, list]): Payload[] => {
-    return [
-      wrapedText(name, { flex: 9, action: messageAction(t(`Vote`, name)) }),
-      createFlexText({ flex: 0, align: 'end' })(String(list.length))
-    ];
-  });
 
   return tableMessage({
     title: [
       wrapAndCenterText(t(`ReVoteBoard`, stage.voted.length, stage.voter.length)),
       wrapAndCenterText(t(`ClickToVote`))
     ],
-    rows: rows,
+    rows: Array.from(stage.candidates, ([name, list]): Payload[] => {
+      return [
+        wrapedText(name, { flex: 9, action: messageAction(t.regex(`Vote`, name)) }),
+        createFlexText({ flex: 0, align: 'end' })(String(list.length))
+      ];
+    }),
     footer: [wrapedText(t(`ReVoteBoardFooter`))],
     buttons: [primaryButton(messageAction(t(`WhoNotVoted`))), secondaryButton(messageAction(t(`Waive`)))]
   });
@@ -194,20 +191,23 @@ function playerList({ title = [], names, action, buttons, footer }: PlayerListPr
 
 export function werewolf(game: Werewolf, killerId: string) {
   const names = game.stage.survivors.reduce(
-    (names, player) => (killerId === player.id ? names : [...names, player.name]),
+    (names, player) => (killerId === player.id ? names : [...names, player.nickname]),
     [] as string[]
   );
 
   return playerList({
     names,
     title: [centeredText(t(`ClickToSelect`))],
-    action: name => postBackTextAction(t.regex(`Kill`, name)),
+    action: name => messageAction(t.regex(`Kill`, name)),
     buttons: [primaryButton(messageAction(t('Idle'))), secondaryButton(messageAction(t('Suicide')))]
   });
 }
 
-export function guard(game: Werewolf) {
-  const names = game.stage.survivors.map(survivor => survivor.nickname);
+export function guard(game: Werewolf, guardId: string) {
+  const names = game.stage.survivors.reduce(
+    (names, player) => (guardId === player.id ? names : [...names, player.nickname]),
+    [] as string[]
+  );
   return playerList({
     names,
     title: [centeredText(t(`GuardBoard`))],
@@ -227,7 +227,7 @@ export function predictor(game: Werewolf, predictorId: string) {
           const predictText = t.regex(`Predict`, c.nickname);
           const predicted = predictor.predicted.includes(c.id);
           const action = predicted ? undefined : messageAction(predictText);
-          const title = predicted ? t(c.good ? `PredictedGoodGuy` : `PredictedBadGuy`) : '???';
+          const title = predicted ? t(c.good ? `PredictedGoodGuy` : `PredictedBadGuy`) : '？？？';
           return [
             wrapedText(`【${title}】`, { flex: 0, align: 'start', action }),
             wrapedText(`${c.nickname}`, { flex: 9, align: 'start', action })
@@ -266,7 +266,7 @@ export function poison(stage: Stage, witcherId: string) {
     names,
     title: [centeredText(t(`PoisonBoard`))],
     action: name => messageAction(t.regex(`Poison`, name)),
-    buttons: [secondaryButton(messageAction(t(`ShowRescueBoard`))), secondaryButton(messageAction(t(`NotUseMedicine`)))]
+    buttons: [primaryButton(messageAction(t(`ShowRescueBoard`))), secondaryButton(messageAction(t(`NotUseMedicine`)))]
   });
 }
 
@@ -291,7 +291,7 @@ export function hunterEnd(stage: Stage) {
   if (stage.shot.length) {
     return playerList({
       names: stage.shot.map(id => stage.players.get(id)!.nickname),
-      title: [wrapAndCenterText(stage.shot.map(() => t(`ShootingSound`)).join('!')), centeredText(t(`SomeOneDead`))],
+      title: [wrapAndCenterText(stage.shot.map(() => t(`ShootingSound`) + '!').join(''))],
       footer: [centeredText(t('SilenceForTheDeceased'))]
     });
   }

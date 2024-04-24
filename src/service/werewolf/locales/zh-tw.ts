@@ -24,7 +24,10 @@ export const IamCommand = (() => {
     Iam,
     ...IamCommands,
     ...entries.reduce(
-      (res, [key, value]) => ({ ...res, [`${key}DM`]: `${value}請私我輸入【${IamCommands[`Iam${key}`]}】` }),
+      (res, [key, value]) => ({
+        ...res,
+        [`${key}DM`]: `【${value}】請私我輸入【${IamCommands[`Iam${key}`]}】或者直接點擊下方按鈕`
+      }),
       {} as Record<`${keyof typeof Character}DM`, string>
     )
   };
@@ -102,7 +105,7 @@ export default defineMessages(
   {
     SystemError: '系統錯誤',
 
-    GameIsFull: '人數已滿，【{0}】下次請早',
+    GameIsFull: '人數已滿，下次請早',
     Joined: '{0}你已經參加遊戲',
     NoEnoughPlayers: '遊戲人數不能少於{0}人',
     NicknameUsed: `暱稱【{0}】已被使用，請更換後再參加`,
@@ -112,8 +115,8 @@ export default defineMessages(
     StageNotEnded: '仍有玩家未完成行動，無法進入下回合',
     YouDead: '安息吧，你已經死了！',
     NotYourTurn: ['現在幹這件事不合適吧？', '還不是你的回合'],
-    TargetIsDead: ['{0}已死亡'],
-    TargetNoExists: ['{0}不存在'],
+    TargetIsDead: ['{0}已死亡，不重新選擇'],
+    TargetNoExists: ['{0}不存在，請檢查是否輸入錯誤'],
 
     VoteNotStarted: `現在不是投票時間`,
     Voted: '我感受到{0}你對投票的渴望，但每人只有一票！',
@@ -152,7 +155,7 @@ export default defineMessages(
     IamWerewolfGroup: [`喂，警察叔叔嗎，這裏有狼人哇`, `欸，我也是耶`, `嗷嗚~~`, `啊，我好怕啊`],
     KillSuccss: '好',
     SuicideSuccss: [`你就這麼有信心有人救你？`, `希望你能賭贏吧！`],
-    WerewolfIdleSuccess: `'你竟然忍住了!? 但你下一晚不可能再忍受饑餓，快想明天的晚餐吧!`,
+    WerewolfIdleSuccess: `你竟然忍住了!? 但下一晚不可能再忍受饑餓，快想明天的晚餐吧!`,
     Hungry: ['平安夜？不，你餓了，快選一個晚餐吧', '什麼都能忍，餓不能！快選一個晚餐吧'],
     DuplicatedKill: '知道了，你們是有多大仇!?',
     DuplicatedSuicide: '知道了，你就這麼想死嗎?',
@@ -188,7 +191,7 @@ export default defineMessages(
     Poisoned: `沒有毒藥了`,
     PoisonSelf: ['這不是正常操作，選別人吧'],
     NoMoreMedicine: `你沒有藥了，系統會默認你已操作完成`,
-    RescueBoard: '點擊名稱選擇你要救的玩家',
+    RescueBoard: '點擊名稱選擇你要治療的玩家',
     PoisonBoard: '點擊名稱選擇你要毒殺的玩家',
     NotUseMedicineSuccessSuccess: `好`,
     NoOneHurt: `沒有人受傷`,
@@ -208,7 +211,7 @@ export default defineMessages(
     ShootSelf: `你要死了，這一槍留給別人吧`,
     NotReadyForShoot: '再等等，還未到開槍的時候',
     HunterBoardSubtitle: [
-      '應該死了的獵人忽然動了，舉著獵槍指向你們',
+      '應該死去的獵人忽然動了，舉著獵槍指向你們',
       '「喀嚓」，大家一起看向聲音的來源，垂死的獵人舉著獵槍指向你們'
     ],
     HunterBoard: `點擊名稱選擇要射擊的目標`,
@@ -216,11 +219,10 @@ export default defineMessages(
     NoOneWasShot: [`不知過了多久，獵人最終沒有開槍，然後倒下了`],
 
     DaytimeBoard: '現在是白天',
-    SomeOneDead: `以下玩家死了`,
     NoOneDead: `沒有人死去`,
-    SilenceForTheDeceased: `我們一起默哀一秒`,
+    SilenceForTheDeceased: `以上玩家死了，我們一起默哀一秒`,
 
-    VoteBoard: `投票階段, {0}/{1}`,
+    VoteBoard: `投票階段 {0}/{1}`,
     ClickToVote: '點擊名稱即可進行投票',
     ReVoteBoard: `第二輪投票, {0}/{1}`,
     ReVoteBoardFooter: `平票者不能投票，其餘玩家只能投票給平票者`,

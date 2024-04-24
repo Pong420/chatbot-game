@@ -10,9 +10,9 @@ const debugHandlers = [
   createHandler(UserId, TextEqual(t('GetUserId')), userId => t(`GetUserIdResp`, userId))
 ];
 
-if (process.env.NODE_ENV === 'test') {
+if (process.env.NODE_ENV === 'development') {
   debugHandlers.push(
-    createHandler(TextMatch(/\d+/), async ([n]) => {
+    createHandler(TextMatch(/^\d+$/), async ([n]) => {
       const content = await fs.readFile(path.join(outdir, `${n}.json`), 'utf-8');
       return JSON.parse(content);
     })

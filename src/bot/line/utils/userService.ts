@@ -7,18 +7,23 @@ import { getUserProfile } from './getUserProfile';
 export const maxLength = 15;
 
 export async function getUser(event: WebhookEvent | null, userId = event?.source.userId || '') {
-  if (!userId) throw t('SystemError');
+  if (!userId) throw t(`GetUserIdFailed`);
 
-  let resp = await api.getUser(userId);
-  if (!resp.data && resp.error.code === ERROR_CODE_EMPTY) {
-    const profile = await getUserProfile(event, userId);
-    if (profile) {
-      resp = await api.createUser({ userId, nickname: profile.displayName });
-    }
+  try {
+    const resp = await api.getUser(userId).catch(async error => {
+      if (error instanceof Error && 'code' in error && error.code === ERROR_CODE_EMPTY) {
+        const profile = await getUserProfile(event, userId);
+        if (!profile) throw `profile not found`;
+        return api.createUser({ userId, nickname: profile.displayName });
+      }
+      throw error;
+    });
+    if (!resp.data) throw `cannot get user from database`;
+    return resp.data;
+  } catch (error) {
+    console.error(error);
+    throw t('SystemError');
   }
-
-  if (resp.error) throw t('SystemError');
-  return resp.data;
 }
 
 export async function setNickname(event: WebhookEvent, name: string) {

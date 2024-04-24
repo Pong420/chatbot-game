@@ -30,7 +30,7 @@ test('main', async () => {
 
   await next(board.guardGroup());
 
-  await guard.s(t('IamGuard')).toEqual(board.guard(game));
+  await guard.s(t('IamGuard')).toEqual(board.guard(game, guard.userId));
   await guard.s(t.regex('Protect', villagers[0].name)).toTextMessage(t(`ProtectSuccess`));
   await guard.s(t.regex('Protect', villagers[0].name)).toTextMessage(t(`TurnEnded`));
 
@@ -68,8 +68,8 @@ test('main', async () => {
 
   await predictor.s(t(`IamPredictor`)).toEqual(board.predictor(game, predictor.userId));
   await predictor
-    .s(t.regex(`Predict`, villagers[0].name))
-    .toTextMessage(t(`PredictResult`, villagers[0].name, t('PredictedGoodGuy')));
+    .s(t.regex(`Predict`, werewolfs[0].name))
+    .toTextMessage(t(`PredictResult`, werewolfs[0].name, t('PredictedBadGuy')));
 
   // Daytime --------------------------------------------------------------------------------
 

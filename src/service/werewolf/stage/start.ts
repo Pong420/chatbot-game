@@ -19,7 +19,7 @@ export class Start extends Stage {
 
   join(payload: Pick<Character, 'id' | 'nickname'>) {
     if (this.players.has(payload.id)) throw t('Joined', payload.nickname);
-    if (this.players.size >= this.maxPlayers) throw t('GameIsFull', payload.nickname);
+    if (this.players.size >= this.maxPlayers) throw t('GameIsFull');
 
     for (const player of this.players.values()) {
       if (payload.nickname === player.nickname) throw t(`NicknameUsed`, payload.nickname);

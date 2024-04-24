@@ -91,9 +91,7 @@ export function testSuite() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const next = async (paylaod: any) => {
     const event = await host.gr(t(`Next`));
-
     await update();
-
     expect(event).toEqual(typeof paylaod === 'function' ? paylaod() : paylaod);
   };
 
@@ -106,7 +104,7 @@ export function testSuite() {
     const clientInOthersGroup = createLineUser({ name: players[0].name });
     clientInOthersGroup.profile.userId = players[0].userId;
 
-    await host.g(t(`Initiate`)).toEqual(board.start());
+    await host.g(t(`Initiate`)).toEqual(board.initiate(host.groupId));
     await host.g(t(`Initiate`)).toEqual(textMessage(lt(`OtherGameRuning`, Game.type)));
 
     await host.g(t(`Join`)).toEqual(textMessage(t(`WaitFotHostSetup`)));
@@ -126,7 +124,7 @@ export function testSuite() {
 
     await extraClient.g(t('Join')).toEqual(textMessage(t('GameIsFull', extraClient.name)));
 
-    await clientInOthersGroup.g(t(`Initiate`)).toEqual(board.start());
+    await clientInOthersGroup.g(t(`Initiate`)).toEqual(board.initiate(clientInOthersGroup.groupId));
     await clientInOthersGroup.g(t('Join')).toTextMessage(lt('JoinedOtherGroupsGame', clientInOthersGroup.name));
   };
 

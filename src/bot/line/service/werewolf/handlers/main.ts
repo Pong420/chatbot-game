@@ -18,7 +18,7 @@ export const mainHandlers = [
     game.stage.host = userId;
 
     await createGame({ type: Werewolf.type, ...game.serialize() });
-    return getStageMessage(game.stage);
+    return getStageMessage(game);
   }),
   createHandler(Group, TextEqual(t('Join')), User, WerewolfGame, async (user, game) => {
     if (user.game && user.game !== game.groupId) return lt(`JoinedOtherGroupsGame`, user.nickname);
@@ -37,7 +37,7 @@ export const mainHandlers = [
       updateGame(game)
     ]);
 
-    return getStageMessage(game.stage);
+    return getStageMessage(game);
   }),
   createHandler(Single, TextEqual(t('MyCharacter')), IsPlayer, async ({ character }) => {
     return board.myCharacter(character);

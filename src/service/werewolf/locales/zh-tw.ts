@@ -26,7 +26,7 @@ export const IamCommand = (() => {
     ...entries.reduce(
       (res, [key, value]) => ({
         ...res,
-        [`${key}DM`]: `【${value}】請私我輸入【${IamCommands[`Iam${key}`]}】或者直接點擊下方按鈕`
+        [`${key}DM`]: `【${value}】請點擊按鈕或私我輸入【${IamCommands[`Iam${key}`]}】`
       }),
       {} as Record<`${keyof typeof Character}DM`, string>
     )

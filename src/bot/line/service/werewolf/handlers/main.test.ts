@@ -23,7 +23,7 @@ declare let players: WerewolfPlayer[];
 declare let host: WerewolfPlayer;
 
 test('main', async () => {
-  const { createGame, next, update, allVoteTo } = testSuite();
+  const { createGame, next, allVoteTo } = testSuite();
   await createGame();
 
   // Guard --------------------------------------------------------------------------------

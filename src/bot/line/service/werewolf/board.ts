@@ -15,7 +15,8 @@ import {
   centeredText,
   wrapedText,
   createFlexText,
-  Payload
+  Payload,
+  uriAction
 } from '@line/utils/createMessage';
 
 interface PlayerListProps {
@@ -34,16 +35,12 @@ function tableMessage({ title = [], ...props }: CreateTableMessageProps) {
   });
 }
 
-const startButtons: CreateTableMessageProps['buttons'] = [
-  primaryButton(messageAction(t(`JoinButton`), t('Join'))),
-  secondaryButton(messageAction(t('StartButton'), t('Start')))
-];
-
-export function start() {
+export function initiate(groupId: string) {
   return tableMessage({
     title: [centeredText(t('Tips'))],
     rows: orderList(t.paragraph('ShortIntro')),
-    buttons: startButtons
+    // TODO:
+    buttons: [primaryButton(messageAction(`使用預設`)), secondaryButton(uriAction(`自訂義`, `/${groupId}/`))]
   });
 }
 
@@ -59,7 +56,10 @@ export function players(players: Iterable<Character>) {
         })
       ];
     }),
-    buttons: startButtons
+    buttons: [
+      primaryButton(messageAction(t(`JoinButton`), t('Join'))),
+      secondaryButton(messageAction(t('StartButton'), t('Start')))
+    ]
   });
 }
 
@@ -284,9 +284,7 @@ export function hunter(stage: Stage, hunterId: string) {
 }
 
 export function hunterEnd(stage: Stage) {
-  if (!(stage instanceof HunterEnd)) {
-    return null;
-  }
+  if (!(stage instanceof HunterEnd)) return null;
 
   if (stage.shot.length) {
     return playerList({
@@ -296,11 +294,7 @@ export function hunterEnd(stage: Stage) {
     });
   }
 
-  return tableMessage({
-    title: [centeredText(t('Tips'))],
-    rows: orderList(t.paragraph('ShortIntro')),
-    buttons: startButtons
-  });
+  return _light([t(`NoOneWasShot`)]);
 }
 
 export function notVoted(stage: Stage) {

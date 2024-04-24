@@ -159,6 +159,13 @@ export class Game extends GameInstance {
 
     return this.stage;
   }
+
+  skip() {
+    this.stage.survivors.forEach(c => {
+      c.endTurn = true;
+    });
+    return this.next();
+  }
 }
 
 export { Game as Werewolf };

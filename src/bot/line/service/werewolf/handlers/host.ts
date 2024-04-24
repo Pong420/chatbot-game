@@ -1,6 +1,6 @@
 import { createHandler } from '@line/handler';
 import { Group, TextEqual } from '@line/filter';
-import { updateGame } from '@/supabase/game';
+import { GameStatus, updateGame } from '@/supabase/game';
 import { t } from '@werewolf/locales';
 import {
   Stage,
@@ -16,8 +16,7 @@ import {
   Vote,
   Voted,
   End,
-  ReVote,
-  VoteBaseStage
+  ReVote
 } from '@werewolf/stage';
 import { IsHost } from '../filter';
 import * as board from '../board';
@@ -35,7 +34,7 @@ export function getStageMessage(stage: Stage) {
   if (stage instanceof Vote) return board.vote(stage);
   if (stage instanceof ReVote) return board.revote(stage);
   if (stage instanceof Voted) return board.voted(stage);
-  if (stage instanceof End) return null;
+  if (stage instanceof End) return board.ended(stage);
 }
 
 export default [
@@ -46,20 +45,24 @@ export default [
       return getStageMessage(stage);
     }
   }),
+  createHandler(Group, TextEqual(t(`End`)), IsHost, async ({ game }) => {
+    await updateGame(game.groupId, { status: GameStatus.CLOSE });
+    return t(`End`);
+  }),
   createHandler(Group, TextEqual([t('Next'), t('NextShort')]), IsHost, async ({ game }) => {
     try {
       game.next();
       await updateGame(game);
-    } catch {}
-
+    } catch (error) {
+      if (error !== t(`StageNotEnded`)) throw error;
+    }
     return getStageMessage(game.stage);
   }),
-  createHandler(Group, TextEqual(t(`WhoNotVoted`)), IsHost, async ({ game }) => {
-    const stage = game.stage;
-    if (stage instanceof VoteBaseStage) {
-      const names = stage.voter.filter(id => !stage.voted.includes(id)).map(id => game.getPlayer(id).nickname);
-      if (!names.length) return;
-      return t(`WhoNotVotedReply`, names.join('，'));
-    }
-  })
+  createHandler(Group, TextEqual(t('Skip')), IsHost, async ({ game }) => {
+    game.skip();
+    await updateGame(game);
+    return getStageMessage(game.stage);
+  }),
+  createHandler(Group, TextEqual(t(`WhoNotVoted`)), IsHost, async ({ game }) => board.notVoted(game.stage)),
+  createHandler(Group, TextEqual(t(`Survivors`)), IsHost, async ({ game }) => board.survivors(game.stage))
 ];

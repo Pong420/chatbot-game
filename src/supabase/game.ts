@@ -4,6 +4,11 @@ import { Tables, TablesInsert, TablesUpdate } from './database.types';
 
 export type Game = Tables<'games'>;
 
+export enum GameStatus {
+  OPEN,
+  CLOSE
+}
+
 /**
  * memo for multiple Game filter
  */
@@ -16,6 +21,7 @@ export async function getGame(groupId: string) {
       .from('games')
       .select('*')
       .eq('groupId', groupId)
+      .eq('status', GameStatus.OPEN)
       .single()
       .throwOnError()
       .then(resp => resp.data);

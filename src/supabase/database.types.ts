@@ -34,6 +34,7 @@ export type Database = {
           data: Json | null;
           groupId: string;
           id: number;
+          status: number;
           type: string;
           updated_at: string | null;
         };
@@ -42,6 +43,7 @@ export type Database = {
           data?: Json | null;
           groupId: string;
           id?: number;
+          status?: number;
           type: string;
           updated_at?: string | null;
         };
@@ -50,6 +52,7 @@ export type Database = {
           data?: Json | null;
           groupId?: string;
           id?: number;
+          status?: number;
           type?: string;
           updated_at?: string | null;
         };

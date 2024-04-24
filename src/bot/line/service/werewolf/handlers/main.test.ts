@@ -79,9 +79,7 @@ test('main', async () => {
   // Vote --------------------------------------------------------------------------------
 
   await next(() => board.vote(game.stage as VoteBaseStage));
-  await host
-    .g(t(`WhoNotVoted`))
-    .toTextMessage(t(`WhoNotVotedReply`, game.stage.survivors.map(s => s.nickname).join('，')));
+  await host.g(t(`WhoNotVoted`)).toEqual(board.notVoted(stage));
   await next(() => board.vote(game.stage as VoteBaseStage));
   await allVoteTo(werewolfs[3]);
 

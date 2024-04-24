@@ -1,7 +1,7 @@
 import { Action } from '@line/bot-sdk';
 import { t } from '@werewolf/locales';
 import { Werewolf } from '@werewolf/game';
-import { Stage, VoteBaseStage, HunterEnd } from '@werewolf/stage';
+import { Stage, VoteBaseStage, HunterEnd, End } from '@werewolf/stage';
 import { Character, Predictor, Villager } from '@werewolf/character';
 import {
   messageAction,
@@ -43,7 +43,7 @@ const startButtons: CreateTableMessageProps['buttons'] = [
 export function start() {
   return tableMessage({
     title: [centeredText(t('Tips'))],
-    rows: orderList(t.paragraph('ShortIntro', t('HostCommands'))),
+    rows: orderList(t.paragraph('ShortIntro')),
     buttons: startButtons
   });
 }
@@ -296,7 +296,36 @@ export function hunterEnd(stage: Stage) {
 
   return tableMessage({
     title: [centeredText(t('Tips'))],
-    rows: orderList(t.paragraph('ShortIntro', t('HostCommands'))),
+    rows: orderList(t.paragraph('ShortIntro')),
     buttons: startButtons
+  });
+}
+
+export function notVoted(stage: Stage) {
+  if (stage instanceof VoteBaseStage) {
+    const names = stage.voter.filter(id => !stage.voted.includes(id)).map(id => stage.players.get(id)!.nickname);
+    if (!names.length) return;
+    return playerList({
+      names,
+      title: [wrapAndCenterText(t(`WhoNotVoted`))]
+    });
+  }
+}
+
+export function survivors(stage: Stage) {
+  const names = stage.survivors.map(survivor => survivor.nickname);
+  return playerList({
+    names,
+    title: [wrapAndCenterText(t(`Survivors`))]
+  });
+}
+
+export function ended(stage: Stage) {
+  if (!(stage instanceof End)) return null;
+  const text = stage.getEndMessage();
+  return tableMessage({
+    title: [wrapAndCenterText(t(`End`))],
+    rows: [[wrapedText(text, { align: text.length > 18 ? 'start' : 'center' })]],
+    buttons: [primaryButton(messageAction(t(`DeathReport`))), secondaryButton(messageAction(t(`Initiate`)))]
   });
 }

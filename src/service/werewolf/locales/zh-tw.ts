@@ -45,18 +45,17 @@ export const HostCommand = {
   Initiate: `開啟狼人殺`,
   Open: `狼人殺設定完畢`,
   Start: `狼人殺開始`,
-  End: `狼人殺結束`, // TODO:
-  Survivor: `狼人殺倖存者`, // TODO:
+  End: `狼人殺結束`,
+  Survivors: `狼人殺倖存者`,
   'DeathReport': '狼人殺死亡報告', // TODO:
   WhoNotVoted: `誰未投票`,
-  HostCommands: `主持指令`, // TODO:
   PlayerReport: `^(.*)的報告` // TODO:
 };
 
 export const StageCommand = {
   NextShort: 'n',
   Next: '/next',
-  Skip: '/skip' // TODO:
+  Skip: '/skip'
 };
 
 export const KillerCommand = {
@@ -128,7 +127,6 @@ export default defineMessages(
 
     ShortIntro: `
       遊戲人數最少6人，最多12人,
-      主持人可以輸入【{0}】查詢指令,
       謹記！友誼第一，這只是遊戲，不要太認真
     `,
 
@@ -227,7 +225,6 @@ export default defineMessages(
     ReVoteBoard: `第二輪投票, {0}/{1}`,
     ReVoteBoardFooter: `平票者不能投票，其餘玩家只能投票給平票者`,
     CandidateCantVote: `平票者不能投票`,
-    WhoNotVotedReply: `{0}未投票`,
 
     VoteEndBoard: `投票結束`,
     Banishment: `{0}被處死了`

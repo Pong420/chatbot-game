@@ -10,8 +10,11 @@ const IsWerewolf = createWerewolfFilter(Werewolf);
 
 export default [
   createHandler(Group, TextEqual(t('IamWerewolf')), IsPlayer, () => t(`IamWerewolfGroup`)),
-  createHandler(Single, TextEqual(t('IamWerewolf')), IsWerewolf({ yourAreNotError: true }), ({ userId, game }) =>
-    board.werewolf(game, userId)
+  createHandler(
+    Single,
+    TextEqual(t('IamWerewolf')),
+    IsWerewolf({ turnEndedError: true, yourAreNotError: true }),
+    ({ userId, game }) => board.werewolf(game, userId)
   ),
   createHandler(Single, IsWerewolf({ target: t('Kill') }), async ({ game, target, character }) => {
     const message = character.kill(target);

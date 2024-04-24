@@ -33,6 +33,7 @@ export function createWerewolfFilter<C extends Character>(CharacterConstructor: 
 
   interface Options {
     target?: RegExp | string;
+    turnEndedError?: boolean;
     yourAreNotError?: boolean;
   }
 
@@ -40,17 +41,18 @@ export function createWerewolfFilter<C extends Character>(CharacterConstructor: 
   function filter(options: Options & { target: RegExp | string }): RR<R & { target: Character }>;
   function filter(options: Options): RR<R>;
   function filter(options: Options = {}): RR<R> {
-    const { target, yourAreNotError } = options;
+    const { target, turnEndedError, yourAreNotError } = options;
 
     return createFilter(
       target ? TextMatch(target) : () => [] as string[],
       IsPlayer,
       (event: WebhookEvent) => event,
-      async ([, name], d, event) => {
-        if (d.character instanceof CharacterConstructor) {
-          const target = name ? d.game.stage.playersByName[name] : undefined;
+      async ([, name], { game, character, ...rest }, event) => {
+        if (character instanceof CharacterConstructor) {
+          const target = name ? game.stage.playersByName[name] : undefined;
           if (!target && options?.target) throw t(`TargetNoExists`, name);
-          return { ...d, target, character: d.character as C };
+          if (isSingleEvent(event) && turnEndedError && character.endTurn) throw t(`NotYourTurn2`);
+          return { game, target, character, ...rest };
         }
 
         if (isSingleEvent(event) && yourAreNotError) throw t(`YouAreNot`);

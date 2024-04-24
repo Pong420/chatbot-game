@@ -10,17 +10,22 @@ const IsWitcher = createWerewolfFilter(Witcher);
 
 export default [
   createHandler(Group, TextEqual(t('IamWitcher')), IsPlayer, () => t(`IamWitcherGroup`)),
-  createHandler(Single, TextEqual(t('IamWitcher')), IsWitcher({ yourAreNotError: true }), ({ game, character }) => {
-    if (!character.rescued) {
-      return board.rescue(game.stage);
-    }
+  createHandler(
+    Single,
+    TextEqual(t('IamWitcher')),
+    IsWitcher({ turnEndedError: true, yourAreNotError: true }),
+    ({ game, character }) => {
+      if (!character.rescued) {
+        return board.rescue(game.stage);
+      }
 
-    if (!character.poisoned) {
-      return board.poison(game.stage, character.id);
-    }
+      if (!character.poisoned) {
+        return board.poison(game.stage, character.id);
+      }
 
-    return t(`NoMoreMedicine`);
-  }),
+      return t(`NoMoreMedicine`);
+    }
+  ),
   createHandler(Single, IsWitcher({ target: t(`Rescue`) }), async ({ game, target, character }) => {
     const message = character.rescue(target);
     await updateGame(game);

@@ -114,7 +114,8 @@ export default defineMessages(
     TurnEnded: ['你已作出了選擇', `有些事...無法改變`],
     StageNotEnded: '仍有玩家未完成行動，無法進入下回合',
     YouDead: '安息吧，你已經死了！',
-    NotYourTurn: ['現在幹這件事不合適吧？', '還不是你的回合'],
+    NotYourTurn: ['現在幹這件事不合適吧？'],
+    NotYourTurn2: ['還不是你的回合'],
     TargetIsDead: ['{0}已死亡，不重新選擇'],
     TargetNoExists: ['{0}不存在，請檢查是否輸入錯誤'],
 

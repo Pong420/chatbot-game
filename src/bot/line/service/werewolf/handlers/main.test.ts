@@ -46,8 +46,7 @@ test('main', async () => {
 
   await werewolfs.slice(-1)[0].s(t(`Idle`)).toTextMessage(t(`WerewolfIdleSuccess`));
 
-  // TODO:
-  // await hunter.s(t(`IamHunter`)).toTextMessage(t(`NotReadyForShoot`));
+  await hunter.s(t(`IamHunter`)).toTextMessage(t(`NotYourTurn2`));
   await hunter.s(t.regex(`Shoot`, werewolfs[0].name)).toTextMessage(t(`NotReadyForShoot`));
 
   // Witcher --------------------------------------------------------------------------------

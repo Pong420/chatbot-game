@@ -5,13 +5,10 @@ import { createGame, updateGame } from '@/supabase/game';
 import { updateUser } from '@/supabase/user';
 import { Werewolf } from '@werewolf/game';
 import { t } from '@werewolf/locales';
-import { Init, Start, VoteBaseStage } from '@werewolf/stage';
+import { Init, Start } from '@werewolf/stage';
 import { WerewolfGame, IsPlayer, IsCharacter } from '../filter';
 import { getStageMessage } from './host';
 import * as board from '../board';
-
-// TODO: intro command
-// TODO: titles
 
 export const mainHandlers = [
   createHandler(UserId, TextEqual(t('Initiate')), CanStartGame, async (userId, groupId) => {
@@ -48,12 +45,12 @@ export const mainHandlers = [
   createHandler(Group, IsCharacter({ target: t(`Vote`) }), async ({ game, target, character }) => {
     character.vote(target);
     await updateGame(game);
-    return board.vote(game.stage as VoteBaseStage);
+    return board.vote(game.stage);
   }),
   createHandler(Group, TextEqual(t(`Waive`)), IsPlayer, async ({ game, character }) => {
     character.waive();
     await updateGame(game);
-    return board.vote(game.stage as VoteBaseStage);
+    return board.vote(game.stage);
   }),
   createHandler(LeaveGroup, WerewolfGame, async (event, game) => {
     await Promise.all(Array.from(game.players, ([id]) => updateUser(id, { game: null }).catch(() => void 0)));

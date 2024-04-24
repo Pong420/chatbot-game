@@ -128,7 +128,8 @@ export function daytime(stage: Stage) {
   }
 }
 
-export function vote(stage: VoteBaseStage) {
+export function vote(stage: Stage) {
+  if (!(stage instanceof VoteBaseStage)) return null;
   const rows = Array.from(stage.candidates, ([name, list]): Payload[] => {
     return [
       wrapedText(name, { flex: 9, action: messageAction(t(`Vote`, name)) }),
@@ -146,7 +147,8 @@ export function vote(stage: VoteBaseStage) {
   });
 }
 
-export function revote(stage: VoteBaseStage) {
+export function revote(stage: Stage) {
+  if (!(stage instanceof VoteBaseStage)) return null;
   const rows = Array.from(stage.candidates, ([name, list]): Payload[] => {
     return [
       wrapedText(name, { flex: 9, action: messageAction(t(`Vote`, name)) }),

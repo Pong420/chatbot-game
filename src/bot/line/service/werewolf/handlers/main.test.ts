@@ -2,7 +2,6 @@
 import { expect, test } from 'vitest';
 import { Werewolf as WerewolfGame } from '@werewolf/game';
 import { t } from '@werewolf/locales';
-import { VoteBaseStage } from '@werewolf/stage';
 import { testSuite, WerewolfPlayer } from '../test';
 import * as board from '../board';
 
@@ -78,14 +77,14 @@ test('main', async () => {
 
   // Vote --------------------------------------------------------------------------------
 
-  await next(() => board.vote(game.stage as VoteBaseStage));
+  await next(() => board.vote(game.stage));
   await host.g(t(`WhoNotVoted`)).toEqual(board.notVoted(stage));
-  await next(() => board.vote(game.stage as VoteBaseStage));
+  await next(() => board.vote(game.stage));
   await allVoteTo(werewolfs[3]);
 
   // Voted --------------------------------------------------------------------------------
 
-  await next(() => board.voted(game.stage as VoteBaseStage));
+  await next(() => board.voted(game.stage));
   expect(survivors).toHaveLength(10);
 
   // Guard --------------------------------------------------------------------------------
@@ -98,8 +97,8 @@ test('main', async () => {
 
   await next(board.werewolfGroup());
   await werewolfs[0].s(t.regex(`Kill`, hunter.name)).toTextMessage(t(`KillSuccss`));
-  await werewolfs[1].s(t.regex(`Kill`, werewolfs[1].name)).toTextMessage(t(`KillSuccss`));
-  await werewolfs[2].s(t.regex(`Idle`)).toTextMessage(t(`WerewolfIdleSuccess`));
+  await werewolfs[1].s(t.regex(`Idle`)).toTextMessage(t(`WerewolfIdleSuccess`));
+  await werewolfs[2].s(t.regex(`Suicide`)).toTextMessage(t(`SuicideSuccss`));
 
   // Witcher --------------------------------------------------------------------------------
 
@@ -125,7 +124,7 @@ test('main', async () => {
   await next(board.hunterGroup());
   await hunter.s(t(`IamHunter`)).toEqual(board.hunter(stage, hunter.userId));
   await hunter.s(t.regex(`Shoot`, hunter.name)).toTextMessage(t('ShootSelf'));
-  await hunter.s(t.regex(`Shoot`, werewolfs[2].name)).toTextMessage(t('ShootSuccess'));
+  await hunter.s(t.regex(`Shoot`, guard.name)).toTextMessage(t('ShootSuccess'));
 
   // HunterEnd --------------------------------------------------------------------------------
 
@@ -133,5 +132,40 @@ test('main', async () => {
 
   // Vote --------------------------------------------------------------------------------
 
-  await next(() => board.vote(game.stage as VoteBaseStage));
+  await next(() => board.vote(game.stage));
+  await allVoteTo(predictor);
+
+  // Voted --------------------------------------------------------------------------------
+
+  await next(() => board.voted(game.stage));
+
+  // Night --------------------------------------------------------------------------------
+
+  await next(board.werewolfGroup());
+  await werewolfs[0].s(t.regex(`Kill`, werewolfs[1].name)).toTextMessage(t(`KillSuccss`));
+  await werewolfs[1].s(t.regex(`Idle`)).toTextMessage(t(`Hungry`));
+  await werewolfs[1].s(t.regex(`Kill`, witcher.name)).toTextMessage(t(`KillSuccss`));
+
+  // Witcher --------------------------------------------------------------------------------
+
+  await next(board.witcherGroup());
+  await witcher.s(t(`IamWitcher`)).toEqual(board.poison(stage, witcher.userId));
+  await witcher.s(t.regex(`Poison`, villagers[2].name)).toTextMessage(t(`PoisonSuccess`));
+
+  // Daytime --------------------------------------------------------------------------------
+
+  await next(() => board.daytime(stage));
+
+  // Vote --------------------------------------------------------------------------------
+
+  await next(() => board.vote(stage));
+  await allVoteTo(villagers[1]);
+
+  // Voted --------------------------------------------------------------------------------
+
+  await next(() => board.voted(stage));
+
+  // Ended --------------------------------------------------------------------------------
+
+  await next(() => board.ended(stage));
 });

@@ -6,7 +6,7 @@ import { t as lt } from '@line/locales';
 import { textMessage } from '@line/utils/createMessage';
 import { characters } from '@werewolf/character';
 import { Werewolf as Game } from '@werewolf/game';
-import { Stage, VoteBaseStage } from '@werewolf/stage';
+import { Stage } from '@werewolf/stage';
 import { Character, Villager, Werewolf, Hunter, Guard, Predictor, Witcher } from '@werewolf/character';
 import { t } from '@werewolf/locales';
 import { getGame } from '@/supabase/game';
@@ -134,7 +134,7 @@ export function testSuite() {
     for (const survivor of survivors) {
       const event = await survivor.gr(t.regex(`Vote`, character.name));
       await update();
-      expect(event).toMatchObject(board.vote(game.stage as VoteBaseStage));
+      expect(event).toEqual(board.vote(game.stage));
     }
   };
 
@@ -142,7 +142,7 @@ export function testSuite() {
     for (const survivor of survivors) {
       const event = await survivor.gr(t.regex(`Waive`));
       await update();
-      expect(event).toMatchObject(board.vote(game.stage as VoteBaseStage));
+      expect(event).toEqual(board.vote(game.stage));
     }
   };
 

@@ -6,8 +6,8 @@ import { t } from '@line/locales';
 import { outdir } from '@line/utils/saveMessages';
 
 const debugHandlers = [
-  createHandler(GroupId, TextEqual(t('GroupId')), groupId => t(`GroupIdResp`, groupId)),
-  createHandler(UserId, TextEqual(t('GetUserId')), userId => t(`GetUserIdResp`, userId))
+  createHandler(GroupId, TextEqual(t('GroupId')), groupId => groupId),
+  createHandler(UserId, TextEqual(t('GetUserId')), userId => userId)
 ];
 
 if (process.env.NODE_ENV === 'development') {

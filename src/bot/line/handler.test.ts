@@ -15,11 +15,9 @@ test('handleEvent', async () => {
   await expect(handleEvent(client.groupMessage('ping'))).resolves.toMatchObject(textMessage('pong'));
 
   await expect(handleEvent(client.singleMessage(t('GroupId')))).resolves.toBeUndefined();
-  await expect(handleEvent(client.groupMessage(t('GroupId')))).resolves.toEqual(
-    textMessage(t('GroupIdResp', client.groupId))
-  );
+  await expect(handleEvent(client.groupMessage(t('GroupId')))).resolves.toEqual(textMessage(client.groupId));
 
-  const userIdMsg = textMessage(t('GetUserIdResp', client.userId));
+  const userIdMsg = textMessage(client.userId);
   await expect(handleEvent(client.singleMessage(t('GetUserId')))).resolves.toEqual(userIdMsg);
   await expect(handleEvent(client.groupMessage(t('GetUserId')))).resolves.toEqual(userIdMsg);
 });

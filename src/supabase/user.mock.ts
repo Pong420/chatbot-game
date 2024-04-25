@@ -1,7 +1,6 @@
 import { vi } from 'vitest';
 import { nanoid } from 'nanoid';
 import * as module from './user';
-import { ERROR_CODE_EMPTY } from './supabase';
 
 export type User = module.User;
 
@@ -22,19 +21,16 @@ export const genMockUserData = (override?: Partial<User>) => {
 
 vi.spyOn(module, 'getUser').mockImplementation(userId => {
   const data = userDB.get(userId);
-  return Promise.resolve({ data, error: data ? null : { code: ERROR_CODE_EMPTY } }) as unknown as ReturnType<
-    (typeof module)['getUser']
-  >;
+  return Promise.resolve(data || null);
 });
 
 vi.spyOn(module, 'createUser').mockImplementation(({ userId }) => {
   if (userDB.has(userId)) {
     return Promise.resolve({ data: null, error: { code: 0 } }) as unknown as ReturnType<(typeof module)['createUser']>;
   }
-
   const data = genMockUserData({ userId });
   userDB.set(userId, data);
-  return Promise.resolve({ data, error: null }) as unknown as ReturnType<(typeof module)['createUser']>;
+  return Promise.resolve(data);
 });
 
 vi.spyOn(module, 'updateUser').mockImplementation((userId, payload) => {
@@ -43,7 +39,5 @@ vi.spyOn(module, 'updateUser').mockImplementation((userId, payload) => {
     data = { ...data, ...payload };
     userDB.set(userId, data);
   }
-  return Promise.resolve({ data, error: data ? null : { code: '0' } }) as unknown as ReturnType<
-    (typeof module)['updateUser']
-  >;
+  return Promise.resolve(data || null);
 });

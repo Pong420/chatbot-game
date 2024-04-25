@@ -1,6 +1,5 @@
 import { WebhookEvent } from '@line/bot-sdk';
 import { t } from '@line/locales';
-import { ERROR_CODE_EMPTY } from '@/supabase';
 import * as api from '@/supabase/user';
 import { getUserProfile } from './getUserProfile';
 
@@ -10,16 +9,14 @@ export async function getUser(event: WebhookEvent | null, userId = event?.source
   if (!userId) throw t(`GetUserIdFailed`);
 
   try {
-    const resp = await api.getUser(userId).catch(async error => {
-      if (error instanceof Error && 'code' in error && error.code === ERROR_CODE_EMPTY) {
-        const profile = await getUserProfile(event, userId);
-        if (!profile) throw `profile not found`;
-        return api.createUser({ userId, nickname: profile.displayName });
-      }
-      throw error;
-    });
-    if (!resp.data) throw `cannot get user from database`;
-    return resp.data;
+    let user = await api.getUser(userId);
+    if (!user) {
+      const profile = await getUserProfile(event, userId);
+      if (!profile) throw `profile not found`;
+      user = await api.createUser({ userId, nickname: profile.displayName });
+    }
+    if (!user) throw `cannot get user from database`;
+    return user;
   } catch (error) {
     console.error(error);
     throw t('SystemError');
@@ -46,8 +43,7 @@ export async function setNickname(event: WebhookEvent, name: string) {
   if (name === user.nickname) return t(`NickNameUsing`, name);
 
   try {
-    const { error } = await api.updateUser(user.userId, { nickname: name });
-    if (error) throw error;
+    await api.updateUser(user.userId, { nickname: name });
     return t(`NickNameSuccess`);
   } catch (error) {
     return t('NickNameFailed');

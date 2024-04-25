@@ -6,14 +6,13 @@ import { isGroupEvent, isSingleEvent } from '@line/types';
 import { createFilter, GroupId } from '@line/filter';
 import { getUser } from '@line/utils/userService';
 import { t } from '@line/locales';
-import { ERROR_CODE_EMPTY } from '@/supabase';
 
 export const Game = <G extends GameInstance>(GameConstructor: GameConstructor<G>) => {
   return async (event: WebhookEvent) => {
     const groupId = isGroupEvent(event)
       ? event.source.groupId
       : isSingleEvent(event)
-        ? await getUser(event).then(u => u.game)
+        ? await getUser(event).then(u => u?.game)
         : null;
 
     if (!groupId) throw false;
@@ -30,10 +29,7 @@ export const Game = <G extends GameInstance>(GameConstructor: GameConstructor<G>
 };
 
 export const CanStartGame = createFilter(GroupId, async groupId => {
-  const data = await getGame(groupId).catch(error => {
-    if (error.code === ERROR_CODE_EMPTY) return null;
-    throw error;
-  });
+  const data = await getGame(groupId);
   if (data && data.status !== GameStatus.CLOSE) throw t('OtherGameRuning', data.type);
   return groupId;
 });

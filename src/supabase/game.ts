@@ -1,5 +1,5 @@
 import { GameInstance } from '@/types';
-import { supabase } from './supabase';
+import { ERROR_CODE_EMPTY, supabase } from './supabase';
 import { Tables, TablesInsert, TablesUpdate } from './database.types';
 
 export type Game = Tables<'games'>;
@@ -18,15 +18,22 @@ const memo = new Map<string, Game | null>();
 export async function getGame(groupId: string) {
   let data = memo.get(groupId);
   if (!data) {
-    data = await supabase
-      .from('games')
-      .select('*')
-      .eq('groupId', groupId)
-      .eq('status', GameStatus.OPEN)
-      .single()
-      .throwOnError()
-      .then(resp => resp.data);
-    data && memo.set(groupId, data);
+    try {
+      data = await supabase
+        .from('games')
+        .select('*')
+        .eq('groupId', groupId)
+        .eq('status', GameStatus.OPEN)
+        .single()
+        .throwOnError()
+        .then(resp => resp.data);
+      data && memo.set(groupId, data);
+    } catch (error) {
+      if (error instanceof Error && 'code' in error && error.code === ERROR_CODE_EMPTY) {
+        return null;
+      }
+      throw error;
+    }
   }
   return data;
 }

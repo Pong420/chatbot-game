@@ -12,8 +12,6 @@ export const Commands = {
 export const Replies = {
   SystemError: '系統錯誤',
 
-  GroupIdResp: 'The group id is {0}',
-  GetUserIdResp: 'Your user id is {0}',
   GetUserIdFailed: '無法取得UserId',
 
   NickNameMaxLength: '暱稱不能多於{0}',

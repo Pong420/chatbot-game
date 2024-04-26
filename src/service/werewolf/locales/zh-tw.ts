@@ -1,7 +1,7 @@
 import { defineMessages } from '@/utils/locale';
-import { characters } from '@werewolf/character';
+import type { CharacterKey } from '@werewolf/character';
 
-export const Character: Record<keyof typeof characters, string> = {
+export const Character: Record<CharacterKey, string> = {
   Villager: `村民`,
   Werewolf: `狼人`,
   Witcher: `女巫`,
@@ -46,7 +46,7 @@ export const CharacterIntroCommand = (() => {
 
 export const HostCommand = {
   Initiate: `開啟狼人殺`,
-  Open: `狼人殺設定完畢`,
+  SetupCompleted: `狼人殺設定完畢`,
   Start: `狼人殺開始`,
   End: `狼人殺結束`,
   Survivors: `狼人殺倖存者`,

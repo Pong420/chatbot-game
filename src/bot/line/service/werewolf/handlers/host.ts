@@ -40,7 +40,7 @@ export function getStageMessage(game: Werewolf) {
 }
 
 export default [
-  createHandler(Group, TextEqual(t('Open')), IsHost, async ({ game }) => {
+  createHandler(Group, TextEqual(t('SetupCompleted')), IsHost, async ({ game }) => {
     if (game.stage instanceof Init) {
       game.next();
       await updateGame(game);

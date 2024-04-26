@@ -10,37 +10,26 @@ export enum GameStatus {
 }
 type GameProps = Omit<Game, 'created_at' | 'data' | 'groupId' | 'id' | 'type' | 'updated_at'>;
 
-/**
- * memo for multiple Game filter
- */
-const memo = new Map<string, Game | null>();
-
 export async function getGame(groupId: string) {
-  let data = memo.get(groupId);
-  if (!data) {
-    try {
-      data = await supabase
-        .from('games')
-        .select('*')
-        .eq('groupId', groupId)
-        .eq('status', GameStatus.OPEN)
-        .single()
-        .throwOnError()
-        .then(resp => resp.data);
-      data && memo.set(groupId, data);
-    } catch (error) {
-      if (error instanceof Error && 'code' in error && error.code === ERROR_CODE_EMPTY) {
-        return null;
-      }
-      throw error;
+  try {
+    return await supabase
+      .from('games')
+      .select('*')
+      .eq('groupId', groupId)
+      .eq('status', GameStatus.OPEN)
+      .single()
+      .throwOnError()
+      .then(resp => resp.data);
+  } catch (error) {
+    if (error instanceof Error && 'code' in error && error.code === ERROR_CODE_EMPTY) {
+      return null;
     }
+    throw error;
   }
-  return data;
 }
 
 export async function createGame(data: TablesInsert<'games'>) {
   const resp = await supabase.from('games').insert([data]).select().single().throwOnError();
-  memo.set(data.groupId, resp.data);
   return resp.data;
 }
 
@@ -62,6 +51,5 @@ export async function updateGame(
     .single()
     .throwOnError()
     .then(resp => resp.data);
-  memo.set(groupId, updated);
   return updated;
 }

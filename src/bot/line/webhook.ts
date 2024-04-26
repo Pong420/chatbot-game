@@ -11,6 +11,8 @@ const handlers = await loadHanlders(
     : { pathname: 'src/bot/line/handlers', load: pathname => import(`./handlers/${pathname}`) }
 );
 
+const handleEvent = createEventHandler(handlers, werewolfGameHandlers);
+
 export async function POST(req: NextRequest, res: NextResponse) {
   await runMiddleware(req, res);
   try {
@@ -21,5 +23,3 @@ export async function POST(req: NextRequest, res: NextResponse) {
     return new Response(`Bad Request`, { status: 500 });
   }
 }
-
-const handleEvent = createEventHandler(handlers, werewolfGameHandlers);

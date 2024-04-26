@@ -1,6 +1,8 @@
 import { Character } from './character/_character';
 import * as characters from './character/_characters';
 
+export type CharacterKey = keyof typeof characters;
+
 export const characterMap: Record<string, typeof Character> = {};
 export const characterNameMap = new Map<typeof Character, string>();
 

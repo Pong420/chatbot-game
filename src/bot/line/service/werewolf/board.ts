@@ -41,7 +41,9 @@ export function initiate(groupId: string) {
     // TODO:
     buttons: [
       primaryButton(messageAction(`使用預設`)),
-      secondaryButton(uriAction(`自訂`, `http://google.com/${groupId}/`))
+      secondaryButton(
+        uriAction(`自訂`, `https://liff.line.me/${process.env.NEXT_PUBLIC_LINE_WEREWOLF_LIFF_ID}/werewolf/settings/${groupId}`)
+      )
     ]
   });
 }

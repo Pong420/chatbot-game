@@ -109,7 +109,7 @@ export function testSuite() {
 
     await host.g(t(`Join`)).toEqual(textMessage(t(`WaitFotHostSetup`)));
 
-    await host.g(t(`Open`)).toMatchObject(board.players([]));
+    await host.g(t(`SetupCompleted`)).toMatchObject(board.players([]));
 
     await host.g(t('Join')).toMatchObject({ type: 'flex' });
     await host.g(t('Join')).toEqual(textMessage(t(`Joined`, host.name)));

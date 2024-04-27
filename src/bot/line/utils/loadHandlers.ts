@@ -30,7 +30,5 @@ export async function loadHanlders(payload: Context | Record<string, () => Promi
     }
   }
 
-  console.log({ handlers: handlers.length });
-
   return handlers;
 }

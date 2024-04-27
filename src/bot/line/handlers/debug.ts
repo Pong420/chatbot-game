@@ -3,7 +3,6 @@ import path from 'path';
 import { createHandler } from '@line/handler';
 import { GroupId, TextEqual, TextMatch, UserId } from '@line/filter';
 import { t } from '@line/locales';
-import { outdir } from '@line/utils/saveMessages';
 
 const debugHandlers = [
   createHandler(GroupId, TextEqual(t('GroupId')), groupId => groupId),
@@ -11,6 +10,8 @@ const debugHandlers = [
 ];
 
 if (process.env.NODE_ENV === 'development') {
+  const { outdir } = await import('@line/utils/saveMessages');
+
   debugHandlers.push(
     createHandler(TextMatch(/^\d+$/), async ([n]) => {
       const content = await fs.readFile(path.join(outdir, `${n}.json`), 'utf-8');

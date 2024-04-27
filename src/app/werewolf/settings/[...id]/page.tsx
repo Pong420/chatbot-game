@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
+import { redirect, RedirectType } from 'next/navigation';
+import { checkIsLineClient } from '@line/next';
 import { SettingForm } from '@/components/werewolf/SettingForm';
 import { characters } from '@/app/werewolf/settings/utils';
 import { updateSettings } from '../actions';
-import { headers } from 'next/headers';
 
 export const metadata: Metadata = {
   title: `狼人殺設定`
@@ -10,9 +11,7 @@ export const metadata: Metadata = {
 
 export default async function Page({ params: { id } }: { params: { id: string } }) {
   const onSubmit = updateSettings.bind(null, id);
-
-  const headersList = headers();
-  const isLineClient = !!headersList.get('user-agent')?.match(/Line\/\d+\.\d+\.\d+ LIFF/);
-
+  const isLineClient = await checkIsLineClient();
+  if (process.env.NODE_ENV === 'production' && !isLineClient) return redirect('/line', RedirectType.replace);
   return <SettingForm isLineClient={isLineClient} characters={characters} onSubmit={onSubmit} />;
 }

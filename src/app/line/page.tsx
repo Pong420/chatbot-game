@@ -18,8 +18,9 @@ export default function Page({ searchParams }: PageProps) {
   }
 
   return (
-    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ">
-      <LineLogo className="block" width="100px" />
+    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+      <LineLogo className="block m-auto" width="100px" />
+      <div className="mt-2 text-lg">請使用LINE APP開啟</div>
     </div>
   );
 }

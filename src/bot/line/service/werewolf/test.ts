@@ -6,10 +6,10 @@ import { t as lt } from '@line/locales';
 import { textMessage } from '@line/utils/createMessage';
 import { characters } from '@werewolf/character';
 import { Werewolf as Game } from '@werewolf/game';
-import { Stage } from '@werewolf/stage';
+import { GameSettingOption, Stage } from '@werewolf/stage';
 import { Character, Villager, Werewolf, Hunter, Guard, Predictor, Witcher } from '@werewolf/character';
 import { t } from '@werewolf/locales';
-import { getGame } from '@/supabase/game';
+import { getGame, updateGame } from '@/supabase/game';
 import { default as handlers } from './handler';
 import * as board from './board';
 
@@ -27,9 +27,8 @@ export const { createLineUser, expectEvent } = createLineEventTestSuite(handlers
 export const groupId = nanoid();
 export type WerewolfPlayer = ReturnType<typeof createLineUser>;
 
-interface CreateGameOptions {
+interface CreateGameOptions extends GameSettingOption {
   numOfPlayers?: number;
-  characters?: (typeof Character)[];
 }
 
 declare let game: Game;
@@ -95,7 +94,9 @@ export function testSuite() {
     expect(event).toEqual(typeof paylaod === 'function' ? paylaod() : paylaod);
   };
 
-  const createGame = async ({ numOfPlayers = 12, characters = [] }: CreateGameOptions = {}) => {
+  const createGame = async ({ customCharacters }: CreateGameOptions = {}) => {
+    const numOfPlayers = customCharacters?.length || 12;
+
     players = Array.from({ length: numOfPlayers }, () => createLineUser({ groupId }));
     host = players[0];
 
@@ -108,6 +109,10 @@ export function testSuite() {
     await host.g(t(`Initiate`)).toEqual(textMessage(lt(`OtherGameRuning`, Game.type)));
 
     await host.g(t(`Join`)).toEqual(textMessage(t(`WaitFotHostSetup`)));
+
+    await update();
+    game.stage.customCharacters = customCharacters;
+    await updateGame(game);
 
     await host.g(t(`SetupCompleted`)).toMatchObject(board.players([]));
 

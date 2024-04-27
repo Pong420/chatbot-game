@@ -18,8 +18,7 @@ declare let witchers: Witcher[];
 test('witcher', () => {
   const { createGame, nextStage, allWaive } = testSuite();
 
-  const characters = [Werewolf, Witcher, Villager, Villager, Villager, Villager];
-  createGame({ numOfPlayers: characters.length, characters });
+  createGame({ customCharacters: ['Werewolf', 'Witcher', 'Villager', 'Villager', 'Villager', 'Villager'] });
   expect(game.stage).toBeInstanceOf(stages.Start);
 
   nextStage('Night');
@@ -108,8 +107,7 @@ test('witcher', () => {
 test('witcher - no medicine', () => {
   const { createGame, nextStage, allWaive } = testSuite();
 
-  const characters = [Werewolf, Witcher, Villager, Villager, Villager, Villager];
-  createGame({ numOfPlayers: characters.length, characters });
+  createGame({ customCharacters: ['Werewolf', 'Witcher', 'Villager', 'Villager', 'Villager', 'Villager'] });
 
   nextStage('Night');
   werewolfs[0].kill(villagers[0]);

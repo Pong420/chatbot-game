@@ -3,12 +3,11 @@ import { expect, vi } from 'vitest';
 import { Constructable } from '@/types';
 import { Game } from './game';
 import { Character, Guard, Hunter, Predictor, Villager, Werewolf, Witcher } from './character';
-import { Init, Start, Stage, stages, Stages } from './stage';
+import { Init, Start, Stage, stages, Stages, GameSettingOption } from './stage';
 import { t } from './locales';
 
-interface CreateGameOptions {
+interface CreateGameOptions extends GameSettingOption {
   numOfPlayers?: number;
-  characters?: (typeof Character)[];
 }
 
 declare let game: Game;
@@ -76,19 +75,24 @@ export function testSuite() {
     return next(stages[key] as Stages[K]);
   };
 
-  const createGame = ({ numOfPlayers = 12, characters = [] }: CreateGameOptions) => {
+  const createGame = ({ customCharacters, numOfPlayers }: CreateGameOptions) => {
     game = Game.create({ groupId: '1' });
     stage = game.stage;
 
     expect(stage).toBeInstanceOf(Init);
     const init = stage as Init;
-    init.numOfPlayers = numOfPlayers;
-    init.characters = characters;
+    init.customCharacters = customCharacters;
 
     testSerialisation();
 
     next(Start);
-    expect(stage.characters).toHaveLength(numOfPlayers);
+
+    if (customCharacters?.length) {
+      expect(init.characters).toHaveLength(customCharacters.length);
+    }
+
+    numOfPlayers = game.stage.characters.length;
+
     expect(() => game.next()).toThrowError(t('NoEnoughPlayers', numOfPlayers));
 
     for (let i = 0; i < numOfPlayers; i++) {

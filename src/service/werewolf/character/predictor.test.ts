@@ -15,8 +15,9 @@ declare let predictors: Predictor[];
 test('predictor', () => {
   const { createGame, nextStage, allVoteTo } = testSuite();
 
-  const characters = [Werewolf, Predictor, Villager, Villager, Villager, Villager, Villager, Villager];
-  createGame({ numOfPlayers: characters.length, characters });
+  createGame({
+    customCharacters: ['Werewolf', 'Predictor', 'Villager', 'Villager', 'Villager', 'Villager', 'Villager', 'Villager']
+  });
   expect(game.stage).toBeInstanceOf(stages.Start);
 
   nextStage('Night');
@@ -91,8 +92,7 @@ test('predictor', () => {
 test('predictor - all', () => {
   const { createGame, nextStage, allVoteTo } = testSuite();
 
-  const characters = [Werewolf, Predictor, Villager, Villager, Villager, Villager];
-  createGame({ numOfPlayers: characters.length, characters });
+  createGame({ customCharacters: ['Werewolf', 'Predictor', 'Villager', 'Villager', 'Villager', 'Villager'] });
 
   nextStage('Night');
   expect(predictors[0]).toBeInstanceOf(Predictor);

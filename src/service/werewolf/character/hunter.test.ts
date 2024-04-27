@@ -19,8 +19,7 @@ declare let witchers: Witcher[];
 test.each(['', 'not '])('hunter was killed - %sshot', shot => {
   const { createGame, nextStage, allWaive } = testSuite();
 
-  const characters = [Werewolf, Hunter, Hunter, Villager, Villager, Villager];
-  createGame({ numOfPlayers: characters.length, characters });
+  createGame({ customCharacters: ['Werewolf', 'Hunter', 'Hunter', 'Villager', 'Villager', 'Villager'] });
   expect(game.stage).toBeInstanceOf(stages.Start);
 
   nextStage('Night');
@@ -63,8 +62,7 @@ test.each(['', 'not '])('hunter was killed - %sshot', shot => {
 test('hunter - vote', () => {
   const { createGame, nextStage, allVoteTo } = testSuite();
 
-  const characters = [Werewolf, Hunter, Villager, Villager, Villager, Villager];
-  createGame({ numOfPlayers: characters.length, characters });
+  createGame({ customCharacters: ['Werewolf', 'Hunter', 'Villager', 'Villager', 'Villager', 'Villager'] });
   expect(game.stage).toBeInstanceOf(stages.Start);
 
   nextStage('Night');
@@ -82,8 +80,7 @@ test('hunter - vote', () => {
 test('hunter - witcher', () => {
   const { createGame, nextStage, allWaive } = testSuite();
 
-  const characters = [Werewolf, Hunter, Witcher, Villager, Villager, Villager];
-  createGame({ numOfPlayers: characters.length, characters });
+  createGame({ customCharacters: ['Werewolf', 'Hunter', 'Witcher', 'Villager', 'Villager', 'Villager'] });
   expect(game.stage).toBeInstanceOf(stages.Start);
 
   nextStage('Night');

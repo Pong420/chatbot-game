@@ -1,6 +1,13 @@
 import { Exclude, Transform, TransformationType, instanceToPlain, plainToInstance } from 'class-transformer';
 import { Constructable } from '@/types';
-import { Character, characterMap, characterNameMap } from '../character';
+import { Character, CharacterKey, characterMap, characterNameMap } from '../character';
+
+export interface GameSettingOption {
+  werewolvesKnowEachOthers?: boolean;
+  customCharacters?: CharacterKey[];
+}
+
+export interface Stage extends GameSettingOption {}
 
 export class Stage {
   static available?(stage: Stage): typeof Stage | undefined;
@@ -11,7 +18,7 @@ export class Stage {
 
   turn = 1;
 
-  numOfPlayers: number | 'flexible' = 'flexible';
+  numOfPlayers = -1;
 
   @Transform(({ value, type }) => {
     return type === TransformationType.CLASS_TO_PLAIN

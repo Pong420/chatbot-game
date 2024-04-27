@@ -17,8 +17,9 @@ declare let guards: Guard[];
 test('guard', () => {
   const { createGame, nextStage, allVoteTo, allWaive } = testSuite();
 
-  const characters = [Werewolf, Werewolf, Guard, Villager, Villager, Villager];
-  createGame({ numOfPlayers: characters.length, characters });
+  createGame({
+    customCharacters: ['Werewolf', 'Werewolf', 'Guard', 'Villager', 'Villager', 'Villager']
+  });
   expect(game.stage).toBeInstanceOf(stages.Start);
 
   nextStage('Guard');

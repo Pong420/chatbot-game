@@ -1,16 +1,18 @@
-import { Stage } from './_stage';
+import { characterMap } from '../character';
 import { t } from '../locales';
+import { Stage } from './_stage';
+
+const minPlayers = 6;
 
 export class Init extends Stage {
   readonly name = 'Init';
 
   onEnd(): void {
-    if (this.characters.length) {
+    if (this.customCharacters?.length) {
+      this.characters = this.customCharacters.map(key => characterMap[key]).filter(Boolean);
       this.numOfPlayers = this.characters.length;
-    }
 
-    if (this.numOfPlayers !== 'flexible') {
-      if (this.numOfPlayers < 6) throw t('NoEnoughPlayers', 6);
+      if (this.numOfPlayers < minPlayers) throw t('NoEnoughPlayers', minPlayers);
     }
   }
 }

@@ -14,7 +14,11 @@ export class Start extends Stage {
   readonly name = 'Start';
 
   get maxPlayers() {
-    return this.numOfPlayers === 'flexible' ? 12 : this.numOfPlayers;
+    return this.numOfPlayers === -1 ? 12 : this.numOfPlayers;
+  }
+
+  get minPlayers() {
+    return this.numOfPlayers === -1 ? 6 : this.numOfPlayers;
   }
 
   join(payload: Pick<Character, 'id' | 'nickname'>) {
@@ -53,13 +57,12 @@ export class Start extends Stage {
   }
 
   onEnd(): void {
-    const minPlayers = this.numOfPlayers === 'flexible' ? 6 : this.numOfPlayers;
-
-    if (this.players.size < minPlayers) {
-      throw t('NoEnoughPlayers', minPlayers);
+    if (this.players.size < this.minPlayers) {
+      throw t('NoEnoughPlayers', this.minPlayers);
     }
 
-    const characters = this.numOfPlayers === 'flexible' ? this.getCharacters(this.players.size) : this.characters;
+    const characters = this.numOfPlayers === -1 ? this.getCharacters(this.players.size) : this.characters;
+    this.numOfPlayers = this.characters.length;
     this.characters = [...characters];
 
     this.players = new Map(

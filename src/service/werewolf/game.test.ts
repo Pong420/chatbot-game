@@ -16,7 +16,7 @@ declare let villagers: Villager[];
 
 test('basic', () => {
   const { createGame, nextStage, allVoteTo, allWaive } = testSuite();
-  createGame({ numOfPlayers: 6, characters: [Werewolf, Villager, Villager, Villager, Villager, Villager] });
+  createGame({ customCharacters: ['Werewolf', 'Villager', 'Villager', 'Villager', 'Villager', 'Villager'] });
 
   expect(game.stage).toBeInstanceOf(Start);
   expect(game.players.size).toBe(6);

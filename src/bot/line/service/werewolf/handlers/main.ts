@@ -13,10 +13,7 @@ import * as board from '../board';
 export const mainHandlers = [
   createHandler(UserId, TextEqual(t('Initiate')), CanStartGame, async (userId, groupId) => {
     const game = Werewolf.create({ groupId });
-
-    // FIXME:
     game.stage.host = userId;
-
     await createGame({ type: Werewolf.type, ...game.serialize() });
     return getStageMessage(game);
   }),

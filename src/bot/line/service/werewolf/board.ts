@@ -38,11 +38,13 @@ function tableMessage({ title = [], ...props }: CreateTableMessageProps) {
 export function initiate(groupId: string) {
   return tableMessage({
     rows: orderList(t.paragraph('ShortIntro')),
-    // TODO:
     buttons: [
-      primaryButton(messageAction(`使用預設`)),
+      primaryButton(messageAction(t(`UseDefaultSetup`), t(`SetupCompleted`))),
       secondaryButton(
-        uriAction(`自訂`, `https://liff.line.me/${process.env.NEXT_PUBLIC_LIFF_ID}/werewolf/settings/${groupId}`)
+        uriAction(
+          t(`UseCustomSetup`),
+          `https://liff.line.me/${process.env.NEXT_PUBLIC_LIFF_ID}/werewolf/settings/${groupId}`
+        )
       )
     ]
   });

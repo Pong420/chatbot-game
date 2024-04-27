@@ -50,9 +50,9 @@ export const HostCommand = {
   Start: `狼人殺開始`,
   End: `狼人殺結束`,
   Survivors: `狼人殺倖存者`,
-  'DeathReport': '狼人殺死亡報告', // TODO:
+  'DeathReport': '狼人殺死亡報告',
   WhoNotVoted: `誰未投票`,
-  PlayerReport: `^(.*)的報告` // TODO:
+  PlayerReport: `^(.*)的報告`
 };
 
 export const StageCommand = {
@@ -131,8 +131,8 @@ export default defineMessages(
 
     ShortIntro: `
       遊戲人數最少6人，最多12人
-      謹記！友誼第一，這只是遊戲，不要太認真
-      主持人請點擊下方按鈕，選擇遊戲設定
+      謹記！友誼第一，不要太投入遊戲
+      主持人請點擊下方按鈕，選擇遊戲設定，
     `,
 
     Players: '參賽者',
@@ -140,6 +140,8 @@ export default defineMessages(
     Started: `狼人殺已開始`,
     NotStarted: `狼人殺未開始`,
     NotJoined: `你未參加狼人殺`,
+    UseDefaultSetup: `使用預設`,
+    UseCustomSetup: `自訂`,
     WaitFotHostSetup: `請等待主持完成配置`,
 
     YourCharacter: '你的角色',

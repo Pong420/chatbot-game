@@ -8,8 +8,15 @@ import { createFilter } from '@line/filter';
  */
 export const UserId = (event: WebhookEvent) => {
   const userId = event.source.userId;
-  if (!userId) throw t('GetUserIdFailed');
-  return userId;
+  if (
+    event.type === 'message' ||
+    event.type === 'postback' ||
+    event.type === 'memberJoined' ||
+    event.type === 'memberLeft'
+  ) {
+    if (!userId) throw t('GetUserIdFailed');
+    return userId;
+  }
 };
 
 export const User = createFilter(

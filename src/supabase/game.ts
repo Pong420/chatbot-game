@@ -8,18 +8,19 @@ export enum GameStatus {
   OPEN,
   CLOSE
 }
+
 type GameProps = Omit<Game, 'created_at' | 'data' | 'groupId' | 'id' | 'type' | 'updated_at'>;
 
 export async function getGame(groupId: string) {
   try {
-    return await supabase
+    const data = await supabase
       .from('games')
       .select('*')
       .eq('groupId', groupId)
-      .eq('status', GameStatus.OPEN)
       .single()
       .throwOnError()
       .then(resp => resp.data);
+    return data;
   } catch (error) {
     if (error instanceof Error && 'code' in error && error.code === ERROR_CODE_EMPTY) {
       return null;
@@ -29,7 +30,12 @@ export async function getGame(groupId: string) {
 }
 
 export async function createGame(data: TablesInsert<'games'>) {
-  const resp = await supabase.from('games').insert([data]).select().single().throwOnError();
+  const resp = await supabase
+    .from('games')
+    .insert([{ ...data, status: GameStatus.OPEN }])
+    .select()
+    .single()
+    .throwOnError();
   return resp.data;
 }
 

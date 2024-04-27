@@ -1,6 +1,6 @@
 # A string used to distinguish different Supabase projects on the same host. Defaults to the
 # working directory name when running `supabase init`.
-project_id = "werewolf"
+project_id = "chatbot-game"
 
 [api]
 enabled = true
@@ -141,7 +141,7 @@ redirect_uri = ""
 url = ""
 
 [analytics]
-enabled = false
+enabled = true
 port = 54327
 vector_port = 54328
 # Configure one of the supported backends: `postgres`, `bigquery`.

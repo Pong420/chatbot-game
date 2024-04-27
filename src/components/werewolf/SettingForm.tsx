@@ -23,7 +23,7 @@ export type SettingValues = z.infer<typeof formSchema>;
 const formSchema = z
   .object({
     customCharacters: z.array(z.string()).optional(),
-    werewolvesKnowEachOthers: z.boolean()
+    werewolvesKnowEachOthers: z.boolean().optional()
   } satisfies Record<keyof GameSettingOption, unknown>)
   .extend({
     enableCustomCharacters: z.boolean()
@@ -58,6 +58,8 @@ export function SettingForm({ isLineClient, characters, onSubmit }: SettingFormP
   }, [watch, reset]);
 
   const handleSubmit = form.handleSubmit(async formdata => {
+    setError(undefined);
+
     const submit: typeof onSubmit = (...args) => onSubmit(...args).then(r => (r.message ? Promise.reject(r) : r));
 
     startTransition(async () => {
@@ -106,14 +108,17 @@ export function SettingForm({ isLineClient, characters, onSubmit }: SettingFormP
   ] satisfies { [x: string]: any; id: keyof SettingValues }[];
 
   if (!loaded) return null;
+  const _error = Object.values(form.formState.errors).filter(Boolean)[0] || error;
 
   return (
-    <form className="max-w-screen-sm mx-auto p-4 pb-0 flex flex-col min-h-full" onSubmit={handleSubmit}>
+    <form className="max-w-screen-sm mx-auto p-4 flex flex-col min-h-screen-safe " onSubmit={handleSubmit}>
       <div className="flex flex-col gap-4">
-        {!!error && (
+        {!!_error && (
           <div className="bg-destructive text-destructive-foreground pt-3 p-4 rounded-md shadow-md">
             <div className="font-semibold">Error</div>
-            <div className="text-sm">{error}</div>
+            <pre>
+              <code className="text-sm">{typeof _error === 'string' ? _error : JSON.stringify(_error, null, 2)}</code>
+            </pre>
           </div>
         )}
 

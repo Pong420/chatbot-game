@@ -21,6 +21,7 @@ export async function updateSettings(
 
   try {
     const data = await getGame(id).catch(() => null);
+
     if (!data || data.type !== Werewolf.type) return { message: `遊戲不存在` };
     const game = Werewolf.create(data);
 
@@ -30,8 +31,9 @@ export async function updateSettings(
       let bad = 0;
       let good = 0;
 
-      for (const name in customCharacters) {
+      for (const name of customCharacters) {
         const c = charactersMap[name as keyof typeof charactersMap];
+        if (!c) continue;
         if (c.good) good += 1;
         else bad += 1;
       }

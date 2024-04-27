@@ -64,7 +64,7 @@ export function SettingForm({ isLineClient, characters, onSubmit }: SettingFormP
       try {
         if (isLineClient) {
           const { liff } = await import('@line/liff');
-          const liffId = process.env.NEXT_PUBLIC_LINE_WEREWOLF_LIFF_ID || '';
+          const liffId = process.env.NEXT_PUBLIC_LIFF_ID || '';
           await liff.init({ liffId });
           const { userId } = await liff.getProfile();
           await submit(userId, formdata);

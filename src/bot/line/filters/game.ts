@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { WebhookEvent } from '@line/bot-sdk';
-import { GameStatus, getGame } from '@service/game/game';
-import { GameConstructor, GameInstance } from '@/types';
+import { GameConstructor, GameInstance, GameStatus, getGame } from '@service/game/game';
 import { isGroupEvent, isSingleEvent } from '@line/types';
 import { createFilter, GroupId } from '@line/filter';
 import { getUser } from '@line/utils/userService';

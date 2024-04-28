@@ -1,4 +1,4 @@
-import { GameInstance } from '@/types';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ERROR_CODE_EMPTY, supabase } from '@service/supabase';
 import { Tables, TablesInsert, TablesUpdate } from '@service/database.types';
 
@@ -7,6 +7,17 @@ export type Game = Tables<'games'>;
 export enum GameStatus {
   OPEN,
   CLOSE
+}
+
+export interface GameConstructor<G extends GameInstance> {
+  type: string;
+  create: (options: Record<string, any>) => G;
+  new (...args: any[]): G;
+}
+
+export abstract class GameInstance {
+  groupId: string;
+  abstract serialize(): any;
 }
 
 type GameProps = Omit<Game, 'created_at' | 'data' | 'groupId' | 'id' | 'type' | 'updated_at'>;

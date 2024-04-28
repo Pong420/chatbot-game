@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { Type, plainToInstance, instanceToPlain, Exclude } from 'class-transformer';
-import { Constructable, GameInstance } from '@/types';
+import { Constructable } from '@/types';
+import { GameInstance } from '@service/game/game';
 import {
   stagesTypes,
   Init,

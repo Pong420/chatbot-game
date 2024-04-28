@@ -10,13 +10,14 @@
 
 - TODO:
   - check group members
-    - leave if too many people
-  - refactor handles the number of players
-    - allow set characters after players joined
+    - leave if too many people?
   - options
     - set vote to postback message or private
-    - werewolfs know each others
+    - werewolves know each other
       - kill one or idle
+  - fix end game, update user game status
+  - game id
+  - debounce response
 
 ## Development
 

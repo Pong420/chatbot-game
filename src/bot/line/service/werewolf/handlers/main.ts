@@ -1,8 +1,7 @@
 import { t as lt } from '@line/locales';
 import { createHandler } from '@line/handler';
 import { CanStartGame, Group, LeaveGroup, Single, TextEqual, User, UserId } from '@line/filter';
-import { createGame, updateGame } from '@service/game/game';
-import { updateUser } from '@service/game/user';
+import { createGame, updateGame, updateUser } from '@service/game';
 import { Werewolf } from '@werewolf/game';
 import { t } from '@werewolf/locales';
 import { Init, Start } from '@werewolf/stage';

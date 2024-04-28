@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { GameSettingOption, Init } from '@werewolf/stage';
 import { Werewolf } from '@werewolf/game';
 import { CharacterKey } from '@werewolf/character';
-import { getGame, updateGame } from '@service/game/game';
+import { getGame, updateGame } from '@service/game';
 import { charactersMap } from './utils';
 
 const schema = z.object({

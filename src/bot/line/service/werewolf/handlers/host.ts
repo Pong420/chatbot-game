@@ -1,6 +1,6 @@
 import { createHandler } from '@line/handler';
 import { Group, TextEqual, TextMatch } from '@line/filter';
-import { GameStatus, updateGame } from '@service/game/game';
+import { GameStatus, updateGame } from '@service/game';
 import { t } from '@werewolf/locales';
 import { Werewolf } from '@werewolf/game';
 import {

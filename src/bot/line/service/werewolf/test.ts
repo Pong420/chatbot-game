@@ -9,7 +9,7 @@ import { Werewolf as Game } from '@werewolf/game';
 import { GameSettingOption, Stage } from '@werewolf/stage';
 import { Character, Villager, Werewolf, Hunter, Guard, Predictor, Witcher } from '@werewolf/character';
 import { t } from '@werewolf/locales';
-import { getGame, updateGame } from '@/supabase/game';
+import { getGame, updateGame } from '@service/game/game';
 import { default as handlers } from './handler';
 import * as board from './board';
 

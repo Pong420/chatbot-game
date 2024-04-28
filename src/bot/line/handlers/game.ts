@@ -1,7 +1,7 @@
 import { t } from '@line/locales';
 import { createHandler } from '@line/handler';
 import { Single, TextEqual, UserId } from '@line/filter';
-import { updateUser } from '@/supabase/user';
+import { updateUser } from '@service/game/user';
 
 export default [
   // TODO: handle memeber left

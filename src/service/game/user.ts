@@ -1,5 +1,5 @@
-import { ERROR_CODE_EMPTY, supabase } from './supabase';
-import { Tables, TablesInsert, TablesUpdate } from './database.types';
+import { ERROR_CODE_EMPTY, supabase } from '@service/supabase';
+import { Tables, TablesInsert, TablesUpdate } from '@service/database.types';
 
 export type User = Tables<'users'>;
 

@@ -1,8 +1,8 @@
 import { t as lt } from '@line/locales';
 import { createHandler } from '@line/handler';
 import { CanStartGame, Group, LeaveGroup, Single, TextEqual, User, UserId } from '@line/filter';
-import { createGame, updateGame } from '@/supabase/game';
-import { updateUser } from '@/supabase/user';
+import { createGame, updateGame } from '@service/game/game';
+import { updateUser } from '@service/game/user';
 import { Werewolf } from '@werewolf/game';
 import { t } from '@werewolf/locales';
 import { Init, Start } from '@werewolf/stage';

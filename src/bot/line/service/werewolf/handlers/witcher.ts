@@ -2,7 +2,7 @@ import { createHandler } from '@line/handler';
 import { Group, Single, TextEqual } from '@line/filter';
 import { Witcher } from '@werewolf/character';
 import { t } from '@werewolf/locales';
-import { updateGame } from '@/supabase/game';
+import { updateGame } from '@service/game/game';
 import { IsPlayer, createWerewolfFilter } from '../filter';
 import * as board from '../board';
 

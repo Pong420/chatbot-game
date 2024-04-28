@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { WebhookEvent } from '@line/bot-sdk';
-import { GameStatus, getGame } from '@/supabase/game';
+import { GameStatus, getGame } from '@service/game/game';
 import { GameConstructor, GameInstance } from '@/types';
 import { isGroupEvent, isSingleEvent } from '@line/types';
 import { createFilter, GroupId } from '@line/filter';

@@ -30,7 +30,6 @@ export const Game = <G extends GameInstance>(GameConstructor: GameConstructor<G>
 export const CanStartGame = createFilter(GroupId, async groupId => {
   if (groupId === process.env.LINE_DEBUG_GROUP_ID) throw false;
   const data = await getGame(groupId, { status: GameStatus.OPEN });
-  // TODO: use game name instead of type
-  if (data) throw t('OtherGameRuning', data.type);
+  if (data) throw t('OtherGameRuning', (data.data as any).name);
   return groupId;
 });

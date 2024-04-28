@@ -112,7 +112,7 @@ export function testSuite() {
     clientInOthersGroup.profile.userId = players[0].userId;
 
     await hostGroupMessage(t(`Initiate`), () => board.initiate(game.id));
-    await host.g(t(`Initiate`)).toEqual(textMessage(lt(`OtherGameRuning`, Game.type)));
+    await host.g(t(`Initiate`)).toEqual(textMessage(lt(`OtherGameRuning`, game.name)));
     expect(game.host).toBe(host.userId);
 
     await update();

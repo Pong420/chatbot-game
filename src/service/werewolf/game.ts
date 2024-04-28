@@ -28,7 +28,7 @@ export interface CreateGame {
 }
 
 export class Game extends GameInstance {
-  static readonly type: string = 'Werewolf';
+  static readonly type = 'Werewolf';
 
   static create({ data }: CreateGameOptions) {
     const game: Game = plainToInstance(Game, data, {

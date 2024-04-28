@@ -9,7 +9,7 @@ import { Werewolf as Game } from '@werewolf/game';
 import { GameSettingOption, Stage } from '@werewolf/stage';
 import { Character, Villager, Werewolf, Hunter, Guard, Predictor, Witcher } from '@werewolf/character';
 import { t } from '@werewolf/locales';
-import { getGame, updateGame } from '@service/game';
+import { GameStatus, getGame, getUser, updateGame, User } from '@service/game';
 import { default as handlers } from './handler';
 import * as board from './board';
 
@@ -115,7 +115,6 @@ export function testSuite() {
     await host.g(t(`Initiate`)).toEqual(textMessage(lt(`OtherGameRuning`, Game.type)));
 
     await update();
-    await update();
     game.stage.customCharacters = customCharacters;
     await updateGame(game);
 
@@ -124,17 +123,19 @@ export function testSuite() {
     if (Math.random() > 0.5) {
       await hostGroupMessage(t(`Next`), () => board.players(game.stage));
     } else {
-      await hostGroupMessage(t(`SetupCompleted`), () => board.start(game.stage));
+      await hostGroupMessage(t(`SetupCompleted`), () => board.start(stage));
     }
 
-    await host.g(t('Join')).toMatchObject({ type: 'flex' });
+    await hostGroupMessage(t('Join'), () => board.players(stage));
     await host.g(t('Join')).toEqual(textMessage(t(`Joined`, host.name)));
 
     await dupClient.g(t('Join')).toEqual(textMessage(t('NicknameUsed', dupClient.name)));
 
     for (const client of players) {
       if (client === host) continue;
-      await client.g(t('Join')).toMatchObject({ type: 'flex' });
+      const event = await client.gr(t('Join'));
+      await update();
+      expect(event).toEqual(board.players(stage));
       await client.g(t('Join')).toEqual(textMessage(t(`Joined`, client.name)));
     }
 
@@ -142,6 +143,7 @@ export function testSuite() {
 
     await clientInOthersGroup.g(t(`Initiate`)).toEqual(board.initiate(clientInOthersGroup.groupId));
     await clientInOthersGroup.g(t('Join')).toTextMessage(lt('JoinedOtherGroupsGame', clientInOthersGroup.name));
+    await clientInOthersGroup.gr(t('End'));
   };
 
   const allVoteTo = async (character: WerewolfPlayer) => {
@@ -160,5 +162,13 @@ export function testSuite() {
     }
   };
 
-  return { createGame, next, hostGroupMessage, update, getPlayersByCharacter, allVoteTo, allWaive };
+  const ended = async () => {
+    const data = await getGame(game.id);
+    expect(data).toHaveProperty('status', GameStatus.CLOSE);
+    expect(Promise.all(Array.from(game.players.keys(), userId => getUser(userId)))).resolves.toSatisfyAll(
+      player => (player as User).game === null
+    );
+  };
+
+  return { createGame, next, hostGroupMessage, update, getPlayersByCharacter, allVoteTo, allWaive, ended };
 }

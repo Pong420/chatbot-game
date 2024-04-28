@@ -15,9 +15,9 @@
     - set vote to postback message or private
     - werewolves know each other
       - kill one or idle
-  - fix end game, update user game status
-  - game id
   - debounce response
+  - t&c
+  - documentation
 
 ## Development
 

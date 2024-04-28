@@ -2,6 +2,7 @@
 import { expect, test } from 'vitest';
 import { Werewolf as WerewolfGame } from '@werewolf/game';
 import { t } from '@werewolf/locales';
+import { GameStatus, getGame, getUser, User } from '@service/game';
 import { getStageMessage } from './host';
 import { testSuite, WerewolfPlayer } from '../test';
 import { getDeathReport } from '../report';
@@ -25,14 +26,15 @@ declare let players: WerewolfPlayer[];
 declare let host: WerewolfPlayer;
 
 test('start', async () => {
-  const { createGame, hostGroupMessage } = testSuite();
+  const { createGame, hostGroupMessage, ended } = testSuite();
   await createGame();
   await hostGroupMessage(t(`Start`), () => getStageMessage(game)); // should be same as /next
   await host.g(t(`End`)).toEqual(board.ended());
+  await ended();
 });
 
 test('main', async () => {
-  const { createGame, next, allVoteTo } = testSuite();
+  const { createGame, next, allVoteTo, ended } = testSuite();
   await createGame();
 
   // Guard --------------------------------------------------------------------------------
@@ -184,4 +186,6 @@ test('main', async () => {
   }
 
   await host.g(t(`End`)).toEqual(board.ended());
+
+  await ended();
 });

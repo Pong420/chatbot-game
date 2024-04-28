@@ -8,7 +8,6 @@ import {
   sendTextToBot,
   primaryButton,
   secondaryButton,
-  orderList,
   createTableMessage,
   CreateTableMessageProps,
   wrapAndCenterText,
@@ -37,7 +36,7 @@ function tableMessage({ title = [], ...props }: CreateTableMessageProps) {
 
 export function initiate(groupId: string) {
   return tableMessage({
-    rows: orderList([t.paragraph('SettingsDesc')]),
+    rows: t.paragraph('SettingsDesc').map(text => [wrapedText(text)]),
     buttons: [
       primaryButton(messageAction(t(`UseDefaultSetup`), t(`SetupCompleted`))),
       secondaryButton(

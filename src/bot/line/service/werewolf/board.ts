@@ -373,12 +373,20 @@ export function survivors(stage: Stage) {
   });
 }
 
-export function ended(stage: Stage) {
+export function end(stage: Stage) {
   if (!(stage instanceof End)) return null;
   const text = stage.getEndMessage();
   return tableMessage({
     title: [wrapAndCenterText(t(`End`))],
     rows: [[wrapedText(text, { align: text.length > 18 ? 'start' : 'center' })]],
-    buttons: [primaryButton(messageAction(t(`DeathReport`))), secondaryButton(messageAction(t(`Initiate`)))]
+    buttons: [primaryButton(messageAction(t('DeathReport'))), secondaryButton(messageAction(t(`End`)))]
+  });
+}
+
+export function ended() {
+  return tableMessage({
+    title: [wrapAndCenterText(t(`End`))],
+    rows: [],
+    buttons: [primaryButton(messageAction(t(`Initiate`)))]
   });
 }

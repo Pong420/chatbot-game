@@ -4,7 +4,8 @@ import {
   createTableMessage,
   Payload,
   wrapAndCenterText,
-  wrapedText
+  wrapedText,
+  primaryButton
 } from '@line/utils/createMessage';
 import { Character, Villager, Guard, Hunter, Predictor, Werewolf, Witcher } from '@werewolf/character';
 import { Poisoned, Voting } from '@werewolf/death';
@@ -144,7 +145,7 @@ export function getDeathReport(game: Game) {
   let turn = 0;
   return createTableMessage({
     fillCol: 0,
-    title: [centeredText(`狼人殺`), centeredText(t('\bDeathReport'))],
+    title: [centeredText(`狼人殺`), centeredText(t('DeathReport'))],
     rows: [...game.players]
       .sort(([, a], [, b]) =>
         a.turn === b.turn ? (a.isDead === b.isDead ? (isKillByVoting(a) ? 1 : -1) : a.isDead ? -1 : 1) : a.turn - b.turn
@@ -180,6 +181,7 @@ export function getDeathReport(game: Game) {
           ]
         ];
       }, [] as Payload[][]),
-    footer: [wrapAndCenterText(`主持人可以點擊玩家名稱，顯示更詳細的描述`)]
+    footer: [wrapAndCenterText(`主持人可以點擊玩家名稱，顯示更詳細的描述`)],
+    buttons: [primaryButton(messageAction(t(`End`)))]
   });
 }

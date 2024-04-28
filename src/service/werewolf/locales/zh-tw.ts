@@ -50,7 +50,7 @@ export const HostCommand = {
   Start: `狼人殺開始`,
   End: `狼人殺結束`,
   Survivors: `狼人殺倖存者`,
-  'DeathReport': '狼人殺死亡報告',
+  DeathReport: '狼人殺死亡報告',
   WhoNotVoted: `誰未投票`,
   PlayerReport: `^(.*)的報告`
 };

@@ -4,6 +4,7 @@ import { Werewolf as WerewolfGame } from '@werewolf/game';
 import { t } from '@werewolf/locales';
 import { getStageMessage } from './host';
 import { testSuite, WerewolfPlayer } from '../test';
+import { getDeathReport } from '../report';
 import * as board from '../board';
 
 declare let game: WerewolfGame;
@@ -27,7 +28,7 @@ test('start', async () => {
   const { createGame, hostGroupMessage } = testSuite();
   await createGame();
   await hostGroupMessage(t(`Start`), () => getStageMessage(game)); // should be same as /next
-  await host.g(t(`End`)).toTextMessage(t('End'));
+  await host.g(t(`End`)).toEqual(board.ended());
 });
 
 test('main', async () => {
@@ -174,13 +175,13 @@ test('main', async () => {
 
   // Ended --------------------------------------------------------------------------------
 
-  await next(() => board.ended(stage));
+  await next(() => board.end(stage));
 
-  await host.g(t(`\bDeathReport`)).toMatchObject({ type: 'flex' });
+  await host.g(t(`DeathReport`)).toEqual(getDeathReport(game));
 
   for (const [, player] of game.players) {
     await host.g(t.regex(`PlayerReport`, player.nickname)).toMatchObject({ type: 'flex' });
   }
 
-  await host.g(t(`End`)).toTextMessage(t('End'));
+  await host.g(t(`End`)).toEqual(board.ended());
 });

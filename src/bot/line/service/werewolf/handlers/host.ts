@@ -36,7 +36,7 @@ export function getStageMessage(game: Werewolf) {
   if (stage instanceof Vote) return board.vote(stage);
   if (stage instanceof ReVote) return board.revote(stage);
   if (stage instanceof Voted) return board.voted(stage);
-  if (stage instanceof End) return board.ended(stage);
+  if (stage instanceof End) return board.end(stage);
 }
 
 export default [
@@ -54,7 +54,7 @@ export default [
   }),
   createHandler(Group, TextEqual(t(`End`)), IsHost, async ({ game }) => {
     await endGame(game, game.players.keys());
-    return t(`End`);
+    return board.ended();
   }),
   createHandler(Group, TextEqual([t('Next'), t('NextShort')]), IsHost, async ({ game }) => {
     try {
@@ -72,7 +72,7 @@ export default [
   }),
   createHandler(Group, TextEqual(t(`WhoNotVoted`)), IsHost, async ({ game }) => board.notVoted(game.stage)),
   createHandler(Group, TextEqual(t(`Survivors`)), IsHost, async ({ game }) => board.survivors(game.stage)),
-  createHandler(Group, TextEqual(t('\bDeathReport')), IsHost, async ({ game }) => {
+  createHandler(Group, TextEqual(t('DeathReport')), IsHost, async ({ game }) => {
     if (!(game.stage instanceof End)) return t(`CannotShowReport`);
     return getDeathReport(game);
   }),

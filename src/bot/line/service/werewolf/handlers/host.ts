@@ -1,6 +1,6 @@
 import { createHandler } from '@line/handler';
 import { Group, TextEqual, TextMatch } from '@line/filter';
-import { GameStatus, updateGame } from '@service/game';
+import { endGame, updateGame } from '@service/game';
 import { t } from '@werewolf/locales';
 import { Werewolf } from '@werewolf/game';
 import {
@@ -53,13 +53,13 @@ export default [
     return getStageMessage(game);
   }),
   createHandler(Group, TextEqual(t(`End`)), IsHost, async ({ game }) => {
-    await updateGame(game.id, { status: GameStatus.CLOSE });
+    await endGame(game, game.players.keys());
     return t(`End`);
   }),
   createHandler(Group, TextEqual([t('Next'), t('NextShort')]), IsHost, async ({ game }) => {
     try {
       game.next();
-      await updateGame(game, game.stage instanceof End ? { status: GameStatus.CLOSE } : {});
+      await updateGame(game);
     } catch (error) {
       if (error !== t(`StageNotEnded`)) throw error;
     }
@@ -72,7 +72,7 @@ export default [
   }),
   createHandler(Group, TextEqual(t(`WhoNotVoted`)), IsHost, async ({ game }) => board.notVoted(game.stage)),
   createHandler(Group, TextEqual(t(`Survivors`)), IsHost, async ({ game }) => board.survivors(game.stage)),
-  createHandler(Group, TextEqual(t(`\bDeathReport`)), IsHost, async ({ game }) => {
+  createHandler(Group, TextEqual(t('\bDeathReport')), IsHost, async ({ game }) => {
     if (!(game.stage instanceof End)) return t(`CannotShowReport`);
     return getDeathReport(game);
   }),

@@ -2,9 +2,9 @@
 import { expect, test } from 'vitest';
 import { Werewolf as WerewolfGame } from '@werewolf/game';
 import { t } from '@werewolf/locales';
+import { getStageMessage } from './host';
 import { testSuite, WerewolfPlayer } from '../test';
 import * as board from '../board';
-import { getStageMessage } from './host';
 
 declare let game: WerewolfGame;
 declare let stage: WerewolfGame['stage'];
@@ -181,4 +181,6 @@ test('main', async () => {
   for (const [, player] of game.players) {
     await host.g(t.regex(`PlayerReport`, player.nickname)).toMatchObject({ type: 'flex' });
   }
+
+  await host.g(t(`End`)).toTextMessage(t('End'));
 });

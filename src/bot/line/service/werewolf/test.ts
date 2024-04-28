@@ -70,8 +70,8 @@ export function testSuite() {
     players.filter(p => game.players.get(p.userId) instanceof CharacterConstructor);
 
   const update = async () => {
-    const data = await getGame(players[0].groupId);
-    if (!data?.data) return;
+    const data = await getGame(game?.id || groupId);
+    if (!data?.data) throw `data not found be undefined`;
     game = Game.create(data.data as Record<string, unknown>);
     stage = game.stage;
 
@@ -101,6 +101,8 @@ export function testSuite() {
   const createGame = async ({ customCharacters }: CreateGameOptions = {}) => {
     const numOfPlayers = customCharacters?.length || 12;
 
+    vi.stubGlobal('game', undefined);
+    vi.stubGlobal('stage', undefined);
     players = Array.from({ length: numOfPlayers }, () => createLineUser({ groupId }));
     host = players[0];
 
@@ -112,11 +114,12 @@ export function testSuite() {
     await host.g(t(`Initiate`)).toEqual(board.initiate(host.groupId));
     await host.g(t(`Initiate`)).toEqual(textMessage(lt(`OtherGameRuning`, Game.type)));
 
-    await host.g(t(`Join`)).toEqual(textMessage(t(`WaitFotHostSetup`)));
-
+    await update();
     await update();
     game.stage.customCharacters = customCharacters;
     await updateGame(game);
+
+    await host.g(t(`Join`)).toEqual(textMessage(t(`WaitFotHostSetup`)));
 
     if (Math.random() > 0.5) {
       await hostGroupMessage(t(`Next`), () => board.players(game.stage));

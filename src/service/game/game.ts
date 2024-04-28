@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ERROR_CODE_EMPTY, supabase } from '@service/supabase';
 import { Tables, TablesInsert, TablesUpdate } from '@service/database.types';
+import { updateUser } from './user';
 
 export type Game = Tables<'games'>;
 
@@ -27,7 +28,7 @@ export interface GetGameOptions {
   status?: GameStatus;
 }
 
-export async function getGame(id: string | number, options?: GetGameOptions) {
+export async function getGame(id: string | number, options: GetGameOptions = {}) {
   try {
     let chain = supabase.from('games').select('*');
 
@@ -37,14 +38,17 @@ export async function getGame(id: string | number, options?: GetGameOptions) {
 
     if (typeof id === 'string') {
       chain = chain.eq('groupId', id);
+
+      if (typeof options?.status === 'undefined') {
+        options.status = GameStatus.OPEN;
+      }
     }
 
     if (typeof options?.status !== 'undefined') {
       chain.eq('status', options.status);
     }
 
-    const games = await chain.order('id').throwOnError();
-    const data = games.data?.slice(-1)?.[0];
+    const { data } = await chain.single().throwOnError();
 
     if (data) {
       Object.assign(data?.data as object, { id: data?.id });
@@ -94,4 +98,9 @@ export async function updateGame(
     .throwOnError();
   Object.assign(resp.data?.data as object, { id: resp.data?.id });
   return resp.data;
+}
+
+export async function endGame(game: GameInstance, players: Iterable<string>) {
+  await updateGame(game.id, { data: game.serialize(), status: GameStatus.CLOSE });
+  await Promise.all(Array.from(players, id => updateUser(id, { game: null }).catch(() => void 0)));
 }

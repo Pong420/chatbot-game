@@ -1,4 +1,4 @@
-import { Action } from '@line/bot-sdk';
+import { Action, FlexComponent } from '@line/bot-sdk';
 import { t } from '@werewolf/locales';
 import { Werewolf } from '@werewolf/game';
 import { Stage, VoteBaseStage, HunterEnd, End, Start } from '@werewolf/stage';
@@ -112,9 +112,17 @@ export function start(stage: Stage) {
 }
 
 export function players(stage: Stage) {
-  const buttons = [primaryButton(messageAction(t(`JoinButton`), t('Join')))];
-  if ((stage.numOfPlayers === -1 && stage.players.size >= 6) || stage.players.size === stage.numOfPlayers) {
-    if (stage.players.size >= 6) buttons.push(secondaryButton(messageAction(t('StartButton'), t('Start'))));
+  if (!(stage instanceof Start)) return;
+
+  const buttons: FlexComponent[] = [primaryButton(messageAction(t(`JoinButton`), t('Join')))];
+
+  if (stage.players.size >= stage.minPlayers)
+    buttons.push(secondaryButton(messageAction(t('StartButton'), t('Start'))));
+  else {
+    buttons.push(
+      wrapAndCenterText(t(`NoEnoughPlayers`, 6), { margin: 'xl', size: 'sm' }),
+      wrapedText(' ', { margin: 'none', size: 'xxs' })
+    );
   }
 
   return tableMessage({

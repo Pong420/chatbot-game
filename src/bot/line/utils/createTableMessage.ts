@@ -29,7 +29,7 @@ export interface CreateTableMessageProps {
   rows: Payload[][];
   fillCol?: number;
   onCloumn?: OnCloumn;
-  buttons?: FlexButton[];
+  buttons?: FlexComponent[];
 }
 
 export const centeredText = createFlexText({ align: 'center' });

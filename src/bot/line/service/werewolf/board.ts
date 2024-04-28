@@ -1,7 +1,7 @@
 import { Action } from '@line/bot-sdk';
 import { t } from '@werewolf/locales';
 import { Werewolf } from '@werewolf/game';
-import { Stage, VoteBaseStage, HunterEnd, End } from '@werewolf/stage';
+import { Stage, VoteBaseStage, HunterEnd, End, Start } from '@werewolf/stage';
 import { Character, Predictor, Villager } from '@werewolf/character';
 import {
   messageAction,
@@ -37,7 +37,7 @@ function tableMessage({ title = [], ...props }: CreateTableMessageProps) {
 
 export function initiate(groupId: string) {
   return tableMessage({
-    rows: orderList(t.paragraph('ShortIntro')),
+    rows: orderList([t.paragraph('SettingsDesc')]),
     buttons: [
       primaryButton(messageAction(t(`UseDefaultSetup`), t(`SetupCompleted`))),
       secondaryButton(
@@ -50,22 +50,73 @@ export function initiate(groupId: string) {
   });
 }
 
-export function players(players: Iterable<Character>) {
+export function start(stage: Stage) {
+  if (!(stage instanceof Start)) throw new Error(`Invalid Stage`);
+
+  const characters = stage.getCharacters().reduce(
+    (res, Character) => {
+      const k = new Character().name;
+      return { ...res, [k]: (res[k] || 0) + 1 };
+    },
+    {} as Record<string, number>
+  );
+
+  const rows: Payload[][] = [];
+
+  if (stage.customCharacters?.length) {
+    rows.push([wrapAndCenterText(t(`AvailableCharacters`))]);
+
+    for (const k in characters) {
+      const count = characters[k];
+      if (!count) continue;
+      rows.push([wrapedText(k, { flex: 9 }), createFlexText({ flex: 0, align: 'end' })(String(count))]);
+    }
+
+    rows.push([wrapAndCenterText('---')]);
+  } else {
+    rows.push([wrapAndCenterText(t(`AvailableCharactersDefault`))]);
+  }
+
+  rows.push([
+    wrapAndCenterText(
+      t(stage.werewolvesKnowEachOthers ? `WerewolvesDontKnowEachOthers` : `WerewolvesDontKnowEachOthers`)
+    )
+  ]);
+  rows.push([wrapAndCenterText(t(`Friendship`))]);
+
   return tableMessage({
-    title: [centeredText(t(`Players`))],
-    rows: Array.from(players, (user, idx) => {
+    title: [centeredText(t(`StartBoard`))],
+    rows: Array.from(stage.players, ([, player], idx) => {
       return [
         wrapedText(`${idx + 1}.`, { flex: 0, align: 'start' }),
-        wrapedText(user.nickname, {
+        wrapedText(player.nickname, {
           align: 'start',
-          margin: !!user.nickname ? 'none' : 'md'
+          margin: !!player.nickname ? 'none' : 'md'
         })
       ];
     }),
-    buttons: [
-      primaryButton(messageAction(t(`JoinButton`), t('Join'))),
-      secondaryButton(messageAction(t('StartButton'), t('Start')))
-    ]
+    buttons: [primaryButton(messageAction(t(`JoinButton`), t('Join')))]
+  });
+}
+
+export function players(stage: Stage) {
+  const buttons = [primaryButton(messageAction(t(`JoinButton`), t('Join')))];
+  if ((stage.numOfPlayers === -1 && stage.players.size >= 6) || stage.players.size === stage.numOfPlayers) {
+    if (stage.players.size >= 6) buttons.push(secondaryButton(messageAction(t('StartButton'), t('Start'))));
+  }
+
+  return tableMessage({
+    title: [centeredText(t(`Players`))],
+    rows: Array.from(stage.players, ([, player], idx) => {
+      return [
+        wrapedText(`${idx + 1}.`, { flex: 0, align: 'start' }),
+        wrapedText(player.nickname, {
+          align: 'start',
+          margin: !!player.nickname ? 'none' : 'md'
+        })
+      ];
+    }),
+    buttons
   });
 }
 

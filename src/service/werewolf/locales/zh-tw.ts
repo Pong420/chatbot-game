@@ -103,6 +103,7 @@ export const CommonCommand = {
 
 export default defineMessages(
   {
+    GameName: `狼人殺`,
     SystemError: '系統錯誤',
 
     GameIsFull: '人數已滿，下次請早',
@@ -123,25 +124,27 @@ export default defineMessages(
     Voted: '我感受到{0}你對投票的渴望，但每人只有一票！',
     VoteOutOfRange: '{0}不在投票範圍',
 
-    GameName: `狼人殺`,
+    SettingsDesc: `
+      主持人請點擊下方按鈕，使用預設或者自選設定
+      P.S. 只有主持能進行設定
+    `,
+    StartBoard: `狼人殺開始`,
+    AvailableCharacters: `自選角色`,
+    AvailableCharactersDefault: `可用角色視乎最終遊戲人數`,
+    WerewolvesKnowEachOthers: `狼人知道誰是隊友`,
+    WerewolvesDontKnowEachOthers: `狼人不知道誰是隊友`,
+    Friendship: `謹記！友誼第一，不要太投入遊戲`,
+
+    Players: '參賽者',
     JoinButton: `參加`,
     Join: `我要參加狼人殺`,
     StartButton: `開始遊戲`,
-    Tips: `遊戲提示`,
-
-    ShortIntro: `
-      遊戲人數最少6人，最多12人
-      謹記！友誼第一，不要太投入遊戲
-      主持人請點擊下方按鈕，選擇遊戲設定，
-    `,
-
-    Players: '參賽者',
 
     Started: `狼人殺已開始`,
     NotStarted: `狼人殺未開始`,
     NotJoined: `你未參加狼人殺`,
     UseDefaultSetup: `使用預設`,
-    UseCustomSetup: `自訂`,
+    UseCustomSetup: `自選`,
     WaitFotHostSetup: `請等待主持完成配置`,
 
     YourCharacter: '你的角色',

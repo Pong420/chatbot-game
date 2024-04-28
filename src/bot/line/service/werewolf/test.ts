@@ -71,6 +71,7 @@ export function testSuite() {
 
   const update = async () => {
     const data = await getGame(players[0].groupId);
+    if (!data) return;
     game = Game.create(data!);
     stage = game.stage;
 
@@ -88,11 +89,14 @@ export function testSuite() {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const next = async (paylaod: any) => {
-    const event = await host.gr(t(`Next`));
+  const hostGroupMessage = async (message: string, paylaod: any) => {
+    const event = await host.gr(message);
     await update();
     expect(event).toEqual(typeof paylaod === 'function' ? paylaod() : paylaod);
   };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const next = async (paylaod: any) => hostGroupMessage(t(`Next`), paylaod);
 
   const createGame = async ({ customCharacters }: CreateGameOptions = {}) => {
     const numOfPlayers = customCharacters?.length || 12;
@@ -114,7 +118,11 @@ export function testSuite() {
     game.stage.customCharacters = customCharacters;
     await updateGame(game);
 
-    await host.g(t(`SetupCompleted`)).toMatchObject(board.players([]));
+    if (Math.random() > 0.5) {
+      await hostGroupMessage(t(`Next`), () => board.players(game.stage));
+    } else {
+      await hostGroupMessage(t(`SetupCompleted`), () => board.start(game.stage));
+    }
 
     await host.g(t('Join')).toMatchObject({ type: 'flex' });
     await host.g(t('Join')).toEqual(textMessage(t(`Joined`, host.name)));
@@ -149,5 +157,5 @@ export function testSuite() {
     }
   };
 
-  return { createGame, next, update, getPlayersByCharacter, allVoteTo, allWaive };
+  return { createGame, next, hostGroupMessage, update, getPlayersByCharacter, allVoteTo, allWaive };
 }

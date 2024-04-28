@@ -1,7 +1,7 @@
 'use server';
 
 import { z } from 'zod';
-import { GameSettingOption } from '@werewolf/stage';
+import { GameSettingOption, Init } from '@werewolf/stage';
 import { Werewolf } from '@werewolf/game';
 import { CharacterKey } from '@werewolf/character';
 import { getGame, updateGame } from '@/supabase/game';
@@ -26,6 +26,7 @@ export async function updateSettings(
     const game = Werewolf.create(data);
 
     if (game.stage.host !== hostId) return { message: `只有主持人可以進行設定` };
+    if (!(game.stage instanceof Init)) return { message: `遊戲已開始，無法更改設定` };
 
     if (customCharacters?.length) {
       let bad = 0;

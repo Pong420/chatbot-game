@@ -4,6 +4,7 @@ import { Werewolf as WerewolfGame } from '@werewolf/game';
 import { t } from '@werewolf/locales';
 import { testSuite, WerewolfPlayer } from '../test';
 import * as board from '../board';
+import { getStageMessage } from './host';
 
 declare let game: WerewolfGame;
 declare let stage: WerewolfGame['stage'];
@@ -21,6 +22,13 @@ declare let witchers: WerewolfPlayer[];
 declare let witcher: WerewolfPlayer;
 declare let players: WerewolfPlayer[];
 declare let host: WerewolfPlayer;
+
+test('start', async () => {
+  const { createGame, hostGroupMessage } = testSuite();
+  await createGame();
+  await hostGroupMessage(t(`Start`), () => getStageMessage(game)); // should be same as /next
+  await host.g(t(`End`)).toTextMessage(t('End'));
+});
 
 test('main', async () => {
   const { createGame, next, allVoteTo } = testSuite();

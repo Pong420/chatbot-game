@@ -83,7 +83,7 @@ export function SettingForm({ isLineClient, characters, onSubmit }: SettingFormP
   const settings = [
     {
       id: 'enableCustomCharacters',
-      title: `自訂遊戲角色`,
+      title: `自選遊戲角色`,
       description: [
         `角色數量最少6個，最多12，其中最少2個好人和1個壞人，角色可以自由配搭，例如上可以 10狼 + 2女巫，但不保證沒有Bug，自定義角色後，參與人數必須和角色數量一樣才能開始遊戲`
       ],
@@ -97,7 +97,7 @@ export function SettingForm({ isLineClient, characters, onSubmit }: SettingFormP
     },
     {
       id: 'werewolvesKnowEachOthers',
-      title: `狼人知道誰是狼人 ( 未開放 )`,
+      title: `狼人知道誰是隊友 ( 未開放 )`,
       description: [
         `開啟後，在狼人的回合，狼人可以知道其他狼人是誰，但每一回合只能選擇一個目標殺死，或者選擇平安夜，實際行動按小數服從多數，平票隨機選擇一個選項`,
         `因為技術限制，目前狼人只能自己拉個群組討論，所以這個設定有點雞肋，我最多只能建一個簡單的網頁聊天室，但麻煩暫時不考慮`

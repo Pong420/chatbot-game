@@ -34,26 +34,31 @@ export class Start extends Stage {
     this.playersByName[player.nickname] = player;
   }
 
-  getCharacters(numOfPlayers: number) {
-    const characters = Array.from({ length: Math.floor(numOfPlayers / 3) }, () => Werewolf) as (typeof Character)[];
+  getCharacters() {
+    if (this.numOfPlayers === -1) {
+      const n = this.players.size;
+      const characters = Array.from({ length: Math.floor(n / 3) }, () => Werewolf) as (typeof Character)[];
 
-    if (numOfPlayers >= 6) {
-      characters.push(Predictor);
+      if (n >= 6) {
+        characters.push(Predictor);
+      }
+
+      if (n >= 11) {
+        characters.push(Witcher, Hunter, Guard);
+      } else if (n >= 9) {
+        characters.push(Witcher, Hunter);
+      } else if (n >= 6) {
+        characters.push(randomOption([Guard, Hunter]));
+      }
+
+      while (characters.length < n) {
+        characters.push(Villager);
+      }
+
+      return characters;
     }
 
-    if (numOfPlayers >= 11) {
-      characters.push(Witcher, Hunter, Guard);
-    } else if (numOfPlayers >= 9) {
-      characters.push(Witcher, Hunter);
-    } else if (numOfPlayers >= 6) {
-      characters.push(randomOption([Guard, Hunter]));
-    }
-
-    while (characters.length < numOfPlayers) {
-      characters.push(Villager);
-    }
-
-    return characters;
+    return this.characters;
   }
 
   onEnd(): void {
@@ -61,7 +66,7 @@ export class Start extends Stage {
       throw t('NoEnoughPlayers', this.minPlayers);
     }
 
-    const characters = this.numOfPlayers === -1 ? this.getCharacters(this.players.size) : this.characters;
+    const characters = this.getCharacters();
     this.numOfPlayers = this.characters.length;
     this.characters = [...characters];
 

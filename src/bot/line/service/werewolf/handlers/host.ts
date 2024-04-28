@@ -25,7 +25,7 @@ import * as board from '../board';
 export function getStageMessage(game: Werewolf) {
   const { stage } = game;
   if (stage instanceof Init) return board.initiate(game.groupId);
-  if (stage instanceof Start) return board.players(stage.players.values());
+  if (stage instanceof Start) return board.players(stage);
   if (stage instanceof Guard) return board.guardGroup();
   if (stage instanceof Night) return board.werewolfGroup();
   if (stage instanceof Witcher) return board.witcherGroup();
@@ -41,11 +41,16 @@ export function getStageMessage(game: Werewolf) {
 
 export default [
   createHandler(Group, TextEqual(t('SetupCompleted')), IsHost, async ({ game }) => {
-    if (game.stage instanceof Init) {
-      game.next();
-      await updateGame(game);
-      return getStageMessage(game);
-    }
+    if (!(game.stage instanceof Init)) return;
+    game.next();
+    await updateGame(game);
+    return board.start(game.stage);
+  }),
+  createHandler(Group, TextEqual(t('Start')), IsHost, async ({ game }) => {
+    if (!(game.stage instanceof Start)) return;
+    game.next();
+    await updateGame(game);
+    return getStageMessage(game);
   }),
   createHandler(Group, TextEqual(t(`End`)), IsHost, async ({ game }) => {
     await updateGame(game.groupId, { status: GameStatus.CLOSE });

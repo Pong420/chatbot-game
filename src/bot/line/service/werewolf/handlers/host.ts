@@ -53,7 +53,7 @@ export default [
     return getStageMessage(game);
   }),
   createHandler(Group, TextEqual(t(`End`)), IsHost, async ({ game }) => {
-    await updateGame(game.groupId, { status: GameStatus.CLOSE });
+    await updateGame(game.id, { status: GameStatus.CLOSE });
     return t(`End`);
   }),
   createHandler(Group, TextEqual([t('Next'), t('NextShort')]), IsHost, async ({ game }) => {

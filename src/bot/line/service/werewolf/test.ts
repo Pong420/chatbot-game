@@ -121,9 +121,7 @@ export function testSuite() {
     if (Math.random() > 0.5) {
       await hostGroupMessage(t(`Next`), () => board.players(game.stage));
     } else {
-      await hostGroupMessage(t(`SetupCompleted`), () => {
-        return board.start(game.stage);
-      });
+      await hostGroupMessage(t(`SetupCompleted`), () => board.start(game.stage));
     }
 
     await host.g(t('Join')).toMatchObject({ type: 'flex' });

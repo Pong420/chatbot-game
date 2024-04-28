@@ -31,7 +31,7 @@ export type Database = {
       games: {
         Row: {
           created_at: string;
-          data: Json | null;
+          data: Json;
           groupId: string;
           id: number;
           status: number;
@@ -40,7 +40,7 @@ export type Database = {
         };
         Insert: {
           created_at?: string;
-          data?: Json | null;
+          data?: Json;
           groupId: string;
           id?: number;
           status?: number;
@@ -49,7 +49,7 @@ export type Database = {
         };
         Update: {
           created_at?: string;
-          data?: Json | null;
+          data?: Json;
           groupId?: string;
           id?: number;
           status?: number;

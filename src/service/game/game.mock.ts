@@ -19,38 +19,38 @@ export const genMockGameData = (override?: Partial<Game>): Game => {
   };
 };
 
-vi.spyOn(module, 'getGame').mockImplementation(groupId => {
-  const data = gameDB.find(g => g.groupId === groupId && g.status === module.GameStatus.OPEN);
-  return Promise.resolve(data || null);
-});
+// vi.spyOn(module, 'getGame').mockImplementation(groupId => {
+//   const data = gameDB.find(g => g.groupId === groupId && g.status === module.GameStatus.OPEN);
+//   return Promise.resolve(data || null);
+// });
 
-vi.spyOn(module, 'createGame').mockImplementation(payload => {
-  const game = gameDB.find(g => g.groupId === payload.groupId && g.status === module.GameStatus.OPEN);
-  if (game) {
-    throw new Error(`Duplicated`);
-  }
+// vi.spyOn(module, 'createGame').mockImplementation(payload => {
+//   const game = gameDB.find(g => g.groupId === payload.groupId && g.status === module.GameStatus.OPEN);
+//   if (game) {
+//     throw new Error(`Duplicated`);
+//   }
 
-  const data = genMockGameData(payload);
-  gameDB.push({ ...payload, ...JSON.parse(JSON.stringify(data)) });
-  return Promise.resolve({ data, error: null }) as unknown as ReturnType<(typeof module)['createGame']>;
-});
+//   const data = genMockGameData(payload);
+//   gameDB.push({ ...payload, ...JSON.parse(JSON.stringify(data)) });
+//   return Promise.resolve({ data, error: null }) as unknown as ReturnType<(typeof module)['createGame']>;
+// });
 
-vi.spyOn(module, 'updateGame').mockImplementation((...payload) => {
-  // TODO:
-  const [changes, groupId, props] =
-    typeof payload[0] === 'string'
-      ? [payload[1], payload[0]]
-      : [{ data: payload[0].serialize() }, payload[0].groupId, payload[1]];
+// vi.spyOn(module, 'updateGame').mockImplementation((...payload) => {
+//   // TODO:
+//   const [changes, groupId, props] =
+//     typeof payload[0] === 'string'
+//       ? [payload[1], payload[0]]
+//       : [{ data: payload[0].serialize() }, payload[0].groupId, payload[1]];
 
-  let result: Game | undefined;
+//   let result: Game | undefined;
 
-  for (let i = 0; i < gameDB.length; i++) {
-    const data = gameDB[i];
-    if (data && data.groupId === groupId && data.status === module.GameStatus.OPEN) {
-      gameDB[i] = result = { ...data, ...changes };
-    }
-  }
+//   for (let i = 0; i < gameDB.length; i++) {
+//     const data = gameDB[i];
+//     if (data && data.groupId === groupId && data.status === module.GameStatus.OPEN) {
+//       gameDB[i] = result = { ...data, ...changes };
+//     }
+//   }
 
-  if (!result) throw Error(`game not found`);
-  return Promise.resolve(result);
-});
+//   if (!result) throw Error(`game not found`);
+//   return Promise.resolve(result);
+// });

@@ -51,7 +51,7 @@ export function initiate(groupId: string) {
 }
 
 export function start(stage: Stage) {
-  if (!(stage instanceof Start)) throw new Error(`Invalid Stage`);
+  if (!(stage instanceof Start)) throw new Error(`expect Start but receive ${stage.name}`);
 
   const characters = stage.getCharacters().reduce(
     (res, Character) => {

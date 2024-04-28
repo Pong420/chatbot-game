@@ -71,8 +71,8 @@ export function testSuite() {
 
   const update = async () => {
     const data = await getGame(players[0].groupId);
-    if (!data) return;
-    game = Game.create(data!);
+    if (!data?.data) return;
+    game = Game.create(data.data as Record<string, unknown>);
     stage = game.stage;
 
     survivors = game.stage.survivors.map(p => players.find(player => player.userId === p.id)!).filter(Boolean);
@@ -121,7 +121,9 @@ export function testSuite() {
     if (Math.random() > 0.5) {
       await hostGroupMessage(t(`Next`), () => board.players(game.stage));
     } else {
-      await hostGroupMessage(t(`SetupCompleted`), () => board.start(game.stage));
+      await hostGroupMessage(t(`SetupCompleted`), () => {
+        return board.start(game.stage);
+      });
     }
 
     await host.g(t('Join')).toMatchObject({ type: 'flex' });

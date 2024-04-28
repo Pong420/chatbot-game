@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Type, plainToInstance, instanceToPlain } from 'class-transformer';
+import { Type, plainToInstance, instanceToPlain, Exclude } from 'class-transformer';
 import { Constructable, GameInstance } from '@/types';
 import {
   stagesTypes,
@@ -30,10 +30,10 @@ export class Game extends GameInstance {
   static readonly type: string = 'Werewolf';
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static create({ data, ...payload }: { groupId: string; data?: any }) {
+  static create(payload: Record<string, any>) {
     const game = plainToInstance(
       Game,
-      { ...payload, stage: data },
+      { ...payload },
       {
         // for initial value of stage
         exposeUnsetFields: false
@@ -56,13 +56,13 @@ export class Game extends GameInstance {
   })
   stage: Stage = new Init();
 
+  @Exclude()
   get players() {
     return this.stage.players;
   }
 
   serialize() {
-    const { groupId, stage } = instanceToPlain(this);
-    return { groupId, data: stage };
+    return instanceToPlain(this);
   }
 
   // id or name
@@ -100,9 +100,9 @@ export class Game extends GameInstance {
   }
 
   protected transition(NextStage: typeof Stage) {
-    const { data } = this.serialize();
+    const serialized = this.serialize();
     const stage = this.stage;
-    this.stage = plainToInstance(NextStage, data) as Stage;
+    this.stage = plainToInstance(NextStage, serialized.stage) as Stage;
     this.stage.onStart(stage);
   }
 

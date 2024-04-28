@@ -33,11 +33,10 @@ export function testSuite() {
 
   const testSerialisation = () => {
     const serialized = game.serialize();
-    expect(serialized.data).not.toHaveProperty('survivors');
+    expect(serialized.stage).not.toHaveProperty('survivors');
 
     let newGame = Game.create(serialized);
     newGame = Game.create(serialized); // this check serialized is not updated
-
     newGame = Game.create(JSON.parse(JSON.stringify(serialized)));
 
     // make sure the stage.name is not renamed

@@ -14,7 +14,7 @@ export const mainHandlers = [
   createHandler(UserId, TextEqual(t('Initiate')), CanStartGame, async (userId, groupId) => {
     const game = Werewolf.create({ groupId });
     game.stage.host = userId;
-    await createGame({ type: Werewolf.type, ...game.serialize() });
+    await createGame({ groupId, type: Werewolf.type, data: game.serialize() });
     return getStageMessage(game);
   }),
   createHandler(Group, TextEqual(t('Join')), User, WerewolfGame, async (user, game) => {

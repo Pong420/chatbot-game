@@ -47,7 +47,7 @@ export async function updateGame(
   const [data, groupId, props] =
     typeof payload[0] === 'string'
       ? [payload[1], payload[0], payload[2]]
-      : [payload[0].serialize(), payload[0].groupId, payload[1]];
+      : [{ data: payload[0].serialize() }, payload[0].groupId, payload[1]];
 
   const updated = await supabase
     .from('games')

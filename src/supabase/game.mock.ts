@@ -36,8 +36,11 @@ vi.spyOn(module, 'createGame').mockImplementation(payload => {
 });
 
 vi.spyOn(module, 'updateGame').mockImplementation((...payload) => {
-  const [changes, groupId] =
-    typeof payload[0] === 'string' ? [payload[1], payload[0]] : [payload[0].serialize(), payload[0].groupId];
+  // TODO:
+  const [changes, groupId, props] =
+    typeof payload[0] === 'string'
+      ? [payload[1], payload[0]]
+      : [{ data: payload[0].serialize() }, payload[0].groupId, payload[1]];
 
   let result: Game | undefined;
 

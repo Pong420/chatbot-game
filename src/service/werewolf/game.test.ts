@@ -12,8 +12,6 @@ declare let survivors: Character[];
 declare let werewolfs: Werewolf[];
 declare let villagers: Villager[];
 
-// TODO: test turn
-
 test('basic', () => {
   const { createGame, nextStage, allVoteTo, allWaive } = testSuite();
   createGame({ customCharacters: ['Werewolf', 'Villager', 'Villager', 'Villager', 'Villager', 'Villager'] });

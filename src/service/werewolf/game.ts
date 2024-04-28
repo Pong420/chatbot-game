@@ -47,6 +47,8 @@ export class Game extends GameInstance {
 
   groupId: string;
 
+  host: string; // host's userId;
+
   @Type(() => Stage, {
     keepDiscriminatorProperty: true,
     discriminator: {

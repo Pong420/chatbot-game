@@ -14,8 +14,6 @@ export class Stage {
 
   readonly name: string;
 
-  host: string; // host's userId
-
   turn = 1;
 
   numOfPlayers = -1;

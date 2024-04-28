@@ -9,7 +9,7 @@ import { t } from '@werewolf/locales';
 export const WerewolfGame = Game(Werewolf);
 
 export const IsHost = createFilter(UserId, WerewolfGame, (userId, game) => {
-  if (game.stage.host !== userId) throw false;
+  if (game.host !== userId) throw false;
   return { userId, game };
 });
 

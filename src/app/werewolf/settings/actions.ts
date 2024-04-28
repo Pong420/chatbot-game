@@ -25,7 +25,7 @@ export async function updateSettings(
     if (!data || data.type !== Werewolf.type) return { message: `遊戲不存在` };
     const game = Werewolf.create(data);
 
-    if (game.stage.host !== hostId) return { message: `只有主持人可以進行設定` };
+    if (game.host !== hostId) return { message: `只有主持人可以進行設定` };
     if (!(game.stage instanceof Init)) return { message: `遊戲已開始，無法更改設定` };
 
     if (customCharacters?.length) {

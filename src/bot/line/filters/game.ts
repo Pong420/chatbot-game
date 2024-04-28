@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { WebhookEvent } from '@line/bot-sdk';
-import { GameConstructor, GameInstance, GameStatus, getGame } from '@service/game';
+import { GameConstructor, GameInstance, GameStatus, getGame, updateGame } from '@service/game';
 import { isGroupEvent, isSingleEvent } from '@line/types';
 import { createFilter, GroupId } from '@line/filter';
 import { getUser } from '@line/utils/userService';
@@ -27,9 +27,17 @@ export const Game = <G extends GameInstance>(GameConstructor: GameConstructor<G>
   };
 };
 
-export const CanStartGame = createFilter(GroupId, async groupId => {
-  if (groupId === process.env.LINE_DEBUG_GROUP_ID) throw false;
-  const data = await getGame(groupId, { status: GameStatus.OPEN });
-  if (data) throw t('OtherGameRuning', (data.data as any).name);
-  return groupId;
-});
+export const CanStartGame = ({ timeout = 5 * 60 * 1000 } = {}) =>
+  createFilter(GroupId, async groupId => {
+    if (groupId === process.env.LINE_DEBUG_GROUP_ID) throw false;
+    const data = await getGame(groupId, { status: GameStatus.OPEN });
+    if (data) {
+      const diff = +new Date() - +new Date(data.updated_at);
+      if (diff < timeout) {
+        throw t('OtherGameRuning', (data.data as any).name);
+      } else {
+        await updateGame(data.id, { status: GameStatus.CLOSE });
+      }
+    }
+    return groupId;
+  });

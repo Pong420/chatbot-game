@@ -46,7 +46,7 @@ vi.spyOn(module, 'updateGame').mockImplementation((...payload) => {
   for (let i = 0; i < gameDB.length; i++) {
     const current = gameDB[i];
     if (current && current.id === id) {
-      gameDB[i] = result = { ...current, ...data, ...props };
+      gameDB[i] = result = { ...current, ...data, ...props, updated_at: new Date().toISOString() + '+00' };
       break;
     }
   }

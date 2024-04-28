@@ -10,9 +10,11 @@ export enum GameStatus {
   CLOSE
 }
 
+export type CreateGameOptions = Partial<Game>;
+
 export interface GameConstructor<G extends GameInstance> {
   type: string;
-  create: (options: Record<string, any>) => G;
+  create: (options: CreateGameOptions) => G;
   new (...args: any[]): G;
 }
 

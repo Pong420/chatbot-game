@@ -73,7 +73,7 @@ export function testSuite() {
   const update = async () => {
     const data = await getGame(game?.id || groupId);
     if (!data?.data) throw `data not found be undefined`;
-    game = Game.create(data.data as Record<string, unknown>);
+    game = Game.create(data);
     stage = game.stage;
 
     survivors = game.stage.survivors.map(p => players.find(player => player.userId === p.id)!).filter(Boolean);

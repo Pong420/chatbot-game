@@ -23,8 +23,7 @@ export async function updateSettings(
     const data = await getGame(id, { status: GameStatus.OPEN }).catch(() => null);
 
     if (!data || data.type !== Werewolf.type) return { message: `遊戲不存在` };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const game = Werewolf.create(data.data as Record<string, any>);
+    const game = Werewolf.create(data);
 
     if (game.host !== hostId) return { message: `只有主持人可以進行設定` };
     if (!(game.stage instanceof Init)) return { message: `遊戲已開始，無法更改設定` };

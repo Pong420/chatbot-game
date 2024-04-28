@@ -35,9 +35,9 @@ export function testSuite() {
     const serialized = game.serialize();
     expect(serialized.stage).not.toHaveProperty('survivors');
 
-    let newGame = Game.create(serialized);
-    newGame = Game.create(serialized); // this check serialized is not updated
-    newGame = Game.create(JSON.parse(JSON.stringify(serialized)));
+    let newGame = Game.create({ data: serialized });
+    newGame = Game.create({ data: serialized }); // this check serialized is not updated
+    newGame = Game.create({ data: JSON.parse(JSON.stringify(serialized)) });
 
     // make sure the stage.name is not renamed
     const StageConstructor = stages[game.stage.name as keyof typeof stages];
@@ -75,7 +75,7 @@ export function testSuite() {
   };
 
   const createGame = ({ customCharacters, numOfPlayers }: CreateGameOptions) => {
-    game = Game.create({ groupId: '1' });
+    game = Game.create({ data: { groupId: '1' } });
     stage = game.stage;
 
     expect(stage).toBeInstanceOf(Init);

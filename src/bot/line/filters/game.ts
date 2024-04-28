@@ -19,7 +19,7 @@ export const Game = <G extends GameInstance>(GameConstructor: GameConstructor<G>
     try {
       const data = await getGame(groupId);
       if (data?.type === GameConstructor.type) {
-        return GameConstructor.create(data.data as Record<string, unknown>);
+        return GameConstructor.create(data);
       }
     } catch (error) {}
 

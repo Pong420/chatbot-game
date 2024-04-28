@@ -11,8 +11,7 @@ import * as board from '../board';
 
 export const mainHandlers = [
   createHandler(UserId, TextEqual(t('Initiate')), CanStartGame, async (userId, groupId) => {
-    const game = Werewolf.create({ groupId });
-    game.host = userId;
+    const game = Werewolf.create({ data: { groupId, host: userId } });
     const data = await createGame({ groupId, type: Werewolf.type, data: game.serialize() });
     if (data) {
       game.id = data.id;

@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { Type, plainToInstance, instanceToPlain, Exclude } from 'class-transformer';
 import { Constructable } from '@/types';
-import { GameInstance } from '@service/game';
+import { GameInstance, CreateGameOptions } from '@service/game';
 import {
   stagesTypes,
   Init,
@@ -30,16 +30,11 @@ export interface CreateGame {
 export class Game extends GameInstance {
   static readonly type: string = 'Werewolf';
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static create(payload: Record<string, any>) {
-    const game = plainToInstance(
-      Game,
-      { ...payload },
-      {
-        // for initial value of stage
-        exposeUnsetFields: false
-      }
-    ) as Game;
+  static create({ data }: CreateGameOptions) {
+    const game: Game = plainToInstance(Game, data, {
+      // for initial value of stage
+      exposeUnsetFields: false
+    });
     game.stage.init();
     return game;
   }

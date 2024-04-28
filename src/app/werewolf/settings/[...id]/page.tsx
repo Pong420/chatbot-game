@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page({ params: { id } }: { params: { id: string } }) {
-  const onSubmit = updateSettings.bind(null, id);
+  const onSubmit = updateSettings.bind(null, Number(id));
   const isLineClient = await checkIsLineClient();
   if (process.env.NODE_ENV === 'production' && !isLineClient) return redirect('/line', RedirectType.replace);
   return <SettingForm isLineClient={isLineClient} characters={characters} onSubmit={onSubmit} />;

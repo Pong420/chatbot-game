@@ -24,7 +24,7 @@ import * as board from '../board';
 
 export function getStageMessage(game: Werewolf) {
   const { stage } = game;
-  if (stage instanceof Init) return board.initiate(game.groupId);
+  if (stage instanceof Init) return board.initiate(game.id);
   if (stage instanceof Start) return board.players(stage);
   if (stage instanceof Guard) return board.guardGroup();
   if (stage instanceof Night) return board.werewolfGroup();

@@ -111,7 +111,7 @@ export function testSuite() {
     const clientInOthersGroup = createLineUser({ name: players[0].name });
     clientInOthersGroup.profile.userId = players[0].userId;
 
-    await host.g(t(`Initiate`)).toEqual(board.initiate(host.groupId));
+    await hostGroupMessage(t(`Initiate`), () => board.initiate(game.id));
     await host.g(t(`Initiate`)).toEqual(textMessage(lt(`OtherGameRuning`, Game.type)));
 
     await update();
@@ -141,7 +141,7 @@ export function testSuite() {
 
     await extraClient.g(t('Join')).toEqual(textMessage(t('GameIsFull', extraClient.name)));
 
-    await clientInOthersGroup.g(t(`Initiate`)).toEqual(board.initiate(clientInOthersGroup.groupId));
+    await clientInOthersGroup.g(t(`Initiate`)).toMatchObject({ type: 'flex' });
     await clientInOthersGroup.g(t('Join')).toTextMessage(lt('JoinedOtherGroupsGame', clientInOthersGroup.name));
     await clientInOthersGroup.gr(t('End'));
   };

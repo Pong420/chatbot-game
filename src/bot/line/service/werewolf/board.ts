@@ -34,7 +34,7 @@ function tableMessage({ title = [], ...props }: CreateTableMessageProps) {
   });
 }
 
-export function initiate(groupId: string) {
+export function initiate(id: number) {
   return tableMessage({
     rows: t.paragraph('SettingsDesc').map(text => [wrapedText(text)]),
     buttons: [
@@ -42,7 +42,7 @@ export function initiate(groupId: string) {
       secondaryButton(
         uriAction(
           t(`UseCustomSetup`),
-          `https://liff.line.me/${process.env.NEXT_PUBLIC_LIFF_ID}/werewolf/settings/${groupId}`
+          `https://liff.line.me/${process.env.NEXT_PUBLIC_LIFF_ID}/werewolf/settings/${id}`
         )
       )
     ]
@@ -85,15 +85,7 @@ export function start(stage: Stage) {
 
   return tableMessage({
     title: [centeredText(t(`StartBoard`))],
-    rows: Array.from(stage.players, ([, player], idx) => {
-      return [
-        wrapedText(`${idx + 1}.`, { flex: 0, align: 'start' }),
-        wrapedText(player.nickname, {
-          align: 'start',
-          margin: !!player.nickname ? 'none' : 'md'
-        })
-      ];
-    }),
+    rows,
     buttons: [primaryButton(messageAction(t(`JoinButton`), t('Join')))]
   });
 }

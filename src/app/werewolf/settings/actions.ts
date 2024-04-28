@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { GameSettingOption, Init } from '@werewolf/stage';
 import { Werewolf } from '@werewolf/game';
 import { CharacterKey } from '@werewolf/character';
-import { getGame, updateGame } from '@service/game';
+import { GameStatus, getGame, updateGame } from '@service/game';
 import { charactersMap } from './utils';
 
 const schema = z.object({
@@ -13,14 +13,14 @@ const schema = z.object({
 } satisfies Record<keyof GameSettingOption, unknown>);
 
 export async function updateSettings(
-  id: string,
+  id: number,
   hostId: string,
   payload: z.infer<typeof schema>
 ): Promise<{ message?: string }> {
   const { customCharacters } = payload;
 
   try {
-    const data = await getGame(id).catch(() => null);
+    const data = await getGame(id, { status: GameStatus.OPEN }).catch(() => null);
 
     if (!data || data.type !== Werewolf.type) return { message: `遊戲不存在` };
     const game = Werewolf.create(data);

@@ -13,8 +13,12 @@ export const mainHandlers = [
   createHandler(UserId, TextEqual(t('Initiate')), CanStartGame, async (userId, groupId) => {
     const game = Werewolf.create({ groupId });
     game.host = userId;
-    await createGame({ groupId, type: Werewolf.type, data: game.serialize() });
-    return getStageMessage(game);
+    const data = await createGame({ groupId, type: Werewolf.type, data: game.serialize() });
+
+    if (data) {
+      game.id = data.id;
+      return getStageMessage(game);
+    }
   }),
   createHandler(Group, TextEqual(t('Join')), User, WerewolfGame, async (user, game) => {
     if (user.game && user.game !== game.groupId) return lt(`JoinedOtherGroupsGame`, user.nickname);

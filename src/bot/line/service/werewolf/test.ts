@@ -113,6 +113,7 @@ export function testSuite() {
 
     await hostGroupMessage(t(`Initiate`), () => board.initiate(game.id));
     await host.g(t(`Initiate`)).toEqual(textMessage(lt(`OtherGameRuning`, Game.type)));
+    expect(game.host).toBe(host.userId);
 
     await update();
     game.stage.customCharacters = customCharacters;
@@ -120,11 +121,7 @@ export function testSuite() {
 
     await host.g(t(`Join`)).toEqual(textMessage(t(`WaitFotHostSetup`)));
 
-    // if (Math.random() > 0.5) {
-    //   await hostGroupMessage(t(`Next`), () => board.players(game.stage));
-    // } else {
     await hostGroupMessage(t(`SetupCompleted`), () => board.start(stage));
-    // }
 
     await hostGroupMessage(t('Join'), () => board.players(stage));
     await host.g(t('Join')).toEqual(textMessage(t(`Joined`, host.name)));

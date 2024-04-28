@@ -49,6 +49,9 @@ export function initiate(id: number) {
   });
 }
 
+const chunk = <T>(arr: T[], size: number): T[][] =>
+  [...Array(Math.ceil(arr.length / size))].map((_, i) => arr.slice(size * i, size + size * i));
+
 export function start(stage: Stage) {
   if (!(stage instanceof Start)) throw new Error(`expect Start but receive ${stage.name}`);
 
@@ -61,8 +64,10 @@ export function start(stage: Stage) {
   );
 
   const rows: Payload[][] = [];
+
+  let idx = 0;
   const row = (text: string) => {
-    const idx = rows.length + 1;
+    idx += 1;
     return [
       wrapedText(`${idx}.`, { flex: 0, align: 'start' }),
       wrapedText(text, {
@@ -75,13 +80,16 @@ export function start(stage: Stage) {
   if (stage.customCharacters?.length) {
     rows.push(row(t(`AvailableCharacters`)));
 
+    const _rows: Payload[] = [];
     for (const k in characters) {
       const count = characters[k];
       if (!count) continue;
-      rows.push([wrapedText(k, { flex: 9 }), createFlexText({ flex: 0, align: 'end' })(String(count))]);
+      _rows.push(
+        wrapedText(k, { flex: 1, margin: 'xxl', align: 'start' }),
+        createFlexText({ flex: 0, align: 'end' })('x' + count)
+      );
     }
-
-    rows.push([wrapAndCenterText('---')]);
+    rows.push(...chunk(_rows, 4));
   } else {
     rows.push(row(t(`AvailableCharactersDefault`)));
   }
@@ -90,7 +98,7 @@ export function start(stage: Stage) {
   rows.push(row(t(`Friendship`)));
 
   return tableMessage({
-    title: [centeredText(t(`StartBoard`))],
+    title: [centeredText(t(`SetupCompleted`))],
     rows,
     buttons: [primaryButton(messageAction(t(`JoinButton`), t('Join')))]
   });

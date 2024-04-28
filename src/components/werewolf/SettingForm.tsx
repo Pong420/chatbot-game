@@ -60,7 +60,7 @@ export function SettingForm({ isLineClient, characters, onSubmit }: SettingFormP
   const handleSubmit = form.handleSubmit(async formdata => {
     setError(undefined);
 
-    const submit: typeof onSubmit = (...args) => onSubmit(...args).then(r => (r.message ? Promise.reject(r) : r));
+    const submit: typeof onSubmit = (...args) => onSubmit(...args).then(r => (r?.message ? Promise.reject(r) : r));
 
     startTransition(async () => {
       try {
@@ -73,7 +73,6 @@ export function SettingForm({ isLineClient, characters, onSubmit }: SettingFormP
           await liff.sendMessages([{ type: 'text', text: '狼人殺設定完畢' }]);
           return liff.closeWindow();
         }
-        await submit('', formdata);
       } catch (error) {
         setError(error && typeof error == 'object' && 'message' in error ? (error['message'] as string) : undefined);
       }
@@ -117,7 +116,9 @@ export function SettingForm({ isLineClient, characters, onSubmit }: SettingFormP
           <div className="bg-destructive text-destructive-foreground pt-3 p-4 rounded-md shadow-md">
             <div className="font-semibold">Error</div>
             <pre>
-              <code className="text-sm">{typeof _error === 'string' ? _error : JSON.stringify(_error, null, 2)}</code>
+              <code className="text-sm whitespace-pre-wrap">
+                {typeof _error === 'string' ? _error : JSON.stringify(_error, null, 2)}
+              </code>
             </pre>
           </div>
         )}

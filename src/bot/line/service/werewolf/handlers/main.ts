@@ -14,7 +14,6 @@ export const mainHandlers = [
     const game = Werewolf.create({ groupId });
     game.host = userId;
     const data = await createGame({ groupId, type: Werewolf.type, data: game.serialize() });
-
     if (data) {
       game.id = data.id;
       return getStageMessage(game);

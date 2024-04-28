@@ -45,10 +45,10 @@ export const CharacterIntroCommand = (() => {
 })();
 
 export const HostCommand = {
-  Initiate: `開啟狼人殺`,
+  Initiate: [`開啟狼人殺`, `狼人殺開啟`],
   SetupCompleted: `狼人殺設定完畢`,
-  Start: `狼人殺開始`,
-  End: `狼人殺結束`,
+  Start: [`開始狼人殺`, `狼人殺開始`],
+  End: [`狼人殺結束`, `結束狼人殺`],
   Survivors: `狼人殺倖存者`,
   DeathReport: '狼人殺死亡報告',
   WhoNotVoted: `誰未投票`,

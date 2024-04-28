@@ -81,13 +81,20 @@ export function start(stage: Stage) {
     rows.push(row(t(`AvailableCharacters`)));
 
     const _rows: Payload[] = [];
+    const push = (name: string, count: string) =>
+      _rows.push(
+        wrapedText(name, { flex: 4, margin: 'xxl', align: 'start' }),
+        wrapedText(count, { flex: 1, align: 'end' })
+      );
+
     for (const k in characters) {
       const count = characters[k];
       if (!count) continue;
-      _rows.push(
-        wrapedText(k, { flex: 1, margin: 'xxl', align: 'start' }),
-        createFlexText({ flex: 0, align: 'end' })('x' + count)
-      );
+      push(k, 'x' + count);
+    }
+
+    if (_rows.length % 4 !== 0) {
+      push(' ', ' ');
     }
     rows.push(...chunk(_rows, 4));
   } else {

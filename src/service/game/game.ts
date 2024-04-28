@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ERROR_CODE_EMPTY, supabase } from '@service/supabase';
 import { Tables, TablesInsert, TablesUpdate } from '@service/database.types';
-import { updateUser } from './user';
 
 export type Game = Tables<'games'>;
 
@@ -100,9 +99,4 @@ export async function updateGame(
     .throwOnError();
   Object.assign(resp.data?.data as object, { id: resp.data?.id });
   return resp.data;
-}
-
-export async function endGame(game: GameInstance, players: Iterable<string>) {
-  await updateGame(game.id, { data: game.serialize(), status: GameStatus.CLOSE });
-  await Promise.all(Array.from(players, id => updateUser(id, { game: null }).catch(() => void 0)));
 }

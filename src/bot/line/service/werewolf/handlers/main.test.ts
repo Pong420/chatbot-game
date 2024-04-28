@@ -2,7 +2,6 @@
 import { expect, test } from 'vitest';
 import { Werewolf as WerewolfGame } from '@werewolf/game';
 import { t } from '@werewolf/locales';
-import { GameStatus, getGame, getUser, User } from '@service/game';
 import { getStageMessage } from './host';
 import { testSuite, WerewolfPlayer } from '../test';
 import { getDeathReport } from '../report';

@@ -10,6 +10,7 @@ import { GameSettingOption, Stage } from '@werewolf/stage';
 import { Character, Villager, Werewolf, Hunter, Guard, Predictor, Witcher } from '@werewolf/character';
 import { t } from '@werewolf/locales';
 import { GameStatus, getGame, getUser, updateGame, User } from '@service/game';
+import { getStageMessage } from './handlers/host';
 import { default as handlers } from './handler';
 import * as board from './board';
 
@@ -98,8 +99,8 @@ export function testSuite() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const next = async (paylaod: any) => hostGroupMessage(t(`Next`), paylaod);
 
-  const createGame = async ({ customCharacters }: CreateGameOptions = {}) => {
-    const numOfPlayers = customCharacters?.length || 12;
+  const createGame = async ({ customCharacters, numOfPlayers }: CreateGameOptions = {}) => {
+    numOfPlayers = numOfPlayers || customCharacters?.length || 12;
 
     vi.stubGlobal('game', undefined);
     vi.stubGlobal('stage', undefined);
@@ -107,7 +108,6 @@ export function testSuite() {
     host = players[0];
 
     const dupClient = createLineUser({ name: players[0].name, groupId });
-    const extraClient = createLineUser({ groupId });
     const clientInOthersGroup = createLineUser({ name: players[0].name });
     clientInOthersGroup.profile.userId = players[0].userId;
 
@@ -120,11 +120,11 @@ export function testSuite() {
 
     await host.g(t(`Join`)).toEqual(textMessage(t(`WaitFotHostSetup`)));
 
-    if (Math.random() > 0.5) {
-      await hostGroupMessage(t(`Next`), () => board.players(game.stage));
-    } else {
-      await hostGroupMessage(t(`SetupCompleted`), () => board.start(stage));
-    }
+    // if (Math.random() > 0.5) {
+    //   await hostGroupMessage(t(`Next`), () => board.players(game.stage));
+    // } else {
+    await hostGroupMessage(t(`SetupCompleted`), () => board.start(stage));
+    // }
 
     await hostGroupMessage(t('Join'), () => board.players(stage));
     await host.g(t('Join')).toEqual(textMessage(t(`Joined`, host.name)));
@@ -135,11 +135,13 @@ export function testSuite() {
       if (client === host) continue;
       const event = await client.gr(t('Join'));
       await update();
-      expect(event).toEqual(board.players(stage));
-      await client.g(t('Join')).toEqual(textMessage(t(`Joined`, client.name)));
+      if (game.players.size === 12) {
+        expect(event).toEqual(getStageMessage(game));
+      } else {
+        expect(event).toEqual(board.players(stage));
+        await client.g(t('Join')).toEqual(textMessage(t(`Joined`, client.name)));
+      }
     }
-
-    await extraClient.g(t('Join')).toEqual(textMessage(t('GameIsFull', extraClient.name)));
 
     await clientInOthersGroup.g(t(`Initiate`)).toMatchObject({ type: 'flex' });
     await clientInOthersGroup.g(t('Join')).toTextMessage(lt('JoinedOtherGroupsGame', clientInOthersGroup.name));

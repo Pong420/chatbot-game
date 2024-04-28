@@ -131,9 +131,9 @@ export default defineMessages(
     StartBoard: `狼人殺開始`,
     AvailableCharacters: `自選角色`,
     AvailableCharactersDefault: `可用角色視乎最終遊戲人數`,
-    WerewolvesKnowEachOthers: `狼人知道誰是隊友`,
+    WerewolvesKnowEachOthers: `狼人會知道誰是隊友`,
     WerewolvesDontKnowEachOthers: `狼人不知道誰是隊友`,
-    Friendship: `謹記！友誼第一，不要太投入遊戲`,
+    Friendship: `謹記！友誼第一`,
 
     Players: '參賽者',
     JoinButton: `參加`,

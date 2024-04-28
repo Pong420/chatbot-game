@@ -27,7 +27,7 @@ export const mainHandlers = [
 
     game.stage.join({ id: user.userId, nickname: user.nickname });
 
-    if (game.players.size === game.stage.numOfPlayers) {
+    if (game.players.size === game.stage.maxPlayers) {
       game.next();
     }
 

@@ -27,7 +27,7 @@ declare let host: WerewolfPlayer;
 
 test('start', async () => {
   const { createGame, hostGroupMessage, ended } = testSuite();
-  await createGame();
+  await createGame({ numOfPlayers: 6 });
   await hostGroupMessage(t(`Start`), () => getStageMessage(game)); // should be same as /next
   await host.g(t(`End`)).toEqual(board.ended());
   await ended();
@@ -35,7 +35,22 @@ test('start', async () => {
 
 test('main', async () => {
   const { createGame, next, allVoteTo, ended } = testSuite();
-  await createGame();
+  await createGame({
+    customCharacters: [
+      'Werewolf',
+      'Werewolf',
+      'Werewolf',
+      'Werewolf',
+      'Witcher',
+      'Hunter',
+      'Guard',
+      'Predictor',
+      'Villager',
+      'Villager',
+      'Villager',
+      'Villager'
+    ]
+  });
 
   // Guard --------------------------------------------------------------------------------
 

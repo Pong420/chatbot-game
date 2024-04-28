@@ -61,9 +61,19 @@ export function start(stage: Stage) {
   );
 
   const rows: Payload[][] = [];
+  const row = (text: string) => {
+    const idx = rows.length + 1;
+    return [
+      wrapedText(`${idx}.`, { flex: 0, align: 'start' }),
+      wrapedText(text, {
+        align: 'start',
+        margin: 'md'
+      })
+    ];
+  };
 
   if (stage.customCharacters?.length) {
-    rows.push([wrapAndCenterText(t(`AvailableCharacters`))]);
+    rows.push(row(t(`AvailableCharacters`)));
 
     for (const k in characters) {
       const count = characters[k];
@@ -73,15 +83,11 @@ export function start(stage: Stage) {
 
     rows.push([wrapAndCenterText('---')]);
   } else {
-    rows.push([wrapAndCenterText(t(`AvailableCharactersDefault`))]);
+    rows.push(row(t(`AvailableCharactersDefault`)));
   }
 
-  rows.push([
-    wrapAndCenterText(
-      t(stage.werewolvesKnowEachOthers ? `WerewolvesDontKnowEachOthers` : `WerewolvesDontKnowEachOthers`)
-    )
-  ]);
-  rows.push([wrapAndCenterText(t(`Friendship`))]);
+  rows.push(row(t(stage.werewolvesKnowEachOthers ? `WerewolvesDontKnowEachOthers` : `WerewolvesDontKnowEachOthers`)));
+  rows.push(row(t(`Friendship`)));
 
   return tableMessage({
     title: [centeredText(t(`StartBoard`))],

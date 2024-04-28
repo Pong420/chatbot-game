@@ -26,7 +26,7 @@ const formSchema = z
     werewolvesKnowEachOthers: z.boolean().optional()
   } satisfies Record<keyof GameSettingOption, unknown>)
   .extend({
-    enableCustomCharacters: z.boolean()
+    enableCustomCharacters: z.boolean().optional()
   });
 
 const defaultValues: SettingValues = {
@@ -57,10 +57,16 @@ export function SettingForm({ isLineClient, characters, onSubmit }: SettingFormP
     return () => subscription.unsubscribe();
   }, [watch, reset]);
 
-  const handleSubmit = form.handleSubmit(async formdata => {
+  const handleSubmit = form.handleSubmit(async ({ ...formdata }) => {
     setError(undefined);
 
     const submit: typeof onSubmit = (...args) => onSubmit(...args).then(r => (r?.message ? Promise.reject(r) : r));
+
+    if (!formdata.enableCustomCharacters) {
+      delete formdata['customCharacters'];
+    }
+
+    delete formdata['enableCustomCharacters'];
 
     startTransition(async () => {
       try {

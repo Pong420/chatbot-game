@@ -36,6 +36,8 @@ export function createTranslateFunction<O extends Record<string, string | string
     return text;
   };
 
+  t.raw = (key: keyof O) => messages[key];
+
   t.paragraph = function (key: keyof O, ...args: (string | number)[]) {
     const content = t(key, ...args);
     return content

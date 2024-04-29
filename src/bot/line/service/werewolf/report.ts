@@ -182,6 +182,6 @@ export function getDeathReport(game: Game) {
         ];
       }, [] as Payload[][]),
     footer: [wrapAndCenterText(`主持人可以點擊玩家名稱，顯示更詳細的描述`)],
-    buttons: [primaryButton(messageAction(t(`End`)))]
+    buttons: [primaryButton(messageAction(t.raw(`End`)[0]))]
   });
 }

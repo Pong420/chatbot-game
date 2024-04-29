@@ -10,7 +10,7 @@ import { getStageMessage } from './host';
 import * as board from '../board';
 
 export const mainHandlers = [
-  createHandler(UserId, TextEqual(t('Initiate')), CanStartGame(), async (userId, groupId) => {
+  createHandler(UserId, TextEqual(t.raw('Initiate')), CanStartGame(), async (userId, groupId) => {
     const game = Werewolf.create({ data: { groupId, host: userId } });
     const data = await createGame({ groupId, type: Werewolf.type, status: GameStatus.OPEN, data: game.serialize() });
     if (data) {

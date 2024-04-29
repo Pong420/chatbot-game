@@ -46,13 +46,13 @@ export default [
     await updateGame(game);
     return board.settings(game.stage);
   }),
-  createHandler(Group, TextEqual(t('Start')), IsHost, async ({ game }) => {
+  createHandler(Group, TextEqual(t.raw('Start')), IsHost, async ({ game }) => {
     if (!(game.stage instanceof Start)) return;
     game.next();
     await updateGame(game);
     return board.start(game);
   }),
-  createHandler(Group, TextEqual(t(`End`)), IsHost, async ({ game }) => {
+  createHandler(Group, TextEqual(t.raw(`End`)), IsHost, async ({ game }) => {
     await endGame(game, game.players.keys());
     return board.ended();
   }),

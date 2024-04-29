@@ -37,7 +37,7 @@ function tableMessage({ title = [], ...props }: CreateTableMessageProps) {
 
 export function initiate(id: number) {
   return tableMessage({
-    rows: orderList(t.paragraph('SettingsDesc', t(`End`))),
+    rows: orderList(t.paragraph('SettingsDesc', t.raw(`End`)[0])),
     buttons: [
       primaryButton(messageAction(t(`UseDefaultSetup`), t(`SetupCompleted`))),
       secondaryButton(
@@ -117,7 +117,7 @@ export function players(stage: Stage) {
   const buttons: FlexComponent[] = [primaryButton(messageAction(t(`JoinButton`), t('Join')))];
 
   if (stage.players.size >= stage.minPlayers)
-    buttons.push(secondaryButton(messageAction(t('StartButton'), t('Start'))));
+    buttons.push(secondaryButton(messageAction(t('StartButton'), t.raw('Start')[0])));
   else {
     buttons.push(
       wrapAndCenterText(t(`NoEnoughPlayers`, stage.minPlayers), { margin: 'xl', size: 'sm' }),
@@ -434,16 +434,16 @@ export function end(stage: Stage) {
   if (!(stage instanceof End)) return null;
   const text = stage.getEndMessage();
   return tableMessage({
-    title: [wrapAndCenterText(t(`End`))],
+    title: [wrapAndCenterText(t.raw(`End`)[0])],
     rows: [[wrapedText(text, { align: text.length > 18 ? 'start' : 'center' })]],
-    buttons: [primaryButton(messageAction(t('DeathReport'))), secondaryButton(messageAction(t(`End`)))]
+    buttons: [primaryButton(messageAction(t('DeathReport'))), secondaryButton(messageAction(t.raw(`End`)[0]))]
   });
 }
 
 export function ended() {
   return tableMessage({
-    title: [wrapAndCenterText(t(`End`))],
+    title: [wrapAndCenterText(t.raw(`End`)[0])],
     rows: [],
-    buttons: [primaryButton(messageAction(t(`Initiate`)))]
+    buttons: [primaryButton(messageAction(t.raw(`Initiate`)[0]))]
   });
 }

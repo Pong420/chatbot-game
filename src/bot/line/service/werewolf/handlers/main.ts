@@ -25,8 +25,11 @@ export const mainHandlers = [
 
     game.stage.join({ id: user.userId, nickname: user.nickname });
 
+    let messages = getStageMessage(game);
+
     if (game.players.size === game.stage.maxPlayers) {
       game.next();
+      messages = board.start(game);
     }
 
     await Promise.all([
@@ -35,7 +38,7 @@ export const mainHandlers = [
       updateGame(game)
     ]);
 
-    return getStageMessage(game);
+    return messages;
   }),
   createHandler(Single, TextEqual(t('MyCharacter')), IsPlayer, async ({ character }) => {
     return board.myCharacter(character);

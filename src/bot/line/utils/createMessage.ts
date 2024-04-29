@@ -27,8 +27,10 @@ export const uriAction = (label: string, uri: string): Action => {
 };
 
 export const sendTextToBot = (label: string, text = label) => {
-  const botId = process.env.LINE_BOT_ID;
-  return uriAction(label, `https://line.me/R/oaMessage/${botId}/?${encodeURIComponent(text)}`);
+  const botId = process.env.LINE_BOT_ID || '';
+  if (!botId) throw new Error(`botId not defined`);
+  if (!botId.startsWith('@')) throw new Error(`botId should start with @`);
+  return uriAction(label, `https://line.me/R/oaMessage/${encodeURIComponent(botId)}/?${encodeURIComponent(text)}`);
 };
 
 export function orderList(payload: (string | string[])[], startIdx = 1) {

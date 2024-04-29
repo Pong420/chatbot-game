@@ -7,7 +7,7 @@ import { t } from '../locales';
 
 export class Character {
   readonly type: string;
-  readonly name: string; // translated character name\
+  readonly name: string; // translated character name
   readonly good: boolean; // for predictor
 
   readonly id: string; // user id

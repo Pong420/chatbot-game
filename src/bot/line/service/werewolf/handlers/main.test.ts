@@ -27,7 +27,7 @@ declare let host: WerewolfPlayer;
 test('start', async () => {
   const { createGame, hostGroupMessage, ended } = testSuite();
   await createGame({ numOfPlayers: 6 });
-  await hostGroupMessage(t(`Start`), () => getStageMessage(game)); // should be same as /next
+  await hostGroupMessage(t(`Start`), () => board.start(game)); // should be same as /next
   await host.g(t(`End`)).toEqual(board.ended());
   await ended();
 });

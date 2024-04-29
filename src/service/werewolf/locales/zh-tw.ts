@@ -101,6 +101,7 @@ export const CommonCommand = {
   Waive: `棄權`
 };
 
+// TODO: reorder
 export default defineMessages(
   {
     GameName: `狼人殺`,
@@ -125,10 +126,14 @@ export default defineMessages(
     VoteOutOfRange: '{0}不在投票範圍',
 
     SettingsDesc: `
-      主持人請點擊下方按鈕，使用預設或者自選設定
-      P.S. 只有主持能進行設定
+      主持人需要不斷輸入指令推進遊戲
+      遊戲完結後需要輸入【{0}】來結束遊戲
+      否則5分鐘內其他人不能重新開啟遊戲
+      點擊下方按鈕，使用預設或者自選設定繼續遊戲
     `,
-    StartBoard: `狼人殺開始`,
+    UseDefaultSetup: `使用預設`,
+    UseCustomSetup: `自選`,
+    WaitFotHostSetup: `請等待主持完成配置`,
     AvailableCharacters: `自選角色`,
     AvailableCharactersDefault: `可用角色視乎最終遊戲人數`,
     WerewolvesKnowEachOthers: `狼人會知道誰是隊友`,
@@ -143,9 +148,11 @@ export default defineMessages(
     Started: `狼人殺已開始`,
     NotStarted: `狼人殺未開始`,
     NotJoined: `你未參加狼人殺`,
-    UseDefaultSetup: `使用預設`,
-    UseCustomSetup: `自選`,
-    WaitFotHostSetup: `請等待主持完成配置`,
+
+    StartBoard: `遊戲開始`,
+    StartBoardDesc: `參與者請私聊機器人輸入或直接點擊【{0}】`,
+    StartBoardDesc2: `主持人可以輸入【{0}】查詢是否能進入下一回合，【{1}】強制進入下一回合`,
+    StartBoardCharacters: `角色`,
 
     YourCharacter: '你的角色',
     YourAreCharacter: '你是【{0}】留意群組訊息，到你的回合後，請按指示輸入指令或直接點擊按鈕',

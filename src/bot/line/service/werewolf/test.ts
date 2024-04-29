@@ -121,7 +121,7 @@ export function testSuite() {
 
     await host.g(t(`Join`)).toEqual(textMessage(t(`WaitFotHostSetup`)));
 
-    await hostGroupMessage(t(`SetupCompleted`), () => board.start(stage));
+    await hostGroupMessage(t(`SetupCompleted`), () => board.settings(stage));
 
     await hostGroupMessage(t('Join'), () => board.players(stage));
     await host.g(t('Join')).toEqual(textMessage(t(`Joined`, host.name)));
@@ -133,7 +133,7 @@ export function testSuite() {
       const event = await client.gr(t('Join'));
       await update();
       if (game.players.size === 12) {
-        expect(event).toEqual(getStageMessage(game));
+        expect(event).toEqual(board.start(game));
       } else {
         expect(event).toEqual(board.players(stage));
         await client.g(t('Join')).toEqual(textMessage(t(`Joined`, client.name)));

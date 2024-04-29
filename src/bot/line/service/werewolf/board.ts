@@ -1,6 +1,6 @@
 import { Action, FlexComponent } from '@line/bot-sdk';
 import { t } from '@werewolf/locales';
-import { Werewolf } from '@werewolf/game';
+import { Game, Werewolf } from '@werewolf/game';
 import { Stage, VoteBaseStage, HunterEnd, End, Start } from '@werewolf/stage';
 import { Character, Predictor, Villager } from '@werewolf/character';
 import {
@@ -15,7 +15,8 @@ import {
   wrapedText,
   createFlexText,
   Payload,
-  uriAction
+  uriAction,
+  orderList
 } from '@line/utils/createMessage';
 
 interface PlayerListProps {
@@ -36,7 +37,7 @@ function tableMessage({ title = [], ...props }: CreateTableMessageProps) {
 
 export function initiate(id: number) {
   return tableMessage({
-    rows: t.paragraph('SettingsDesc').map(text => [wrapedText(text)]),
+    rows: orderList(t.paragraph('SettingsDesc', t(`End`))),
     buttons: [
       primaryButton(messageAction(t(`UseDefaultSetup`), t(`SetupCompleted`))),
       secondaryButton(
@@ -52,7 +53,7 @@ export function initiate(id: number) {
 const chunk = <T>(arr: T[], size: number): T[][] =>
   [...Array(Math.ceil(arr.length / size))].map((_, i) => arr.slice(size * i, size + size * i));
 
-export function start(stage: Stage) {
+export function settings(stage: Stage) {
   if (!(stage instanceof Start)) throw new Error(`expect Start but receive ${stage.name}`);
 
   const characters = stage.getCharacters().reduce(
@@ -102,7 +103,6 @@ export function start(stage: Stage) {
   }
 
   rows.push(row(t(stage.werewolvesKnowEachOthers ? `WerewolvesDontKnowEachOthers` : `WerewolvesDontKnowEachOthers`)));
-  rows.push(row(t(`Friendship`)));
 
   return tableMessage({
     title: [centeredText(t(`SetupCompleted`))],
@@ -120,7 +120,7 @@ export function players(stage: Stage) {
     buttons.push(secondaryButton(messageAction(t('StartButton'), t('Start'))));
   else {
     buttons.push(
-      wrapAndCenterText(t(`NoEnoughPlayers`, 6), { margin: 'xl', size: 'sm' }),
+      wrapAndCenterText(t(`NoEnoughPlayers`, stage.minPlayers), { margin: 'xl', size: 'sm' }),
       wrapedText(' ', { margin: 'none', size: 'xxs' })
     );
   }
@@ -137,6 +137,43 @@ export function players(stage: Stage) {
       ];
     }),
     buttons
+  });
+}
+
+export function start(game: Game) {
+  const characters = [...game.players].reduce(
+    (result, [, c]) => ({
+      ...result,
+      [c.name]: (result[c.name] || 0) + 1
+    }),
+    {} as Record<string, number>
+  );
+
+  const entries = Object.entries(characters);
+  const charactersRows = entries.reduce(
+    (cols, [name, count], i) => [
+      ...cols,
+      wrapedText(name, { flex: 3, align: 'start' }),
+      wrapedText('x' + count, { flex: 1, align: 'end' }),
+      ...(i % 2 === 0 ? [wrapedText(' ', { flex: 1, align: 'end' })] : [])
+    ],
+    [] as Payload[]
+  );
+
+  if (entries.length % 2 !== 0) {
+    charactersRows.push(wrapedText(' ', { flex: 3, align: 'start' }), wrapedText(' ', { flex: 1, align: 'end' }));
+  }
+
+  return tableMessage({
+    title: [wrapAndCenterText(t(`StartBoard`))],
+    rows: [
+      [wrapAndCenterText(t(`StartBoardCharacters`))],
+      ...chunk(charactersRows, 5),
+      [wrapedText(t(`StartBoardDesc`, t('MyCharacter')))],
+      [wrapedText(t(`StartBoardDesc2`, t('NextShort'), t(`Skip`)))],
+      [wrapAndCenterText(t(`Friendship`))]
+    ],
+    buttons: [primaryButton(sendTextToBot(t(`MyCharacter`)))]
   });
 }
 

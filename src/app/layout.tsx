@@ -14,6 +14,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#ffffff" />
+        <meta name="description" content="提供遊戲輔助功能的聊天軟件機器人" />
         <title>遊戲機器人</title>
       </head>
       <body>

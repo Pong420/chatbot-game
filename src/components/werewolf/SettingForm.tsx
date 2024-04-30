@@ -9,6 +9,15 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormField } from '@/components/ui/form';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from '@/components/ui/alert-dialog';
 import { createLocalStorage } from '@/utils/storage';
 import { CharacterSelectorProps, CharacterSelector } from './CharacterSelector';
 
@@ -46,6 +55,8 @@ export function SettingForm({ isLineClient, characters, onSubmit }: SettingFormP
     defaultValues: { ...defaultValues }
   });
 
+  const [alert, showAlert] = useState<{ title?: string; message: string; confirm?: string }>();
+
   const { watch, reset } = form;
   useEffect(() => {
     setLoaded(true);
@@ -76,8 +87,12 @@ export function SettingForm({ isLineClient, characters, onSubmit }: SettingFormP
           await liff.init({ liffId });
           const { userId } = await liff.getProfile();
           await submit(userId, formdata);
-          await liff.sendMessages([{ type: 'text', text: '狼人殺設定完畢' }]);
-          return liff.closeWindow();
+          try {
+            await liff.sendMessages([{ type: 'text', text: '狼人殺設定完畢' }]);
+            return liff.closeWindow();
+          } catch (error) {
+            showAlert({ message: '發送訊息失敗，請關閉視窗並手動輸入「狼人殺設定完畢」以繼續遊戲' });
+          }
         }
       } catch (error) {
         setError(error && typeof error == 'object' && 'message' in error ? (error['message'] as string) : undefined);
@@ -116,7 +131,7 @@ export function SettingForm({ isLineClient, characters, onSubmit }: SettingFormP
   const _error = Object.values(form.formState.errors).filter(Boolean)[0] || error;
 
   return (
-    <form className="max-w-screen-sm mx-auto p-4 flex flex-col" onSubmit={handleSubmit}>
+    <form className="max-w-screen-sm mx-auto p-4 flex flex-col min-h-full" onSubmit={handleSubmit}>
       <div className="flex flex-col gap-4">
         {!!_error && (
           <div className="bg-destructive text-destructive-foreground pt-3 p-4 rounded-md shadow-md">
@@ -171,6 +186,20 @@ export function SettingForm({ isLineClient, characters, onSubmit }: SettingFormP
           確認
         </Button>
       </div>
+
+      {alert && (
+        <AlertDialog open={!!alert} onOpenChange={open => !open && showAlert(undefined)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{alert?.title || '發生錯誤'}</AlertDialogTitle>
+              <AlertDialogDescription>{alert?.message}</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogAction>{alert?.confirm || '確認'}</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </form>
   );
 }

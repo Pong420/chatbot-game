@@ -5,11 +5,8 @@ import { withContentlayer } from 'next-contentlayer2';
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
 
-  exportPathMap() {
-    return {
-      '/privacy': { page: '/docs/privacy' },
-      '/term-of-use': { page: '/docs/term-of-use' },
-    };
+  async rewrites() {
+    return ['privacy', 'term-of-use'].map(s => ({ source: `/${s}`, destination: `/docs/${s}` }));
   },
 
   webpack(config, { webpack }) {

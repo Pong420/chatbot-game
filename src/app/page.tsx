@@ -1,11 +1,10 @@
-import Image from 'next/image';
 import Link from 'next/link';
-import logo from '@/assets/logo.png';
 import { Card, CardDescription, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { Logo } from '@/components/Logo';
 
 function Feature({ title = '', description = '', path = '' }) {
-  const containerClassName = cn('lg:basis-3/12', 'w-full', 'select-none');
+  const containerClassName = cn('lg:basis-3/12', 'w-full');
 
   const content = (
     <Card className={cn('h-full flex flex-col')}>
@@ -36,9 +35,9 @@ function Feature({ title = '', description = '', path = '' }) {
 
 export default function Home() {
   return (
-    <div className="container max-w-8xl min-h-full pt-12 md:pt-30 pb-10">
+    <div className="container max-w-8xl min-h-full pt-12 md:pt-30 pb-10 select-none">
       <div className="text-center">
-        <Image src={logo} alt="logo" width={100} className="block m-auto" />
+        <Logo width={100} className="block m-auto" />
         <div className="mt-2 text-lg text-foreground">遊戲機器人</div>
         <div className="text-muted-foreground">提供遊戲輔助功能的聊天軟件機器人</div>
       </div>

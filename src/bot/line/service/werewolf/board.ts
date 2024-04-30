@@ -241,7 +241,8 @@ export function daytime(stage: Stage) {
   }
 }
 
-export function vote(stage: Stage) {
+export function vote(game: Game) {
+  const { stage } = game;
   if (!(stage instanceof VoteBaseStage)) return null;
 
   return tableMessage({
@@ -249,7 +250,8 @@ export function vote(stage: Stage) {
       wrapAndCenterText(t(`VoteBoard`, stage.voted.length, stage.voter.length)),
       wrapAndCenterText(t(`ClickToVote`))
     ],
-    rows: Array.from(stage.candidates, ([name, list]): Payload[] => {
+    rows: Array.from(stage.candidates, ([id, list]): Payload[] => {
+      const name = game.getPlayer(id).nickname;
       return [
         wrapedText(name, { flex: 9, action: messageAction(t.regex(`Vote`, name)) }),
         createFlexText({ flex: 0, align: 'end' })(String(list.length))
@@ -259,7 +261,8 @@ export function vote(stage: Stage) {
   });
 }
 
-export function revote(stage: Stage) {
+export function revote(game: Game) {
+  const { stage } = game;
   if (!(stage instanceof VoteBaseStage)) return null;
 
   return tableMessage({
@@ -267,7 +270,8 @@ export function revote(stage: Stage) {
       wrapAndCenterText(t(`ReVoteBoard`, stage.voted.length, stage.voter.length)),
       wrapAndCenterText(t(`ClickToVote`))
     ],
-    rows: Array.from(stage.candidates, ([name, list]): Payload[] => {
+    rows: Array.from(stage.candidates, ([id, list]): Payload[] => {
+      const name = game.getPlayer(id).nickname;
       return [
         wrapedText(name, { flex: 9, action: messageAction(t.regex(`Vote`, name)) }),
         createFlexText({ flex: 0, align: 'end' })(String(list.length))

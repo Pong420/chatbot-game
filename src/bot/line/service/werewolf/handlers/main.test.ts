@@ -101,9 +101,9 @@ test('main', async () => {
 
   // Vote --------------------------------------------------------------------------------
 
-  await next(() => board.vote(game.stage));
+  await next(() => board.vote(game));
   await host.g(t(`WhoNotVoted`)).toEqual(board.notVoted(stage));
-  await next(() => board.vote(game.stage));
+  await next(() => board.vote(game));
   await allVoteTo(werewolfs[3]);
 
   // Voted --------------------------------------------------------------------------------
@@ -156,7 +156,7 @@ test('main', async () => {
 
   // Vote --------------------------------------------------------------------------------
 
-  await next(() => board.vote(game.stage));
+  await next(() => board.vote(game));
   await allVoteTo(predictor);
 
   // Voted --------------------------------------------------------------------------------
@@ -182,7 +182,7 @@ test('main', async () => {
 
   // Vote --------------------------------------------------------------------------------
 
-  await next(() => board.vote(stage));
+  await next(() => board.vote(game));
   await allVoteTo(villagers[1]);
 
   // Voted --------------------------------------------------------------------------------

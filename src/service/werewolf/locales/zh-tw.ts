@@ -95,7 +95,7 @@ export const HunterCommand = {
 };
 
 export const CommonCommand = {
-  Intro: '狼人殺介紹',
+  // Intro: '狼人殺介紹',
   MyCharacter: `我的狼人殺角色`,
   Vote: `^我投(.*)`,
   Waive: `棄權`

@@ -149,7 +149,7 @@ export function testSuite() {
     for (const survivor of survivors) {
       const event = await survivor.gr(t.regex(`Vote`, character.name));
       await update();
-      expect(event).toEqual(board.vote(game.stage));
+      expect(event).toEqual(board.vote(game));
     }
   };
 
@@ -157,7 +157,7 @@ export function testSuite() {
     for (const survivor of survivors) {
       const event = await survivor.gr(t.regex(`Waive`));
       await update();
-      expect(event).toEqual(board.vote(game.stage));
+      expect(event).toEqual(board.vote(game));
     }
   };
 

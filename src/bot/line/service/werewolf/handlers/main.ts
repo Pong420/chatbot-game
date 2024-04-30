@@ -46,12 +46,12 @@ export const mainHandlers = [
   createHandler(Group, IsCharacter({ target: t(`Vote`) }), async ({ game, target, character }) => {
     character.vote(target);
     await updateGame(game);
-    return board.vote(game.stage);
+    return board.vote(game);
   }),
   createHandler(Group, TextEqual(t(`Waive`)), IsPlayer, async ({ game, character }) => {
     character.waive();
     await updateGame(game);
-    return board.vote(game.stage);
+    return board.vote(game);
   }),
   createHandler(LeaveGroup, WerewolfGame, async (event, game) => {
     await Promise.all(Array.from(game.players, ([id]) => updateUser(id, { game: null }).catch(() => void 0)));

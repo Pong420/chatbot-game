@@ -33,8 +33,8 @@ export function getStageMessage(game: Werewolf) {
   if (stage instanceof Hunter) return board.hunterGroup();
   if (stage instanceof HunterEnd) return board.hunterEnd(stage);
   if (stage instanceof Daytime) return board.daytime(stage);
-  if (stage instanceof Vote) return board.vote(stage);
-  if (stage instanceof ReVote) return board.revote(stage);
+  if (stage instanceof Vote) return board.vote(game);
+  if (stage instanceof ReVote) return board.revote(game);
   if (stage instanceof Voted) return board.voted(stage);
   if (stage instanceof End) return board.end(stage);
 }

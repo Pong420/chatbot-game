@@ -1,9 +1,23 @@
 import { readdirSync } from 'fs';
+import { withContentlayer } from 'next-contentlayer2';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+
+  exportPathMap() {
+    return {
+      '/privacy': { page: '/docs/privacy' },
+      '/term-of-use': { page: '/docs/term-of-use' },
+    };
+  },
+
   webpack(config, { webpack }) {
+    // ----- require.context ------
+
     config.plugins.push(new webpack.ContextExclusionPlugin(/test\.ts$/));
+
+    // ----- SVG ------
 
     // Grab the existing rule that handles SVG imports
     const fileLoaderRule = config.module.rules.find(rule => rule.test?.test?.('.svg'));
@@ -40,4 +54,4 @@ const nextConfig = {
   }
 };
 
-export default nextConfig;
+export default withContentlayer(nextConfig);

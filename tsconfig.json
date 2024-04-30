@@ -28,13 +28,15 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".",
     "paths": {
+      "contentlayer/generated": ["./.contentlayer/generated"],
       "@werewolf/*": ["./src/service/werewolf/*"],
       "@line/*": ["./src/bot/line/*"],
       "@service/*": ["./src/service/*"],
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", ".contentlayer/generated"],
   "exclude": ["node_modules"]
 }

@@ -89,7 +89,7 @@ export default async function DocPage({ params }: DocPageProps) {
   const globals = { ...messages, tRegex };
 
   return (
-    <main className="max-w-screen-md mx-auto p-6 flex flex-col">
+    <main className="max-w-screen-md w-full mx-auto p-6 flex flex-col flex-1">
       <div className="space-y-2">
         <h1 className={cn('scroll-m-20 text-4xl font-bold tracking-tight')}>{doc.title}</h1>
         {doc.date && (

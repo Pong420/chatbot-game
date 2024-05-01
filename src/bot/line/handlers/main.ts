@@ -22,5 +22,4 @@ export default [
       ]
     })
   )
-  // createHandler(UserId, TextEqual(t('GetUserId')), userId => userId)
 ];

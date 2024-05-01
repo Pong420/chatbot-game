@@ -29,7 +29,7 @@
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-toggle": "^1.0.3",
     "@radix-ui/react-tooltip": "^1.0.7",
-    "@supabase/supabase-js": "^2.42.7",
+    "@supabase/supabase-js": "^2.43.0",
     "class-transformer": "^0.5.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

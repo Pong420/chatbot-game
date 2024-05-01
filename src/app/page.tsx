@@ -40,21 +40,21 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-full">
       <Header />
-      <main className="container max-w-5xl flex-1  pt-12 md:pt-30 pb-10 select-none">
+      <main className="container max-w-5xl flex-1 pt-4 sm:pt-12 md:pt-30 pb-10 select-none">
         <div className="flex flex-col-reverse gap-4 mx-auto items-center text-center sm:flex-row sm:text-left sm:justify-between sm:items-start">
-          <div className="">
-            <h1 className="mt-2 sm:text-3xl text-foreground">遊戲機器人</h1>
+          <div>
+            <h1 className="mt-2 text-xl sm:text-3xl text-foreground">遊戲機器人</h1>
             <h2 className="text-md text-muted-foreground">提供遊戲輔助功能的聊天軟件機器人</h2>
-            <div className="flex mt-2">
+            <div className="flex mt-2 justify-center sm:justify-start">
               <Link href="https://lin.ee/pXH6asv" target="_blank">
                 <LineLogo width={30} />
               </Link>
             </div>
           </div>
-          <Logo width={150} className="block mr-10" style={{ transform: `scale(-1, 1)` }} />
+          <Logo width={150} className="block sm:mr-10" style={{ transform: `scale(-1, 1)` }} />
         </div>
 
-        <div className="flex flex-wrap gap-y-4 mt-20 justify-between">
+        <div className="flex flex-wrap gap-y-4 mt-4 sm:mt-20 justify-between">
           <Feature
             path="werewolf"
             title="狼人殺"

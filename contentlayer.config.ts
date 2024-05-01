@@ -28,6 +28,10 @@ export const Doc = defineDocumentType(() => ({
     date: {
       type: 'date',
       required: false
+    },
+    messages: {
+      type: 'string',
+      required: false
     }
   },
   computedFields: {

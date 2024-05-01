@@ -4,6 +4,7 @@ import { allDocs } from 'contentlayer/generated';
 import { format, parseISO } from 'date-fns';
 import { absoluteUrl, cn } from '@/lib/utils';
 import { Mdx } from '@/components/mdx-components';
+import '@/app/mdx.css';
 
 interface DocPageProps {
   params: {
@@ -56,12 +57,36 @@ export async function generateStaticParams(): Promise<DocPageProps['params'][]> 
   }));
 }
 
+function getLocale(type: string) {
+  switch (type) {
+    case 'line':
+      return import('@line/locales');
+    case 'werewolf':
+      return import('@werewolf/locales');
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const tRegex = (content: string, ...args: any[]) => {
+  content = content.replace(/^\^|\$$/, '');
+  for (const arg of args) {
+    content = content.replace('(.*)', arg);
+  }
+  return content;
+};
+
 export default async function DocPage({ params }: DocPageProps) {
   const doc = await getDocFromParams({ params });
 
   if (!doc) {
     notFound();
   }
+
+  const messages = await Promise.all(doc.messages?.split(',').map(getLocale) || []).then(modules =>
+    modules.reduce((r, m) => (m ? { ...r, ...m?.messages } : r), {} as Record<string, unknown>)
+  );
+
+  const globals = { ...messages, tRegex };
 
   return (
     <main className="max-w-screen-md mx-auto p-6 flex flex-col">
@@ -74,7 +99,7 @@ export default async function DocPage({ params }: DocPageProps) {
         )}
       </div>
       <div className="pb-12 pt-8">
-        <Mdx code={doc.body.code} />
+        <Mdx code={doc.body.code} globals={globals} />
       </div>
       {/* TODO: DocsPager*/}
     </main>

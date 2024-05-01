@@ -6,7 +6,10 @@ const nextConfig = {
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
 
   async rewrites() {
-    return ['privacy', 'term-of-use'].map(s => ({ source: `/${s}`, destination: `/docs/${s}` }));
+    return [
+      ...['privacy', 'term-of-use'].map(s => ({ source: `/${s}`, destination: `/docs/${s}` })),
+      { source: '/docs/werewolf', destination: '/docs/werewolf/flow' }
+    ];
   },
 
   webpack(config, { webpack }) {

@@ -1,5 +1,3 @@
-'use client';
-
 import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -132,10 +130,11 @@ const components = {
 
 interface MdxProps {
   code: string;
+  globals?: Record<string, unknown>;
 }
 
-export function Mdx({ code }: MdxProps) {
-  const Component = useMDXComponent(code, {});
+export async function Mdx({ code, globals }: MdxProps) {
+  const Component = useMDXComponent(code, globals);
 
   return (
     <div className="mdx">

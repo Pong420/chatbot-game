@@ -37,7 +37,7 @@ function tableMessage({ title = [], ...props }: CreateTableMessageProps) {
 
 export function initiate(id: number) {
   return tableMessage({
-    rows: orderList(t.paragraph('SettingsDesc', t.raw(`End`)[0])),
+    rows: orderList(t.paragraph('SettingsDesc', t(`NextShort`))),
     buttons: [
       primaryButton(messageAction(t(`UseDefaultSetup`), t(`SetupCompleted`))),
       secondaryButton(
@@ -114,12 +114,13 @@ export function settings(stage: Stage) {
 export function players(stage: Stage) {
   if (!(stage instanceof Start)) return;
 
-  const buttons: FlexComponent[] = [primaryButton(messageAction(t(`JoinButton`), t('Join')))];
+  const buttons: FlexComponent[] = [];
 
   if (stage.players.size >= stage.minPlayers)
-    buttons.push(secondaryButton(messageAction(t('StartButton'), t.raw('Start')[0])));
+    buttons.push(primaryButton(messageAction(t('StartButton'), t.raw('Start')[0])));
   else {
     buttons.push(
+      primaryButton(messageAction(t(`JoinButton`), t('Join'))),
       wrapAndCenterText(t(`NoEnoughPlayers`, stage.minPlayers), { margin: 'xl', size: 'sm' }),
       wrapedText(' ', { margin: 'none', size: 'xxs' })
     );

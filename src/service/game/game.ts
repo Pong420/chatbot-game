@@ -64,7 +64,7 @@ export async function getGame(id: string | number, options: GetGameOptions = {})
   }
 }
 
-export async function createGame(data: TablesInsert<'games'>) {
+export async function createGame({ id, ...data }: TablesInsert<'games'>) {
   const resp = await supabase.from('games').insert([data]).select().single().throwOnError();
   Object.assign(resp.data?.data as object, { id: resp.data?.id });
   return resp.data;

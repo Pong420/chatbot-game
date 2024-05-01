@@ -27,6 +27,9 @@ export const Game = <G extends GameInstance>(GameConstructor: GameConstructor<G>
   };
 };
 
+/**
+ * @deprecated
+ */
 export const CanStartGame = ({ timeout = 5 * 60 * 1000 } = {}) =>
   createFilter(GroupId, async groupId => {
     if (groupId === process.env.LINE_DEBUG_GROUP_ID) throw false;

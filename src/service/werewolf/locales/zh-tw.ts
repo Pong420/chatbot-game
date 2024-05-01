@@ -118,7 +118,7 @@ export default defineMessages(
     YouDead: '安息吧，你已經死了！',
     NotYourTurn: ['現在幹這件事不合適吧？'],
     NotYourTurn2: ['還不是你的回合'],
-    TargetIsDead: ['{0}已死亡，不重新選擇'],
+    TargetIsDead: ['{0}已死亡，請重新選擇'],
     TargetNoExists: ['{0}不存在，請檢查是否輸入錯誤'],
 
     VoteNotStarted: `現在不是投票時間`,
@@ -126,9 +126,7 @@ export default defineMessages(
     VoteOutOfRange: '{0}不在投票範圍',
 
     SettingsDesc: `
-      主持人需要不斷輸入指令推進遊戲
-      遊戲完結後需要輸入【{0}】來結束遊戲
-      否則5分鐘內其他人不能重新開啟遊戲
+      主持人需要不斷主動輸入【{0}】判斷玩家是否完成操作
       點擊下方按鈕，使用預設或者自選設定繼續遊戲
     `,
     UseDefaultSetup: `使用預設`,

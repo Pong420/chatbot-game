@@ -44,7 +44,7 @@ export async function setNickname(event: WebhookEvent, name: string) {
 
   try {
     await api.updateUser(user.userId, { nickname: name });
-    return t(`NickNameSuccess`);
+    return t(`NickNameSuccess`, name);
   } catch (error) {
     return t('NickNameFailed');
   }

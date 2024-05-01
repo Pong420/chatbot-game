@@ -1,7 +1,7 @@
 import { t as lt } from '@line/locales';
 import { createHandler } from '@line/handler';
-import { CanStartGame, Group, LeaveGroup, Single, TextEqual, User, UserId } from '@line/filter';
-import { createGame, GameStatus, updateGame, updateUser } from '@service/game';
+import { Group, GroupId, LeaveGroup, Single, TextEqual, User, UserId } from '@line/filter';
+import { createGame, endGame, GameStatus, getGame, updateGame, updateUser } from '@service/game';
 import { Werewolf } from '@werewolf/game';
 import { t } from '@werewolf/locales';
 import { Init, Start } from '@werewolf/stage';
@@ -10,13 +10,23 @@ import { getStageMessage } from './host';
 import * as board from '../board';
 
 export const mainHandlers = [
-  createHandler(UserId, TextEqual(t.raw('Initiate')), CanStartGame(), async (userId, groupId) => {
-    const game = Werewolf.create({ data: { groupId, host: userId } });
-    const data = await createGame({ groupId, type: Werewolf.type, status: GameStatus.OPEN, data: game.serialize() });
+  createHandler(GroupId, UserId, TextEqual(t.raw('Initiate')), async (groupId, userId) => {
+    let data = await getGame(groupId, { status: GameStatus.OPEN });
+    let game: Werewolf;
+
+    // if current game exists, turn it end
     if (data) {
-      game.id = data.id;
-      return getStageMessage(game);
+      game = Werewolf.create(data);
+      await endGame(game, game.players.keys());
     }
+
+    game = Werewolf.create({ data: { groupId, host: userId } });
+    data = await createGame({ groupId, type: Werewolf.type, status: GameStatus.OPEN, data: game.serialize() });
+
+    if (!data) throw false;
+
+    game.id = data.id;
+    return getStageMessage(game);
   }),
   createHandler(Group, TextEqual(t('Join')), User, WerewolfGame, async (user, game) => {
     if (user.game && user.game !== game.groupId) return lt(`JoinedOtherGroupsGame`, user.nickname);
@@ -25,20 +35,13 @@ export const mainHandlers = [
 
     game.stage.join({ id: user.userId, nickname: user.nickname });
 
-    let messages = getStageMessage(game);
-
-    if (game.players.size === game.stage.maxPlayers) {
-      game.next();
-      messages = board.start(game);
-    }
-
     await Promise.all([
       //
       updateUser(user.userId, { game: game.groupId }),
       updateGame(game)
     ]);
 
-    return messages;
+    return getStageMessage(game);
   }),
   createHandler(Single, TextEqual(t('MyCharacter')), IsPlayer, async ({ character }) => {
     return board.myCharacter(character);

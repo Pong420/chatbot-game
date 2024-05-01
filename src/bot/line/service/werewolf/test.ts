@@ -112,7 +112,6 @@ export function testSuite() {
     clientInOthersGroup.profile.userId = players[0].userId;
 
     await hostGroupMessage(t(`Initiate`), () => board.initiate(game.id));
-    await host.g(t(`Initiate`)).toEqual(textMessage(lt(`OtherGameRuning`, game.name)));
     expect(game.host).toBe(host.userId);
 
     await update();
@@ -132,13 +131,11 @@ export function testSuite() {
       if (client === host) continue;
       const event = await client.gr(t('Join'));
       await update();
-      if (game.players.size === 12) {
-        expect(event).toEqual(board.start(game));
-      } else {
-        expect(event).toEqual(board.players(stage));
-        await client.g(t('Join')).toEqual(textMessage(t(`Joined`, client.name)));
-      }
+      expect(event).toEqual(board.players(stage));
+      await client.g(t('Join')).toEqual(textMessage(t(`Joined`, client.name)));
     }
+
+    await hostGroupMessage(t(`Start`), () => board.start(game));
 
     await clientInOthersGroup.g(t(`Initiate`)).toMatchObject({ type: 'flex' });
     await clientInOthersGroup.g(t('Join')).toTextMessage(lt('JoinedOtherGroupsGame', clientInOthersGroup.name));

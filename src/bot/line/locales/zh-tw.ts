@@ -6,7 +6,7 @@ export const Commands = {
 
   NickNameIntro: '暱稱系統介紹',
   MyNickName: '我的暱稱',
-  SetNickName: '^/我的暱稱 (.*)'
+  SetNickName: '^設定暱稱 (.*)'
 };
 
 export const Replies = {
@@ -19,7 +19,7 @@ export const Replies = {
   NickNameContainBracket: '暱稱不能擁有 "「 " 和 " 」"',
   NickNameUsing: '你已經在使用「{0}」',
   NickNameFailed: '設定暱稱失敗，請嘗試別的暱稱或聯絡管理員',
-  NickNameSuccess: '暱稱設定成功',
+  NickNameSuccess: '設定成功，你是{0}',
   NickNameIntroResp: `
     暱稱只會在機器人相關回覆中顯示，例如遊戲期間
     如你未設定暱稱，使用機器人「部份」功能時，會記錄你LINE的暱稱，你修改LINE的暱稱後不會自動更新

@@ -153,10 +153,10 @@ export function getDeathReport(game: Game) {
       .reduce((rows, [, c]) => {
         let text = `${c.nickname} `;
         if (c.isDead) {
-          text += `死在`;
+          text += `死於`;
           text += c.causeOfDeath
             .map(cause => {
-              if (cause instanceof Voting) return `【${cause.percetage}%票】`;
+              if (cause instanceof Voting) return `【${cause.percetage}%得票率】`;
               else if (c.id === cause.userId) return `【自殺】`;
               else return `【${game.getPlayer(cause.userId).nickname}】手上`;
             })

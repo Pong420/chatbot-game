@@ -16,7 +16,7 @@ test('nickname', async () => {
   const nickname = `New Name`;
   const setNickName = (nickname: string) => client.s(t.regex('SetNickName', nickname));
 
-  await setNickName(nickname).toTextMessage(t('NickNameSuccess'));
+  await setNickName(nickname).toTextMessage(t('NickNameSuccess', nickname));
   await setNickName(nickname).toTextMessage(t('NickNameUsing', nickname));
   await setNickName('').toTextMessage(t('NickNameEmpty'));
   await setNickName(nanoid()).toTextMessage(t('NickNameMaxLength', maxLength));

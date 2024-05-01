@@ -8,6 +8,7 @@ export const GroupId = (event: WebhookEvent) => isGroupEvent(event) && event.sou
 export const MemberJoin = (event: WebhookEvent) =>
   event.type === 'memberJoined' && isGroupEvent(event) ? event : false;
 export const MemberLeft = (event: WebhookEvent) => (event.type === 'memberLeft' && isGroupEvent(event) ? event : false);
+export const JoinGroup = (event: WebhookEvent) => (event.type === 'join' && isGroupEvent(event) ? event : false);
 export const LeaveGroup = (event: WebhookEvent) => (event.type === 'leave' && isGroupEvent(event) ? event : false);
 
 export const DebugGroup = (event: WebhookEvent) =>

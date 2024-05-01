@@ -32,7 +32,15 @@ export const Replies = {
   OtherGameRuning: '{0}進行中，請先結束遊戲',
 
   ForceQuitGame: `強制退出遊戲`,
-  ForceQuitGameSucess: `好`
+  ForceQuitGameSucess: `好`,
+
+  TermOfUse: `使用條款`,
+  Privacy: `隱私政策`,
+  JoinGroupTitle: '溫馨提示',
+  JoinGroupMessage: `
+    嗨，感謝邀請，當您繼續使用本機器人時，即表示您已同意接受機器人的「使用條款」及「隱私政策」，
+    如您不同意，立即停止使用
+  `
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export

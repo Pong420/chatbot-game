@@ -10,7 +10,7 @@ messages: line
 2. 默認使用聊天軟件中的暱稱，之後可以隨時修改。
 3. 修改聊天軟件的暱稱後不會同步更新。
 
-## 基本規則
+## 限制
 
 1. 暱稱不能為空
 2. 暱稱長度不能多於 15 個字母，包括中英文
@@ -18,5 +18,5 @@ messages: line
 
 ## 指令
 
-1. 私聊機器人輸入「{MyNickName}」，查詢暱稱
-2. 私聊機器人輸入「{tRegex(SetNickName, '<新的暱稱>')}」，修改暱稱，例子：「{tRegex(SetNickName, 'Pong')}」。
+1. 群組或私聊機器人輸入「{MyNickName}」查詢暱稱
+2. 群組或私聊機器人輸入「{tRegex(SetNickName, '<新的暱稱>')}」修改暱稱，例子：「{tRegex(SetNickName, 'Pong')}」，注意，名字前面要有空格

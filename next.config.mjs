@@ -7,7 +7,7 @@ const nextConfig = {
 
   async rewrites() {
     return [
-      ...['privacy', 'term-of-use'].map(s => ({ source: `/${s}`, destination: `/docs/${s}` })),
+      ...['privacy', 'term-of-use', 'contact'].map(s => ({ source: `/${s}`, destination: `/docs/${s}` })),
       { source: '/docs/werewolf', destination: '/docs/werewolf/flow' }
     ];
   },

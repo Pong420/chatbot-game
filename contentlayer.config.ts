@@ -3,6 +3,16 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 
+export const Category = defineDocumentType(() => ({
+  name: 'Category',
+  contentType: 'data',
+  filePathPattern: `**/_category_.json`,
+  fields: {
+    label: { type: 'string', required: true }
+  },
+  computedFields: {}
+}));
+
 export const Doc = defineDocumentType(() => ({
   name: 'Doc',
   filePathPattern: `**/*.mdx`,
@@ -32,7 +42,9 @@ export const Doc = defineDocumentType(() => ({
     messages: {
       type: 'string',
       required: false
-    }
+    },
+    navbar: { type: 'boolean', default: true },
+    navbarPosition: { type: 'number', default: 99999 }
   },
   computedFields: {
     slug: {
@@ -48,7 +60,7 @@ export const Doc = defineDocumentType(() => ({
 
 export default makeSource({
   contentDirPath: './docs',
-  documentTypes: [Doc],
+  documentTypes: [Doc, Category],
   mdx: {
     remarkPlugins: [remarkGfm],
     rehypePlugins: [

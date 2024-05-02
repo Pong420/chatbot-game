@@ -85,7 +85,8 @@ const components = {
   code: ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => (
     <code className={cn('relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm', className)} {...props} />
   ),
-  Image,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Image: (props: any) => <Image alt="image" {...props} />,
   AspectRatio,
   Step: ({ className, ...props }: React.ComponentProps<'h3'>) => (
     <h3 className={cn('font-heading mt-8 scroll-m-20 text-xl font-semibold tracking-tight', className)} {...props} />

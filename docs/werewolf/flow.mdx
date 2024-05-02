@@ -1,10 +1,9 @@
 ---
-title: 狼人殺
+title: 玩法/流程
 description: 在群組發起狼人殺後，群組內的用戶即可參與遊戲，機器人會負責遊戲管理，派發角色，玩家通過私聊機器人進行操作，發起人(主持人)在群組輸入的查詢指令，判斷玩家是否完成操作，完成後機器人會回覆當前狀態
 messages: werewolf
+navbarPosition: 0
 ---
-
-## 玩法/流程
 
 <div className='flow-list'>
 
@@ -12,7 +11,12 @@ messages: werewolf
 
 2. 當群組有人人輸入「{Initiate[0]}」或「{Initiate[1]}」，發送者會被視為「主持人」，任何人重覆輸入將會覆蓋遊戲
 
-   <Image src="/assets/werewolf/flow/flow_2.jpg" width={400} height={331} className="m-auto" />
+   <Image
+     src="/assets/werewolf/flow/flow_2.jpg"
+     width={400}
+     height={331}
+     className="m-auto py-4 box-content bg-black"
+   />
 
 3. 主持人可以對遊戲進行設定，目前只支持自選角色。<br />
    P.S. 首次使用自選會彈出一個視窗並要求權限，你可以選擇拒絕授權發送信息權限，可以參考[使用條款](/term-of-use)。

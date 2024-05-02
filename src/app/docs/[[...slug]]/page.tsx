@@ -5,6 +5,7 @@ import { format, parseISO } from 'date-fns';
 import { absoluteUrl, cn } from '@/lib/utils';
 import { Mdx } from '@/components/mdx-components';
 import '@/app/mdx.css';
+import { DocNavBar } from '@/components/DocNavBar';
 
 interface DocPageProps {
   params: {
@@ -67,13 +68,13 @@ function getLocale(type: string) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const tRegex = (content: string, ...args: any[]) => {
+function tRegex(content: string, ...args: any[]) {
   content = content.replace(/^\^|\$$/, '');
   for (const arg of args) {
     content = content.replace('(.*)', arg);
   }
   return content;
-};
+}
 
 export default async function DocPage({ params }: DocPageProps) {
   const doc = await getDocFromParams({ params });
@@ -89,19 +90,22 @@ export default async function DocPage({ params }: DocPageProps) {
   const globals = { ...messages, tRegex };
 
   return (
-    <main className="max-w-screen-md w-full mx-auto p-6 flex flex-col flex-1">
-      <div className="space-y-2">
-        <h1 className={cn('scroll-m-20 text-4xl font-bold tracking-tight')}>{doc.title}</h1>
-        {doc.date && (
-          <time dateTime={doc.date} className="mb-1 text-xs text-muted-foreground">
-            最後更新時間: {format(parseISO(doc.date), 'LLLL d, yyyy')}
-          </time>
-        )}
+    <main className="container flex-1 items-start flex max-w-screen-xl">
+      <DocNavBar />
+      <div className="flex-1">
+        <div className="py-6 pr-6 lg:py-8">
+          <h1 className={cn('scroll-m-20 text-4xl font-bold tracking-tight')}>{doc.title}</h1>
+          {doc.date && (
+            <time dateTime={doc.date} className="mb-1 text-xs text-muted-foreground">
+              最後更新時間: {format(parseISO(doc.date), 'LLLL d, yyyy')}
+            </time>
+          )}
+        </div>
+        <div className="pb-12 pt-8">
+          <Mdx code={doc.body.code} globals={globals} />
+        </div>
+        {/* TODO: DocsPager*/}
       </div>
-      <div className="pb-12 pt-8">
-        <Mdx code={doc.body.code} globals={globals} />
-      </div>
-      {/* TODO: DocsPager*/}
     </main>
   );
 }

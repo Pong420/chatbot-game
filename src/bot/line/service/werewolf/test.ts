@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { expect, vi } from 'vitest';
 import { nanoid } from 'nanoid';
@@ -6,11 +7,10 @@ import { t as lt } from '@line/locales';
 import { textMessage } from '@line/utils/createMessage';
 import { characters } from '@werewolf/character';
 import { GameSettingOption, Werewolf as Game } from '@werewolf/game';
-import { Stage } from '@werewolf/stage';
+import { Stage, Start } from '@werewolf/stage';
 import { Character, Villager, Werewolf, Hunter, Guard, Predictor, Witcher } from '@werewolf/character';
 import { t } from '@werewolf/locales';
 import { GameStatus, getGame, getUser, updateGame, User } from '@service/game';
-import { getStageMessage } from './handlers/host';
 import { default as handlers } from './handler';
 import * as board from './board';
 
@@ -89,15 +89,15 @@ export function testSuite() {
     witcher = witchers[0];
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const hostGroupMessage = async (message: string, paylaod: any) => {
-    const event = await host.gr(message);
+  const groupMessage = async (player: WerewolfPlayer, message: string, paylaod: any) => {
+    const event = await player.gr(message);
     await update();
     expect(event).toEqual(typeof paylaod === 'function' ? paylaod() : paylaod);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const hostGroupMessage = async (message: string, paylaod: any) => groupMessage(host, message, paylaod);
   const next = async (paylaod: any) => hostGroupMessage(t(`Next`), paylaod);
+  const anyGroupMessage = (player: WerewolfPlayer, payload: any) => groupMessage(player, nanoid(), payload);
 
   const createGame = async ({ customCharacters, numOfPlayers }: CreateGameOptions = {}) => {
     numOfPlayers = numOfPlayers || customCharacters?.length || 12;
@@ -133,26 +133,28 @@ export function testSuite() {
       await update();
       expect(event).toEqual(board.players(stage));
       await client.g(t('Join')).toEqual(textMessage(t(`Joined`, client.name)));
+
+      // this check autoMode won't start the game
+      await anyGroupMessage(client, undefined);
+      expect(game.stage).toBeInstanceOf(Start);
     }
 
     await clientInOthersGroup.g(t(`Initiate`)).toMatchObject({ type: 'flex' });
     await clientInOthersGroup.g(t('Join')).toTextMessage(lt('JoinedOtherGroupsGame', clientInOthersGroup.name));
     await clientInOthersGroup.gr(t('End'));
+
+    await update();
   };
 
   const allVoteTo = async (character: WerewolfPlayer) => {
     for (const survivor of survivors) {
-      const event = await survivor.gr(t.regex(`Vote`, character.name));
-      await update();
-      expect(event).toEqual(board.vote(game));
+      await groupMessage(survivor, t.regex(`Vote`, character.name), () => board.vote(game));
     }
   };
 
   const allWaive = async () => {
     for (const survivor of survivors) {
-      const event = await survivor.gr(t.regex(`Waive`));
-      await update();
-      expect(event).toEqual(board.vote(game));
+      await groupMessage(survivor, t.regex(`Waive`), () => board.vote(game));
     }
   };
 
@@ -164,5 +166,15 @@ export function testSuite() {
     );
   };
 
-  return { createGame, next, hostGroupMessage, update, getPlayersByCharacter, allVoteTo, allWaive, ended };
+  return {
+    createGame,
+    next,
+    update,
+    allVoteTo,
+    allWaive,
+    ended,
+    groupMessage,
+    hostGroupMessage,
+    anyGroupMessage
+  };
 }

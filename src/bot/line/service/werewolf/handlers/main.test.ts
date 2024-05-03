@@ -33,7 +33,7 @@ test('start', async () => {
 });
 
 test('main', async () => {
-  const { createGame, next, allVoteTo, ended } = testSuite();
+  const { createGame, next, allVoteTo, ended, hostGroupMessage, anyGroupMessage } = testSuite();
   await createGame({
     customCharacters: [
       'Werewolf',
@@ -50,6 +50,8 @@ test('main', async () => {
       'Villager'
     ]
   });
+
+  await hostGroupMessage(t(`Start`), () => board.start(game)); // should be same as /next
 
   // Guard --------------------------------------------------------------------------------
 
@@ -76,7 +78,7 @@ test('main', async () => {
 
   // Witcher --------------------------------------------------------------------------------
 
-  await next(board.witcherGroup());
+  await anyGroupMessage(werewolfs[0], board.witcherGroup());
 
   await witcher.s(t(`IamWitcher`)).toEqual(board.rescue(stage));
   await witcher.s(t(`ShowRescueBoard`)).toEqual(board.rescue(stage));
@@ -101,7 +103,7 @@ test('main', async () => {
 
   // Vote --------------------------------------------------------------------------------
 
-  await next(() => board.vote(game));
+  await anyGroupMessage(werewolfs[0], () => board.vote(game));
   await host.g(t(`WhoNotVoted`)).toEqual(board.notVoted(stage));
   await next(() => board.vote(game));
   await allVoteTo(werewolfs[3]);

@@ -1,7 +1,7 @@
 import { Exclude, Transform, TransformationType, instanceToPlain, plainToInstance } from 'class-transformer';
 import { Constructable } from '@/types';
 import { Character, characterMap, characterNameMap } from '../character';
-import { Game } from '../game';
+import { type Game } from '../game';
 
 export class Stage {
   static available?(stage: Stage): typeof Stage | undefined;

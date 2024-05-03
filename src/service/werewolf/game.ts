@@ -28,7 +28,7 @@ export interface CreateGame {
 }
 
 export interface GameSettingOption {
-  autoReply?: boolean;
+  autoMode?: boolean;
   werewolvesKnowEachOthers?: boolean;
   customCharacters?: CharacterKey[];
 }
@@ -54,7 +54,7 @@ export class Game extends GameInstance {
 
   host: string; // host's userId;
 
-  autoReply = true;
+  autoMode = true;
 
   @Type(() => Stage, {
     keepDiscriminatorProperty: true,

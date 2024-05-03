@@ -4,7 +4,9 @@ import { ComputedFields, defineDocumentType, makeSource } from 'contentlayer2/so
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
-import word from 'words-count';
+import * as wc from 'words-count';
+
+const { wordsCount } = wc['default'] as unknown as typeof import('words-count');
 
 const slugFields = (): ComputedFields => ({
   slug: {
@@ -20,13 +22,19 @@ const slugFields = (): ComputedFields => ({
 const getDescription = (content: string, length: number) => {
   content = content.trim();
   length = Math.min(content.length, length);
+
+  const total = wordsCount(content);
   let result = content.slice(0, length);
   let i = 0;
-  // @ts-ignore ignore
-  while (word.wordsCount(result) < length) {
+  while (wordsCount(result) < length) {
     i++;
     result = content.slice(0, length + i);
   }
+
+  if (length < total) {
+    result += '...';
+  }
+
   return result;
 };
 

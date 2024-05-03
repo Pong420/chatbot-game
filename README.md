@@ -2,12 +2,6 @@
 
 ## Werewolf
 
-[ ] Website
-
-    [ ] Settings
-    [ ] Documentation
-    [ ] Game Room
-
 - TODO:
   - check group members
     - leave if too many people?
@@ -16,8 +10,6 @@
     - werewolves know each other
       - kill one or idle
   - debounce response
-  - t&c
-  - documentation
 
 ## Development
 

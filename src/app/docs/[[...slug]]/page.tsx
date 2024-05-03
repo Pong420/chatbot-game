@@ -4,8 +4,8 @@ import { allDocs } from 'contentlayer/generated';
 import { format, parseISO } from 'date-fns';
 import { absoluteUrl, cn } from '@/lib/utils';
 import { Mdx } from '@/components/mdx-components';
+import { DocNavBar } from '@/components/DocNav/DocNavBar';
 import '@/app/mdx.css';
-import { DocNavBar } from '@/components/DocNavBar';
 
 interface DocPageProps {
   params: {
@@ -101,7 +101,7 @@ export default async function DocPage({ params }: DocPageProps) {
             </time>
           )}
         </div>
-        <div className="pb-12 pt-8">
+        <div className="pb-12 pt-0">
           <Mdx code={doc.body.code} globals={globals} />
         </div>
         {/* TODO: DocsPager*/}

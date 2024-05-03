@@ -71,7 +71,7 @@ test('main', async () => {
     await werewolf.s(t.regex(`Kill`, villagers[0].name)).toTextMessage(t(`TurnEnded`));
   }
 
-  await werewolfs.slice(-1)[0].s(t(`Idle`)).toTextMessage(t(`WerewolfIdleSuccess`));
+  await werewolfs.slice(-1)[0].s(t(`Idle`)).toTextMessage(t(`IdleSuccess`));
 
   await hunter.s(t(`IamHunter`)).toTextMessage(t(`NotYourTurn2`));
   await hunter.s(t.regex(`Shoot`, werewolfs[0].name)).toTextMessage(t(`NotReadyForShoot`));
@@ -123,7 +123,7 @@ test('main', async () => {
 
   await next(board.werewolfGroup());
   await werewolfs[0].s(t.regex(`Kill`, hunter.name)).toTextMessage(t(`KillSuccss`));
-  await werewolfs[1].s(t.regex(`Idle`)).toTextMessage(t(`WerewolfIdleSuccess`));
+  await werewolfs[1].s(t.regex(`Idle`)).toTextMessage(t(`IdleSuccess`));
   await werewolfs[2].s(t.regex(`Suicide`)).toTextMessage(t(`SuicideSuccss`));
 
   // Witcher --------------------------------------------------------------------------------

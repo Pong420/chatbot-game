@@ -39,7 +39,7 @@ export class Werewolf extends Character {
   idle() {
     if (this.hungry) throw t('Hungry');
     this.hungry = true;
-    return t('WerewolfIdleSuccess');
+    return t('IdleSuccess');
   }
 
   @Action(() => Night)

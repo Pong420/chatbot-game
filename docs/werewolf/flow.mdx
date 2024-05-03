@@ -5,66 +5,63 @@ messages: werewolf
 navbarPosition: 0
 ---
 
+export const imageClassName = 'm-auto py-4 box-content bg-[rgb(25,25,25)]';
+
 <div className='flow-list'>
 
 1. 你需要找到6 - 12位參與者，因為過程會造成嚴重洗頻，請建立一個獨立群組遊玩，然後將機器人加到群組
 
 2. 群組裡任何人輸入【{Initiate[0]}】或【{Initiate[1]}】，發送者會被視為【主持人】，任何人重覆輸入將會覆蓋遊戲
 
-   <Image
-     src="/assets/werewolf/flow/flow_2.jpg"
-     width={400}
-     height={331}
-     className="m-auto py-4 box-content bg-black"
-   />
+   <Image src="/assets/werewolf/flow/flow_2.jpg" width={400} height={331} className={imageClassName} />
 
 3. 主持人可以對遊戲進行設定，目前只支持自選角色。<br />
    P.S. 首次使用自選會彈出一個視窗並要求權限，你可以選擇拒絕授權，然後手動發送信息，可以參考[使用條款](/term-of-use)。
 
-   <Image src="/assets/werewolf/flow/flow_3.jpg" width={400} height={376} className="m-auto" />
+   <Image src="/assets/werewolf/flow/flow_3.jpg" width={400} height={376} className={imageClassName} />
 
 4. 點擊參加按鈕或者直接輸入【{Join}】 即可參與，名字乃隨機生成，如有雷同，實屬緣份。
 
-   <Image src="/assets/werewolf/flow/flow_4.jpg" width={400} height={614} className="m-auto" />
+   <Image src="/assets/werewolf/flow/flow_4.jpg" width={400} height={614} className={imageClassName} />
 
 5. 主持人點擊【開始遊戲】或直接輸入【{Start[0]}】或【{Start[1]}】，參與者點擊【{MyCharacter}】將會直接跳轉到機器人私聊頁面，按下發送。
 
-   <Image src="/assets/werewolf/flow/flow_5.jpg" width={400} height={478} className="m-auto" />
+   <Image src="/assets/werewolf/flow/flow_5.jpg" width={400} height={478} className={imageClassName} />
 
 6. 機器人會回覆你的角色，查看角色後請回到群組。
 
-   <Image src="/assets/werewolf/flow/flow_6.jpg" width={400} height={86} className="m-auto" />
+   <Image src="/assets/werewolf/flow/flow_6.jpg" width={400} height={86} className={imageClassName} />
 
 7. 主持人輸入【{NextShort}】進入下一回合，和查看角色的操作一樣，守衛可以點擊按鈕跳轉到私聊頁面，按下發送。
 
-   <Image src="/assets/werewolf/flow/flow_7.jpg" width={400} height={239} className="m-auto" />
+   <Image src="/assets/werewolf/flow/flow_7.jpg" width={400} height={239} className={imageClassName} />
 
 8. 只要是你的回合，私聊機器說出你的身份，即會回覆你對應的操作介面。
 
-   <Image src="/assets/werewolf/flow/flow_8.jpg" width={400} height={625} className="m-auto" />
+   <Image src="/assets/werewolf/flow/flow_8.jpg" width={400} height={625} className={imageClassName} />
 
 9. 等待角色操作期間，自動模式下，機器人收到任何群組訊息，或主持人輸入【{NextShort}】，機器人都會檢查是否可以進入下一回合，並回覆對應的信息
 
-   <Image src="/assets/werewolf/flow/flow_9.jpg" width={400} height={239} className="m-auto" />
+   <Image src="/assets/werewolf/flow/flow_9.jpg" width={400} height={239} className={imageClassName} />
 
 10. 所有角色完成操作，天亮了，死者遺言等規則請自行決定。
 
-    <Image src="/assets/werewolf/flow/flow_10.jpg" width={400} height={216} className="m-auto" />
+    <Image src="/assets/werewolf/flow/flow_10.jpg" width={400} height={216} className={imageClassName} />
 
 11. 接著進入投票環節，票數最多的會被處死，平票將進入下一輪投票環節，平票者不能投票，再次平票則完結投票環節。
 
-    <Image src="/assets/werewolf/flow/flow_11.jpg" width={400} height={646} className="m-auto" />
+    <Image src="/assets/werewolf/flow/flow_11.jpg" width={400} height={646} className={imageClassName} />
 
 12. 投票結束，公佈死者。
 
-    <Image src="/assets/werewolf/flow/flow_12.jpg" width={400} height={178} className="m-auto" />
+    <Image src="/assets/werewolf/flow/flow_12.jpg" width={400} height={178} className={imageClassName} />
 
 13. 最後遊戲結束，狼人勝利。
 
-    <Image src="/assets/werewolf/flow/flow_13.jpg" width={400} height={301} className="m-auto" />
+    <Image src="/assets/werewolf/flow/flow_13.jpg" width={400} height={301} className={imageClassName} />
 
 14. 主持人可以請求死亡報告。
 
-    <Image src="/assets/werewolf/flow/flow_14.jpg" width={400} height={763} className="m-auto" />
+    <Image src="/assets/werewolf/flow/flow_14.jpg" width={400} height={763} className={imageClassName} />
 
 </div>

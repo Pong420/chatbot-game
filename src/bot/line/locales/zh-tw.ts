@@ -11,7 +11,6 @@ export const Commands = {
 
 export const Replies = {
   SystemError: '系統錯誤',
-
   GetUserIdFailed: '無法取得UserId',
 
   NickNameMaxLength: '暱稱不能多於{0}個字母，包括中英文',
@@ -21,9 +20,8 @@ export const Replies = {
   NickNameFailed: '設定暱稱失敗，請嘗試別的暱稱或聯絡作者',
   NickNameSuccess: '設定成功，你是【{0}】',
 
-  JoinedOtherGroupsGame: `{0}已參加了其他群組的遊戲`,
   OtherGameRuning: '{0}進行中，請先結束遊戲',
-
+  JoinedOtherGroupsGame: `{0}已參加了其他群組的遊戲`,
   ForceQuitGame: `強制退出遊戲`,
   ForceQuitGameSucess: `好`,
 

@@ -1,14 +1,49 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { defineDocumentType, makeSource } from 'contentlayer2/source-files';
+import { ComputedFields, defineDocumentType, makeSource } from 'contentlayer2/source-files';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 
+const slugFields = (): ComputedFields => ({
+  slug: {
+    type: 'string',
+    resolve: doc => `/${doc._raw.flattenedPath}`
+  },
+  slugAsParams: {
+    type: 'string',
+    resolve: doc => doc._raw.flattenedPath.split('/').slice(1).join('/')
+  }
+});
+
+export const Post = defineDocumentType(() => ({
+  name: 'Post',
+  contentType: 'mdx',
+  filePathPattern: `posts/**/*.mdx`,
+  fields: {
+    title: {
+      type: 'string',
+      required: true
+    }
+  },
+  computedFields: {
+    ...slugFields(),
+    date: {
+      type: 'date',
+      resolve: doc => new Date(path.basename(doc._raw.sourceFileName, '.mdx')).toISOString()
+    },
+    description: {
+      type: 'string',
+      // TODO: pick 100 words instead of length
+      resolve: doc => doc.body.raw.slice(0, 100)
+    }
+  }
+}));
+
 export const Category = defineDocumentType(() => ({
   name: 'Category',
   contentType: 'data',
-  filePathPattern: `**/_category_.json`,
+  filePathPattern: `docs/**/_category_.json`,
   fields: {
     label: { type: 'string', required: true }
   },
@@ -17,7 +52,7 @@ export const Category = defineDocumentType(() => ({
 
 export const Doc = defineDocumentType(() => ({
   name: 'Doc',
-  filePathPattern: `**/*.mdx`,
+  filePathPattern: `docs/**/*.mdx`,
   contentType: 'mdx',
   fields: {
     title: {
@@ -49,14 +84,7 @@ export const Doc = defineDocumentType(() => ({
     navbarPosition: { type: 'number', default: 99999 }
   },
   computedFields: {
-    slug: {
-      type: 'string',
-      resolve: doc => `/docs/${doc._raw.flattenedPath}`
-    },
-    slugAsParams: {
-      type: 'string',
-      resolve: doc => doc._raw.flattenedPath
-    },
+    ...slugFields(),
     category: {
       type: 'Category' as 'json',
       resolve: doc =>
@@ -69,8 +97,9 @@ export const Doc = defineDocumentType(() => ({
 }));
 
 export default makeSource({
-  contentDirPath: './docs',
-  documentTypes: [Doc, Category],
+  contentDirPath: './',
+  documentTypes: [Post, Doc, Category],
+  contentDirInclude: ['docs', 'posts'],
   mdx: {
     remarkPlugins: [remarkGfm],
     rehypePlugins: [

@@ -86,7 +86,7 @@ export default async function DocPage({ params }: DocPageProps) {
 
   return (
     <>
-      <div className="flex-1">
+      <article className="flex-1">
         <div className="py-6 pr-6 lg:py-8">
           <div className="text-sm text-muted-foreground mb-2">{doc.category?.label}</div>
           <h1 className={cn('scroll-m-20 text-4xl font-bold tracking-tight')}>{doc.title}</h1>
@@ -99,7 +99,7 @@ export default async function DocPage({ params }: DocPageProps) {
         <div className="pb-12 pt-0">
           <Mdx code={doc.body.code} globals={globals} />
         </div>
-      </div>
+      </article>
       {doc.toc && (
         <div className="hidden text-sm md:block">
           <div className="fixed top-14">

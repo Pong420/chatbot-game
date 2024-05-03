@@ -1,8 +1,7 @@
-// import { DocNavBar } from '@/components/Doc/DocNav';
-import { DocNav } from '@/components/Doc/DocNav';
-import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
 import { Sidebar } from '@/components/Sidebar/Sidebar';
+import { PostNav } from '@/components/Post/PostNav';
 
 export default function Layout({ children }: React.PropsWithChildren) {
   return (
@@ -10,7 +9,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
       <Header />
       <main className="container flex-1 items-start flex max-w-screen-xl px-4">
         <Sidebar>
-          <DocNav />
+          <PostNav />
         </Sidebar>
         {children}
       </main>

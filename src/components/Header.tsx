@@ -16,6 +16,7 @@ export function Header() {
 
         <nav className="flex items-center gap-4 text-sm lg:gap-6">
           <HeaderLink href="/docs">資料</HeaderLink>
+          <HeaderLink href="/posts">貼文</HeaderLink>
         </nav>
       </div>
     </header>

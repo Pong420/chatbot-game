@@ -2,21 +2,21 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { Button, ButtonProps } from '@/components/ui/button';
 
-export interface DocNavItemProps extends ButtonProps {
+export interface SidebarItemProps extends ButtonProps {
   href?: string;
   active?: boolean;
   level?: number;
   isActive?: (pathname: string) => boolean;
 }
 
-export function DocNavItem({ href, active, isActive, className, level = 0, ...props }: DocNavItemProps) {
+export function SidebarItem({ href, active, isActive, className, level = 0, ...props }: SidebarItemProps) {
   const _active = active || (href && isActive?.(href));
   const button = (
     <Button
       {...props}
       component="div"
       variant={_active ? 'default' : 'ghost'}
-      className={cn('w-full justify-between', `pl-${4 + level * 2}`, className)}
+      className={cn('w-full justify-between', `px-${4 + level * 2}`, className)}
     />
   );
 

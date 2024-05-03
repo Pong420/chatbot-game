@@ -28,7 +28,7 @@ export const mainHandlers = [
     game.id = data.id;
     return getStageMessage(game);
   }),
-  createHandler(Group, TextEqual(t('Join')), User, WerewolfGame, async (user, game) => {
+  createHandler(Group, TextEqual(t('Join')), User, WerewolfGame, async (user, { game }) => {
     if (user.game && user.game !== game.groupId) return lt(`JoinedOtherGroupsGame`, user.nickname);
     if (game.stage instanceof Init) return t('WaitFotHostSetup');
     if (!(game.stage instanceof Start)) return t(`Started`);
@@ -56,7 +56,7 @@ export const mainHandlers = [
     await updateGame(game);
     return board.vote(game);
   }),
-  createHandler(LeaveGroup, WerewolfGame, async (event, game) => {
+  createHandler(LeaveGroup, WerewolfGame, async (event, { game }) => {
     await Promise.all(Array.from(game.players, ([id]) => updateUser(id, { game: null }).catch(() => void 0)));
   })
 ];

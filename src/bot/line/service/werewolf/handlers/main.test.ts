@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { expect, test } from 'vitest';
+import { expect, test, vi } from 'vitest';
 import { Werewolf as WerewolfGame } from '@werewolf/game';
 import { t } from '@werewolf/locales';
 import { getStageMessage } from './host';
@@ -33,6 +33,8 @@ test('start', async () => {
 });
 
 test('main', async () => {
+  vi.useFakeTimers();
+
   const { createGame, next, allVoteTo, ended, hostGroupMessage, anyGroupMessage } = testSuite();
   await createGame({
     customCharacters: [
@@ -78,6 +80,7 @@ test('main', async () => {
 
   // Witcher --------------------------------------------------------------------------------
 
+  vi.advanceTimersByTime(5000);
   await anyGroupMessage(werewolfs[0], board.witcherGroup());
 
   await witcher.s(t(`IamWitcher`)).toEqual(board.rescue(stage));
@@ -103,6 +106,7 @@ test('main', async () => {
 
   // Vote --------------------------------------------------------------------------------
 
+  vi.advanceTimersByTime(5000);
   await anyGroupMessage(werewolfs[0], () => board.vote(game));
   await host.g(t(`WhoNotVoted`)).toEqual(board.notVoted(stage));
   await next(() => board.vote(game));

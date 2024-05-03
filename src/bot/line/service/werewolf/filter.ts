@@ -8,12 +8,12 @@ import { t } from '@werewolf/locales';
 
 export const WerewolfGame = Game(Werewolf);
 
-export const IsHost = createFilter(UserId, WerewolfGame, (userId, game) => {
+export const IsHost = createFilter(UserId, WerewolfGame, (userId, { game }) => {
   if (game.host !== userId) throw false;
   return { userId, game };
 });
 
-export const IsPlayer = createFilter(UserId, WerewolfGame, async (userId, game) => {
+export const IsPlayer = createFilter(UserId, WerewolfGame, async (userId, { game }) => {
   const character = game.players.get(userId);
   if (!character) throw t(`NotJoined`);
   if (character.constructor === Character) throw t(`NotStarted`);

@@ -1,40 +1,10 @@
 import Link from 'next/link';
-import { Card, CardDescription, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
+
 import { default as LineLogo } from '@/assets/LINE_logo.svg';
 import { Logo } from '@/components/Logo';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-
-function Feature({ title = '', description = '', path = '' }) {
-  const containerClassName = cn('lg:w-[32%]', 'w-full');
-
-  const content = (
-    <Card className={cn('h-full flex flex-col')}>
-      <CardHeader className="pb-2">
-        <CardTitle>{title}</CardTitle>
-      </CardHeader>
-
-      <CardContent>
-        <CardDescription>{description}</CardDescription>
-      </CardContent>
-    </Card>
-  );
-
-  if (path) {
-    return (
-      <Link
-        href={`/docs/${path}`}
-        className={cn(containerClassName, 'hover:shadow-lg cursor-pointer')}
-        draggable={false}
-      >
-        {content}
-      </Link>
-    );
-  }
-
-  return <div className={cn(containerClassName, 'opacity-60')}>{content}</div>;
-}
+import { Feature } from '@/components/Home/Feature';
 
 export default function Home() {
   return (
@@ -66,14 +36,9 @@ export default function Home() {
             description="用於遊戲或者機器人相關回覆，默認使用聊天軟件中的暱稱，之後可以向機器人提交修改暱稱指示，修改聊天軟件的暱稱後不會自動更新。"
           />
           <Feature
-            // path="designation"
             title="稱號系統 (未完成)"
             description="參與遊戲並達成某種條件取得，例如狼人殺的【我是村民」，「嫌疑犯」，「披著羊皮的狼】，用於遊戲或者機器人相關回覆。"
           />
-          <Feature title="猜猜畫畫 (考慮中)" description="需要找合適儲存圖片的服務" />
-          <Feature title="海戰 (考慮中)" description="猜謎遊戲，或者叫海戰棋？要考慮一下多人玩法" />
-          <Feature title="擲骰子 (考慮中)" description="打開網頁，配合3D動畫，但3D相關知識是零，找到合適的參考會試試" />
-          <Feature title="其他遊戲" description="暫時不考慮撲克相關，歡迎提供其他建議" />
         </div>
       </main>
       <Footer />

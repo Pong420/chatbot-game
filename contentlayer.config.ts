@@ -110,7 +110,7 @@ export const Doc = defineDocumentType(() => ({
       type: 'Category' as 'json',
       resolve: doc =>
         fs
-          .readFile(path.resolve('docs', doc._raw.sourceFileDir, '_category_.json'), 'utf-8')
+          .readFile(path.resolve(doc._raw.sourceFileDir, '_category_.json'), 'utf-8')
           .then(content => JSON.parse(content))
           .catch(() => ({}))
     }

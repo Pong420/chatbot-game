@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -6,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Checkbox } from './ui/checkbox';
 
 const components = {
   Accordion,
@@ -132,7 +134,13 @@ const components = {
       )}
       {...props}
     />
-  )
+  ),
+  input: ({ type, ...props }: React.ComponentProps<'input'>) => {
+    switch (type) {
+      case 'checkbox':
+        return <Checkbox {...(props as any)} readOnly />;
+    }
+  }
 };
 
 interface MdxProps {

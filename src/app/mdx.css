@@ -35,3 +35,23 @@
 .mdx .subheading-anchor {
   text-decoration-line: none;
 }
+
+.mdx .contains-task-list {
+  margin: 0;
+}
+
+.mdx .task-list-item {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.mdx {
+  ul,
+  ol {
+    ul,
+    ol {
+      margin-top: 0;
+    }
+  }
+}

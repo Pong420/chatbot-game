@@ -25,10 +25,16 @@ const components = {
     />
   ),
   h3: ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h3 className={cn('font-heading mt-8 scroll-m-20 text-xl font-semibold tracking-tight', className)} {...props} />
+    <h3
+      className={cn('font-heading mt-8 scroll-m-20 text-xl font-semibold tracking-tight first:mt-0', className)}
+      {...props}
+    />
   ),
   h4: ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h4 className={cn('font-heading mt-8 scroll-m-20 text-lg font-semibold tracking-tight', className)} {...props} />
+    <h4
+      className={cn('font-heading mt-8 scroll-m-20 text-lg font-semibold tracking-tight first:mt-0', className)}
+      {...props}
+    />
   ),
   h5: ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h5 className={cn('mt-8 scroll-m-20 text-lg font-semibold tracking-tight', className)} {...props} />

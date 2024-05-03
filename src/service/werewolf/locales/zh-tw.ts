@@ -33,17 +33,6 @@ export const IamCommand = (() => {
   };
 })();
 
-export const CharacterIntroCommand = (() => {
-  const CharacterIntro = '{0}簡介';
-  return {
-    CharacterIntro,
-    ...Object.entries(Character).reduce(
-      (res, [key, value]) => ({ ...res, [`${key}Intro`]: CharacterIntro.replace('{0}', value) }),
-      {} as Record<`${keyof typeof Character}Intro`, string>
-    )
-  };
-})();
-
 export const HostCommand = {
   Initiate: [`開啟狼人殺`, `狼人殺開啟`],
   SetupCompleted: `狼人殺設定完畢`,
@@ -64,7 +53,7 @@ export const StageCommand = {
 export const KillerCommand = {
   Kill: `^我要殺(.*)`,
   Suicide: `我要自殺`,
-  Idle: `今晚是平安夜`
+  Idle: `平安夜`
 };
 
 export const GuardCommand = {
@@ -95,7 +84,6 @@ export const HunterCommand = {
 };
 
 export const CommonCommand = {
-  // Intro: '狼人殺介紹',
   MyCharacter: `我的狼人殺角色`,
   Vote: `^我投(.*)`,
   Waive: `棄權`
@@ -251,7 +239,6 @@ export default defineMessages(
   },
   Character,
   IamCommand,
-  CharacterIntroCommand,
   CommonCommand,
   HostCommand,
   StageCommand,

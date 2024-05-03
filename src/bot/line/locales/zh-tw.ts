@@ -14,19 +14,12 @@ export const Replies = {
 
   GetUserIdFailed: '無法取得UserId',
 
-  NickNameMaxLength: '暱稱不能多於{0}',
+  NickNameMaxLength: '暱稱不能多於{0}個字母，包括中英文',
   NickNameEmpty: '暱稱不能為空',
   NickNameContainBracket: '暱稱不能擁有 "「 " 和 " 」"',
   NickNameUsing: '你已經在使用「{0}」',
-  NickNameFailed: '設定暱稱失敗，請嘗試別的暱稱或聯絡管理員',
-  NickNameSuccess: '設定成功，你是{0}',
-  NickNameIntroResp: `
-    暱稱只會在機器人相關回覆中顯示，例如遊戲期間
-    如你未設定暱稱，使用機器人「部份」功能時，會記錄你LINE的暱稱，你修改LINE的暱稱後不會自動更新
-    輸入「{0} 新的暱稱」可以新增或修改暱稱，最多{1}個字
-    輸入「{0}」可以查詢你目前的暱稱，
-    如果暱稱顯示「???」請稍後再試，本機器人也愛莫能助...
-  `,
+  NickNameFailed: '設定暱稱失敗，請嘗試別的暱稱或聯絡作者',
+  NickNameSuccess: '設定成功，你是「{0}」',
 
   JoinedOtherGroupsGame: `{0}已參加了其他群組的遊戲`,
   OtherGameRuning: '{0}進行中，請先結束遊戲',

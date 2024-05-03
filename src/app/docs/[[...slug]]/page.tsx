@@ -1,10 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { allDocs } from 'contentlayer/generated';
 import { format, parseISO } from 'date-fns';
 import { absoluteUrl, cn } from '@/lib/utils';
+import { getTableOfContents } from '@/lib/toc';
+import { translate, translateRegex } from '@/utils/locale';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Mdx } from '@/components/mdx-components';
-import { DocNavBar } from '@/components/DocNav/DocNavBar';
+import { DocNavBar } from '@/components/Doc/DocNavBar';
+import { DocToc } from '@/components/Doc/DocToc';
 import '@/app/mdx.css';
 
 interface DocPageProps {
@@ -67,15 +72,6 @@ function getLocale(type: string) {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function tRegex(content: string, ...args: any[]) {
-  content = content.replace(/^\^|\$$/, '');
-  for (const arg of args) {
-    content = content.replace('(.*)', arg);
-  }
-  return content;
-}
-
 export default async function DocPage({ params }: DocPageProps) {
   const doc = await getDocFromParams({ params });
 
@@ -84,10 +80,16 @@ export default async function DocPage({ params }: DocPageProps) {
   }
 
   const messages = await Promise.all(doc.messages?.split(',').map(getLocale) || []).then(modules =>
-    modules.reduce((r, m) => (m ? { ...r, ...m?.messages } : r), {} as Record<string, unknown>)
+    modules.reduce((r, m) => (m ? { ...r, ...m?.messages } : r), {} as Record<string, string | string[]>)
   );
 
-  const globals = { ...messages, tRegex };
+  const toc = await getTableOfContents(doc.body.raw);
+
+  const globals = {
+    ...messages,
+    t: (k: string, ...args: any[]) => translate(messages, k, ...args),
+    tRegex: translateRegex
+  };
 
   return (
     <main className="container flex-1 items-start flex max-w-screen-xl px-4">
@@ -105,8 +107,18 @@ export default async function DocPage({ params }: DocPageProps) {
         <div className="pb-12 pt-0">
           <Mdx code={doc.body.code} globals={globals} />
         </div>
-        {/* TODO: DocsPager*/}
       </div>
+      {doc.toc && (
+        <div className="hidden text-sm md:block">
+          <div className="fixed top-14">
+            <ScrollArea className="pb-10">
+              <div className="sticky top-16 -mt-10 h-[calc(100vh-3.5rem)] py-12">
+                <DocToc toc={toc} />
+              </div>
+            </ScrollArea>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

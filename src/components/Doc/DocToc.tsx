@@ -1,21 +1,22 @@
 'use client';
+
 import { useState, useEffect, useMemo } from 'react';
 import { TableOfContents } from '@/lib/toc';
-import { cn } from '@/lib/utils';
 import { useMounted } from '@/hooks/useMounted';
+import { DocTocTree } from './DocTocTree';
 
 interface TocProps {
   toc: TableOfContents;
 }
 
-export function DashboardTableOfContents({ toc }: TocProps) {
+export function DocToc({ toc }: TocProps) {
   const itemIds = useMemo(
     () =>
       toc.items
         ? toc.items
             .flatMap(item => [item.url, item?.items?.map(item => item.url)])
             .flat()
-            .filter((i): i is string => !!i)
+            .filter((s): s is string => !!s)
             .map(id => id?.split('#')[1])
         : [],
     [toc]
@@ -28,15 +29,17 @@ export function DashboardTableOfContents({ toc }: TocProps) {
   }
 
   return (
-    <div className="space-y-2">
-      <p className="font-medium">On This Page</p>
-      <Tree tree={toc} activeItem={activeHeading} />
+    <div className="px-6 pb-4 ml-10 min-w-48 border-l-muted border-l whitespace-nowrap">
+      <p className="font-medium">目錄</p>
+      <DocTocTree tree={toc} activeItem={activeHeading} />
     </div>
   );
 }
 
 function useActiveItem(itemIds: string[]) {
-  const [activeId, setActiveId] = useState<string>();
+  const [activeId, setActiveId] = useState<string>(
+    typeof window === 'undefined' ? '' : decodeURIComponent(window.location.hash.slice(1))
+  );
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -68,33 +71,4 @@ function useActiveItem(itemIds: string[]) {
   }, [itemIds]);
 
   return activeId;
-}
-
-interface TreeProps {
-  tree: TableOfContents;
-  level?: number;
-  activeItem?: string;
-}
-
-function Tree({ tree, level = 1, activeItem }: TreeProps) {
-  return tree?.items?.length && level < 3 ? (
-    <ul className={cn('m-0 list-none', { 'pl-4': level !== 1 })}>
-      {tree.items.map((item, index) => {
-        return (
-          <li key={index} className={cn('mt-0 pt-2')}>
-            <a
-              href={item.url}
-              className={cn(
-                'inline-block no-underline transition-colors hover:text-foreground',
-                item.url === `#${activeItem}` ? 'font-medium text-foreground' : 'text-muted-foreground'
-              )}
-            >
-              {item.title}
-            </a>
-            {item.items?.length ? <Tree tree={item} level={level + 1} activeItem={activeItem} /> : null}
-          </li>
-        );
-      })}
-    </ul>
-  ) : null;
 }

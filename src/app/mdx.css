@@ -31,3 +31,7 @@
     }
   }
 }
+
+.mdx .subheading-anchor {
+  text-decoration-line: none;
+}

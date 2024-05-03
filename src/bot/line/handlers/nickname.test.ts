@@ -1,16 +1,15 @@
 import { nanoid } from 'nanoid';
-import { expect, test } from 'vitest';
+import { test } from 'vitest';
 import { createLineEventTestSuite } from '@line/test';
 import { textMessage } from '@line/utils/createMessage';
 import { maxLength } from '@line/utils/userService';
 import { t } from '@line/locales';
-import { nicknameHandlers, crearteIntroContent } from './nickname';
+import { nicknameHandlers } from './nickname';
 
 const { createLineUser } = createLineEventTestSuite(nicknameHandlers);
 const client = createLineUser();
 
 test('nickname', async () => {
-  await client.s(t(`NickNameIntro`)).toEqual(crearteIntroContent());
   await client.s(t(`MyNickName`)).toEqual(textMessage(client.name));
 
   const nickname = `New Name`;
@@ -23,10 +22,4 @@ test('nickname', async () => {
   await setNickName('「${nickname}」').toTextMessage(t('NickNameContainBracket'));
 
   await client.s(t(`MyNickName`)).toTextMessage(nickname);
-});
-
-test('nickname intro content', async () => {
-  const content = JSON.stringify(crearteIntroContent()['contents']);
-  expect(content).toContain(t('MyNickName'));
-  expect(content).toContain(maxLength);
 });

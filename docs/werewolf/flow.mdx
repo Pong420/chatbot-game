@@ -9,7 +9,7 @@ navbarPosition: 0
 
 1. 你需要找到6 - 12位參與者，因為過程會造成嚴重洗頻，請建立一個獨立群組遊玩，然後將機器人加到群組
 
-2. 當群組有人人輸入「{Initiate[0]}」或「{Initiate[1]}」，發送者會被視為「主持人」，任何人重覆輸入將會覆蓋遊戲
+2. 群組裡任何人輸入「{Initiate[0]}」或「{Initiate[1]}」，發送者會被視為「主持人」，任何人重覆輸入將會覆蓋遊戲
 
    <Image
      src="/assets/werewolf/flow/flow_2.jpg"
@@ -19,7 +19,7 @@ navbarPosition: 0
    />
 
 3. 主持人可以對遊戲進行設定，目前只支持自選角色。<br />
-   P.S. 首次使用自選會彈出一個視窗並要求權限，你可以選擇拒絕授權發送信息權限，可以參考[使用條款](/term-of-use)。
+   P.S. 首次使用自選會彈出一個視窗並要求權限，你可以選擇拒絕授權，然後手動發送信息，可以參考[使用條款](/term-of-use)。
 
    <Image src="/assets/werewolf/flow/flow_3.jpg" width={400} height={376} className="m-auto" />
 
@@ -27,23 +27,23 @@ navbarPosition: 0
 
    <Image src="/assets/werewolf/flow/flow_4.jpg" width={400} height={614} className="m-auto" />
 
-5. 主持人點擊開始遊戲或直接輸入「{Start[0]}」或「{Start[1]}」，參與者點擊「{MyCharacter}」將會直接跳轉到機器人私聊頁面，按下發送。
+5. 主持人點擊「開始遊戲」或直接輸入「{Start[0]}」或「{Start[1]}」，參與者點擊「{MyCharacter}」將會直接跳轉到機器人私聊頁面，按下發送。
 
-   <Image src="/assets/werewolf/flow/flow_5.jpg" width={400} height={477} className="m-auto" />
+   <Image src="/assets/werewolf/flow/flow_5.jpg" width={400} height={478} className="m-auto" />
 
 6. 機器人會回覆你的角色，查看角色後請回到群組。
 
-   <Image src="/assets/werewolf/flow/flow_6.jpg" width={400} height={85} className="m-auto" />
+   <Image src="/assets/werewolf/flow/flow_6.jpg" width={400} height={86} className="m-auto" />
 
 7. 主持人輸入「{NextShort}」進入下一回合，和查看角色的操作一樣，守衛可以點擊按鈕跳轉到私聊頁面，按下發送。
 
    <Image src="/assets/werewolf/flow/flow_7.jpg" width={400} height={239} className="m-auto" />
 
-8. 只要是你的回合，私聊機器說出你的身份，即會回覆你操作介面，基本上都是點擊即可，不需要手動輸入。
+8. 只要是你的回合，私聊機器說出你的身份，即會回覆你對應的操作介面。
 
    <Image src="/assets/werewolf/flow/flow_8.jpg" width={400} height={625} className="m-auto" />
 
-9. 等待角色操作期間，主持人可以不斷輸入「{NextShort}」，如果角色已經完成操作即可進入下一回合。
+9. 等待角色操作期間，自動模式下，機器人收到任何群組訊息，或主持人輸入「{NextShort}」，機器人都會檢查是否可以進入下一回合，並回覆對應的信息
 
    <Image src="/assets/werewolf/flow/flow_9.jpg" width={400} height={239} className="m-auto" />
 
@@ -59,11 +59,11 @@ navbarPosition: 0
 
     <Image src="/assets/werewolf/flow/flow_12.jpg" width={400} height={178} className="m-auto" />
 
-13. 遊戲結束，狼人勝利。
+13. 最後遊戲結束，狼人勝利。
 
     <Image src="/assets/werewolf/flow/flow_13.jpg" width={400} height={301} className="m-auto" />
 
-14. 主持人可以查看死亡報告。
+14. 主持人可以請求死亡報告。
 
     <Image src="/assets/werewolf/flow/flow_14.jpg" width={400} height={763} className="m-auto" />
 

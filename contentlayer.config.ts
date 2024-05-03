@@ -4,6 +4,7 @@ import { ComputedFields, defineDocumentType, makeSource } from 'contentlayer2/so
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
+import word from 'words-count';
 
 const slugFields = (): ComputedFields => ({
   slug: {
@@ -15,6 +16,19 @@ const slugFields = (): ComputedFields => ({
     resolve: doc => doc._raw.flattenedPath.split('/').slice(1).join('/')
   }
 });
+
+const getDescription = (content: string, length: number) => {
+  content = content.trim();
+  length = Math.min(content.length, length);
+  let result = content.slice(0, length);
+  let i = 0;
+  // @ts-ignore ignore
+  while (word.wordsCount(result) < length) {
+    i++;
+    result = content.slice(0, length + i);
+  }
+  return result;
+};
 
 export const Post = defineDocumentType(() => ({
   name: 'Post',
@@ -34,8 +48,7 @@ export const Post = defineDocumentType(() => ({
     },
     description: {
       type: 'string',
-      // TODO: pick 100 words instead of length
-      resolve: doc => doc.body.raw.slice(0, 100)
+      resolve: doc => getDescription(doc.body.raw, 100)
     }
   }
 }));

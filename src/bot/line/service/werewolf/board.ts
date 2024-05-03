@@ -181,7 +181,6 @@ export function start(game: Game) {
 
 export function myCharacter(character: Character) {
   const iamCmd = t('Iam', character.name);
-  const introCmd = t('CharacterIntro', character.name);
 
   if (character instanceof Villager) {
     return t('YouAreVillager');
@@ -190,7 +189,11 @@ export function myCharacter(character: Character) {
   return tableMessage({
     title: [centeredText(t('YourCharacter'))],
     rows: [[wrapedText(t('YourCharacter', character.type))]],
-    buttons: [primaryButton(messageAction(iamCmd)), secondaryButton(messageAction(t('CharacterIntroButton'), introCmd))]
+    buttons: [
+      primaryButton(messageAction(iamCmd))
+      // TODO: link to website
+      // secondaryButton(messageAction(t('CharacterIntroButton'), introCmd))
+    ]
   });
 }
 

@@ -53,7 +53,8 @@ export function initiate(id: number) {
 const chunk = <T>(arr: T[], size: number): T[][] =>
   [...Array(Math.ceil(arr.length / size))].map((_, i) => arr.slice(size * i, size + size * i));
 
-export function settings(stage: Stage) {
+export function settings(game: Game) {
+  const stage = game.stage;
   if (!(stage instanceof Start)) throw new Error(`expect Start but receive ${stage.name}`);
 
   const characters = stage.getCharacters().reduce(
@@ -78,7 +79,7 @@ export function settings(stage: Stage) {
     ];
   };
 
-  if (stage.customCharacters?.length) {
+  if (game.customCharacters?.length) {
     rows.push(row(t(`AvailableCharacters`)));
 
     const _rows: Payload[] = [];
@@ -102,7 +103,7 @@ export function settings(stage: Stage) {
     rows.push(row(t(`AvailableCharactersDefault`)));
   }
 
-  rows.push(row(t(stage.werewolvesKnowEachOthers ? `WerewolvesDontKnowEachOthers` : `WerewolvesDontKnowEachOthers`)));
+  rows.push(row(t(game.werewolvesKnowEachOthers ? `WerewolvesDontKnowEachOthers` : `WerewolvesDontKnowEachOthers`)));
 
   return tableMessage({
     title: [centeredText(t(`SetupCompleted`))],

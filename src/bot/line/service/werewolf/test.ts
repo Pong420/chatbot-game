@@ -5,8 +5,8 @@ import { LineUser, createLineEventTestSuite } from '@line/test';
 import { t as lt } from '@line/locales';
 import { textMessage } from '@line/utils/createMessage';
 import { characters } from '@werewolf/character';
-import { Werewolf as Game } from '@werewolf/game';
-import { GameSettingOption, Stage } from '@werewolf/stage';
+import { GameSettingOption, Werewolf as Game } from '@werewolf/game';
+import { Stage } from '@werewolf/stage';
 import { Character, Villager, Werewolf, Hunter, Guard, Predictor, Witcher } from '@werewolf/character';
 import { t } from '@werewolf/locales';
 import { GameStatus, getGame, getUser, updateGame, User } from '@service/game';
@@ -115,12 +115,12 @@ export function testSuite() {
     expect(game.host).toBe(host.userId);
 
     await update();
-    game.stage.customCharacters = customCharacters;
+    game.customCharacters = customCharacters;
     await updateGame(game);
 
     await host.g(t(`Join`)).toEqual(textMessage(t(`WaitFotHostSetup`)));
 
-    await hostGroupMessage(t(`SetupCompleted`), () => board.settings(stage));
+    await hostGroupMessage(t(`SetupCompleted`), () => board.settings(game));
 
     await hostGroupMessage(t('Join'), () => board.players(stage));
     await host.g(t('Join')).toEqual(textMessage(t(`Joined`, host.name)));

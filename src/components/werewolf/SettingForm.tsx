@@ -2,7 +2,7 @@
 import { useEffect, useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { GameSettingOption } from '@werewolf/stage';
+import { GameSettingOption } from '@werewolf/game';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Card } from '@/components/ui/card';
@@ -31,6 +31,7 @@ export type SettingValues = z.infer<typeof formSchema>;
 
 const formSchema = z
   .object({
+    autoReply: z.boolean(),
     customCharacters: z.array(z.string()).optional(),
     werewolvesKnowEachOthers: z.boolean().optional()
   } satisfies Record<keyof GameSettingOption, unknown>)
@@ -39,9 +40,11 @@ const formSchema = z
   });
 
 const defaultValues: SettingValues = {
+  autoReply: true,
   enableCustomCharacters: false,
   werewolvesKnowEachOthers: false
 };
+
 const storage = createLocalStorage('@werewolf/settings', defaultValues);
 
 export function SettingForm({ isLineClient, characters, onSubmit }: SettingFormProps) {
@@ -60,7 +63,7 @@ export function SettingForm({ isLineClient, characters, onSubmit }: SettingFormP
   const { watch, reset } = form;
   useEffect(() => {
     setLoaded(true);
-    reset(storage.get());
+    reset({ ...defaultValues, ...storage.get() });
     const subscription = watch(values => {
       setError(undefined);
       storage.override(values);

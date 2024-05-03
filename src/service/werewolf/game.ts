@@ -19,13 +19,21 @@ import {
   Voted,
   HunterEnd
 } from './stage';
-import { Character, Werewolf } from './character';
+import { Character, CharacterKey, Werewolf } from './character';
 import { t } from './locales';
 
 export interface CreateGame {
   id: string;
   stage?: object;
 }
+
+export interface GameSettingOption {
+  autoReply?: boolean;
+  werewolvesKnowEachOthers?: boolean;
+  customCharacters?: CharacterKey[];
+}
+
+export interface Game extends GameSettingOption {}
 
 export class Game extends GameInstance {
   static readonly type = 'Werewolf';
@@ -35,6 +43,7 @@ export class Game extends GameInstance {
       // for initial value of stage
       exposeUnsetFields: false
     });
+    game.stage.game = game;
     game.stage.init();
     return game;
   }
@@ -44,6 +53,8 @@ export class Game extends GameInstance {
   groupId: string;
 
   host: string; // host's userId;
+
+  autoReply = true;
 
   @Type(() => Stage, {
     keepDiscriminatorProperty: true,
@@ -101,6 +112,7 @@ export class Game extends GameInstance {
     const serialized = this.serialize();
     const stage = this.stage;
     this.stage = plainToInstance(NextStage, serialized.stage) as Stage;
+    this.stage.game = this;
     this.stage.onStart(stage);
   }
 

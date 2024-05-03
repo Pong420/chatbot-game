@@ -44,7 +44,7 @@ export default [
     if (!(game.stage instanceof Init)) return;
     game.next();
     await updateGame(game);
-    return board.settings(game.stage);
+    return board.settings(game);
   }),
   createHandler(Group, TextEqual(t.raw('Start')), IsHost, async ({ game }) => {
     if (!(game.stage instanceof Start)) return;

@@ -8,8 +8,8 @@ export class Init extends Stage {
   readonly name = 'Init';
 
   onEnd(): void {
-    if (this.customCharacters?.length) {
-      this.characters = this.customCharacters.map(key => characterMap[key]).filter(Boolean);
+    if (this.game.customCharacters?.length) {
+      this.characters = this.game.customCharacters.map(key => characterMap[key]).filter(Boolean);
       this.numOfPlayers = this.characters.length;
 
       if (this.numOfPlayers < minPlayers) throw t('NoEnoughPlayers', minPlayers);

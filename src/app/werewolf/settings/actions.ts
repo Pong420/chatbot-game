@@ -1,13 +1,14 @@
 'use server';
 
 import { z } from 'zod';
-import { GameSettingOption, Init } from '@werewolf/stage';
-import { Werewolf } from '@werewolf/game';
+import { Init } from '@werewolf/stage';
+import { GameSettingOption, Werewolf } from '@werewolf/game';
 import { CharacterKey } from '@werewolf/character';
 import { GameStatus, getGame, updateGame } from '@service/game';
 import { charactersMap } from './utils';
 
 const schema = z.object({
+  autoReply: z.boolean().optional(),
   customCharacters: z.array(z.string()).min(6).max(12).optional(),
   werewolvesKnowEachOthers: z.boolean().optional()
 } satisfies Record<keyof GameSettingOption, unknown>);
@@ -43,7 +44,7 @@ export async function updateSettings(
       if (bad < 1) return { message: `最少要一個壞人` };
       if (customCharacters.length < 6) return { message: `角色數量不能小於「6」` };
       if (customCharacters.length > 12) return { message: `角色數量不能多於「12」` };
-      game.stage.customCharacters = customCharacters as CharacterKey[];
+      game.customCharacters = customCharacters as CharacterKey[];
     }
 
     const r = schema.safeParse(payload);

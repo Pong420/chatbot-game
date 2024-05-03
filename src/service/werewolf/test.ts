@@ -3,7 +3,8 @@ import { expect, vi } from 'vitest';
 import { Constructable } from '@/types';
 import { Game } from './game';
 import { Character, Guard, Hunter, Predictor, Villager, Werewolf, Witcher } from './character';
-import { Init, Start, Stage, stages, Stages, GameSettingOption } from './stage';
+import { Init, Start, Stage, stages, Stages } from './stage';
+import { GameSettingOption } from './game';
 import { t } from './locales';
 
 interface CreateGameOptions extends GameSettingOption {
@@ -76,11 +77,11 @@ export function testSuite() {
 
   const createGame = ({ customCharacters, numOfPlayers }: CreateGameOptions) => {
     game = Game.create({ data: { groupId: '1' } });
+    game.customCharacters = customCharacters;
     stage = game.stage;
 
     expect(stage).toBeInstanceOf(Init);
     const init = stage as Init;
-    init.customCharacters = customCharacters;
 
     testSerialisation();
 

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { DocMobileNav } from '@/components/DocNav/DocMobileNav';
+import { DocMobileNav } from '@/components/Doc/DocMobileNav';
 import { Logo } from './Logo';
 
 export function Header() {

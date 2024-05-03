@@ -19,7 +19,9 @@ test('nickname', async () => {
   await setNickName(nickname).toTextMessage(t('NickNameUsing', nickname));
   await setNickName('').toTextMessage(t('NickNameEmpty'));
   await setNickName(nanoid()).toTextMessage(t('NickNameMaxLength', maxLength));
-  await setNickName('「${nickname}」').toTextMessage(t('NickNameContainBracket'));
+  await setNickName('【${nickname}】').toTextMessage(t('NickNameContainBracket'));
+  await setNickName('${nickname}】').toTextMessage(t('NickNameContainBracket'));
+  await setNickName('【${nickname}').toTextMessage(t('NickNameContainBracket'));
 
   await client.s(t(`MyNickName`)).toTextMessage(nickname);
 });

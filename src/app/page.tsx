@@ -68,7 +68,7 @@ export default function Home() {
           <Feature
             // path="designation"
             title="稱號系統 (未完成)"
-            description="參與遊戲並達成某種條件取得，例如狼人殺的「我是村民」，「嫌疑犯」，「披著羊皮的狼」，用於遊戲或者機器人相關回覆。"
+            description="參與遊戲並達成某種條件取得，例如狼人殺的【我是村民」，「嫌疑犯」，「披著羊皮的狼】，用於遊戲或者機器人相關回覆。"
           />
           <Feature title="猜猜畫畫 (考慮中)" description="需要找合適儲存圖片的服務" />
           <Feature title="海戰 (考慮中)" description="猜謎遊戲，或者叫海戰棋？要考慮一下多人玩法" />

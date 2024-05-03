@@ -42,8 +42,8 @@ export async function updateSettings(
 
       if (good < 1) return { message: `最少要一個好人` };
       if (bad < 1) return { message: `最少要一個壞人` };
-      if (customCharacters.length < 6) return { message: `角色數量不能小於「6」` };
-      if (customCharacters.length > 12) return { message: `角色數量不能多於「12」` };
+      if (customCharacters.length < 6) return { message: `角色數量不能小於【6】` };
+      if (customCharacters.length > 12) return { message: `角色數量不能多於【12】` };
       game.customCharacters = customCharacters as CharacterKey[];
     }
 

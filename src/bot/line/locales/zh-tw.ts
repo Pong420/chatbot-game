@@ -16,10 +16,10 @@ export const Replies = {
 
   NickNameMaxLength: '暱稱不能多於{0}個字母，包括中英文',
   NickNameEmpty: '暱稱不能為空',
-  NickNameContainBracket: '暱稱不能擁有 "「 " 和 " 」"',
-  NickNameUsing: '你已經在使用「{0}」',
+  NickNameContainBracket: '暱稱不能擁有 "【" 和 "】"',
+  NickNameUsing: '你已經在使用【{0}】',
   NickNameFailed: '設定暱稱失敗，請嘗試別的暱稱或聯絡作者',
-  NickNameSuccess: '設定成功，你是「{0}」',
+  NickNameSuccess: '設定成功，你是【{0}】',
 
   JoinedOtherGroupsGame: `{0}已參加了其他群組的遊戲`,
   OtherGameRuning: '{0}進行中，請先結束遊戲',
@@ -31,7 +31,7 @@ export const Replies = {
   Privacy: `隱私政策`,
   JoinGroupTitle: '溫馨提示',
   JoinGroupMessage: `
-    嗨，感謝邀請，當您繼續使用本機器人時，即表示您已同意接受機器人的「使用條款」及「隱私政策」，
+    嗨，感謝邀請，當您繼續使用本機器人時，即表示您已同意接受機器人的【使用條款】及【隱私政策】，
     如您不同意，立即停止使用
   `
 };

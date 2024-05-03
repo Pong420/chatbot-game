@@ -34,7 +34,7 @@ export async function setNickname(event: WebhookEvent, name: string) {
     return t('NickNameEmpty');
   }
 
-  if (/「.*」/.test(name)) {
+  if (/(【|】)/.test(name)) {
     return t(`NickNameContainBracket`);
   }
 

@@ -9,7 +9,7 @@ export function Logo({ withTooltip = true, ...props }: Partial<ImageProps> & { w
   if (withTooltip) {
     return (
       <TooltipProvider>
-        <Tooltip delayDuration={400}>
+        <Tooltip delayDuration={250}>
           <TooltipTrigger asChild>{content}</TooltipTrigger>
           <TooltipContent>
             <Link href="https://www.deviantart.com/projectrobo1989/art/Pixel-Art-Robot-1-805987543">

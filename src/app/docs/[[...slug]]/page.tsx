@@ -90,10 +90,11 @@ export default async function DocPage({ params }: DocPageProps) {
   const globals = { ...messages, tRegex };
 
   return (
-    <main className="container flex-1 items-start flex max-w-screen-xl">
+    <main className="container flex-1 items-start flex max-w-screen-xl px-4">
       <DocNavBar />
       <div className="flex-1">
         <div className="py-6 pr-6 lg:py-8">
+          <div className="text-sm text-muted-foreground mb-2">{doc.category?.label}</div>
           <h1 className={cn('scroll-m-20 text-4xl font-bold tracking-tight')}>{doc.title}</h1>
           {doc.date && (
             <time dateTime={doc.date} className="mb-1 text-xs text-muted-foreground">

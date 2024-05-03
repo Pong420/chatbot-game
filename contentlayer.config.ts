@@ -1,3 +1,5 @@
+import fs from 'fs/promises';
+import path from 'path';
 import { defineDocumentType, makeSource } from 'contentlayer2/source-files';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
@@ -54,6 +56,14 @@ export const Doc = defineDocumentType(() => ({
     slugAsParams: {
       type: 'string',
       resolve: doc => doc._raw.flattenedPath
+    },
+    category: {
+      type: 'Category' as 'json',
+      resolve: doc =>
+        fs
+          .readFile(path.resolve('docs', doc._raw.sourceFileDir, '_category_.json'), 'utf-8')
+          .then(content => JSON.parse(content))
+          .catch(() => ({}))
     }
   }
 }));

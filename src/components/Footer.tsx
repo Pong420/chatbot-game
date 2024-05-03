@@ -21,7 +21,7 @@ export function Footer() {
           <Separator />
           <Item href="/term-of-use">使用條款</Item>
           <Separator />
-          <Item href="/contact">聯繫我們</Item>
+          <Item href="/contact">聯絡我們</Item>
         </ul>
       </div>
     </footer>

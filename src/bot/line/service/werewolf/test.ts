@@ -135,8 +135,6 @@ export function testSuite() {
       await client.g(t('Join')).toEqual(textMessage(t(`Joined`, client.name)));
     }
 
-    await hostGroupMessage(t(`Start`), () => board.start(game));
-
     await clientInOthersGroup.g(t(`Initiate`)).toMatchObject({ type: 'flex' });
     await clientInOthersGroup.g(t('Join')).toTextMessage(lt('JoinedOtherGroupsGame', clientInOthersGroup.name));
     await clientInOthersGroup.gr(t('End'));

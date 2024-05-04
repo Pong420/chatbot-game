@@ -88,7 +88,7 @@ export function achievementCount(character: Character, game: Game) {
       achievement['bad_shot'] = 1;
     }
 
-    if (character.canShoot && !character.shot) {
+    if (character._canShoot === false) {
       achievement['no_shot'] = 1;
     }
   }
@@ -138,5 +138,5 @@ export function achievementCount(character: Character, game: Game) {
     achievement['killed_by_vote'] = 1;
   }
 
-  return achievement;
+  return achievement as Record<string, number>;
 }

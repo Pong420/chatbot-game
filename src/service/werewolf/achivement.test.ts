@@ -100,4 +100,29 @@ test('basic', () => {
   nextStage('Daytime');
 
   nextStage('End');
+
+  expect(count(hunter)).toEqual({ i_am_hunter: 1, no_shot: 1 });
+  expect(count(witcher)).toEqual({ i_am_witcher: 1, bodhisattva: 1, poison_master: 1 });
+  expect(count(predictor)).toEqual({ i_am_predictor: 1, voyeur: 1 });
+  expect(count(guard)).toEqual({ i_am_guard: 1, protected: 2 });
+
+  expect(count(villagers[0])).toEqual({ i_am_villager: 1, vote_to_kill: 3 });
+  expect(count(villagers[1])).toEqual({ i_am_villager: 1, vote_to_kill: 3 });
+  expect(count(villagers[2])).toEqual({ i_am_villager: 1, vote_to_kill: 1 });
+  expect(count(villagers[3])).toEqual({ i_am_villager: 1, dead_on_the_first_day: 1 });
+
+  expect(count(werewolfs[0])).toEqual({ i_am_werewolf: 1, god_of_gamblers: 1, nightmare: 1, traitor: 3 });
+  expect(count(werewolfs[1])).toEqual({ i_am_werewolf: 1, traitor: 2 });
+  expect(count(werewolfs[2])).toEqual({
+    i_am_werewolf: 1,
+    traitor: 1,
+    fratricidal_fighting: 1,
+    dead_on_the_first_day: 1
+  });
+  expect(count(werewolfs[3])).toEqual({
+    i_am_werewolf: 1,
+    traitor: 1,
+    fratricidal_fighting: 1,
+    dead_on_the_first_day: 1
+  });
 });

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ERROR_CODE_EMPTY, supabase } from '@service/supabase';
 import { Tables, TablesInsert, TablesUpdate } from '@service/database.types';
+import { updateAchivement } from './achievement';
 
 export type Game = Tables<'games'>;
 
@@ -21,6 +22,7 @@ export abstract class GameInstance {
   id: number; // only defined with @service/game
   groupId: string;
   abstract serialize(): any;
+  abstract getAchivement(): Parameters<typeof updateAchivement>[];
 }
 
 type GameProps = Omit<Game, 'created_at' | 'data' | 'groupId' | 'id' | 'type' | 'updated_at'>;

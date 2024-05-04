@@ -21,6 +21,7 @@ import {
 } from './stage';
 import { Character, CharacterKey, Werewolf } from './character';
 import { t } from './locales';
+import { achievementCount } from './achivement';
 
 export interface CreateGame {
   id: string;
@@ -179,6 +180,10 @@ export class Game extends GameInstance {
       c.endTurn = true;
     });
     return this.next();
+  }
+
+  getAchivement(): [userId: string, payload: Record<string, number>][] {
+    return Array.from(this.players, ([userId, player]) => [userId, achievementCount(player, this)]);
   }
 }
 

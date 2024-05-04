@@ -10,6 +10,7 @@ const nextConfig = {
       beforeFiles: [...['privacy', 'term-of-use', 'contact'].map(s => ({ source: `/${s}`, destination: `/docs/${s}` }))]
     };
   },
+
   async redirects() {
     return [
       { source: '/docs/werewolf', destination: '/docs/werewolf/flow', permanent: true },

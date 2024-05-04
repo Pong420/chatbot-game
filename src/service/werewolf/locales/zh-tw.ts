@@ -95,14 +95,15 @@ export default defineMessages(
     SystemError: '系統錯誤',
 
     SettingsDesc: `
-      主持人需要不斷主動輸入【{0}】判斷玩家是否完成操作
-      點擊下方按鈕，使用預設或者自選設定繼續遊戲
+      主持人請點擊下方按鈕，使用預設或者自選設定繼續遊戲，
     `,
     UseDefaultSetup: `使用預設`,
     UseCustomSetup: `自選`,
     WaitFotHostSetup: `請等待主持完成配置`,
     AvailableCharacters: `自選角色`,
     AvailableCharactersDefault: `可用角色視乎最終遊戲人數`,
+    AutoModeEnabled: `自動模式: 開啟`,
+    AutoModeDisabled: `自動模式: 關閉`,
     WerewolvesKnowEachOthers: `狼人會知道誰是隊友`,
     WerewolvesDontKnowEachOthers: `狼人不知道誰是隊友`,
     Friendship: `謹記！友誼第一`,

@@ -37,7 +37,7 @@ function tableMessage({ title = [], ...props }: CreateTableMessageProps) {
 
 export function initiate(id: number) {
   return tableMessage({
-    rows: orderList(t.paragraph('SettingsDesc', t(`NextShort`))),
+    rows: orderList(t.paragraph('SettingsDesc')),
     buttons: [
       primaryButton(messageAction(t(`UseDefaultSetup`), t(`SetupCompleted`))),
       secondaryButton(
@@ -103,6 +103,7 @@ export function settings(game: Game) {
     rows.push(row(t(`AvailableCharactersDefault`)));
   }
 
+  rows.push(row(t(game.autoMode ? 'AutoModeEnabled' : 'AutoModeDisabled')));
   rows.push(row(t(game.werewolvesKnowEachOthers ? `WerewolvesDontKnowEachOthers` : `WerewolvesDontKnowEachOthers`)));
 
   return tableMessage({

@@ -6,7 +6,9 @@ const nextConfig = {
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
 
   async rewrites() {
-    return [...['privacy', 'term-of-use', 'contact'].map(s => ({ source: `/${s}`, destination: `/docs/${s}` }))];
+    return {
+      beforeFiles: [...['privacy', 'term-of-use', 'contact'].map(s => ({ source: `/${s}`, destination: `/docs/${s}` }))]
+    };
   },
   async redirects() {
     return [{ source: '/docs/werewolf', destination: '/docs/werewolf/flow', permanent: true }];

@@ -16,7 +16,11 @@ export default function Home() {
             <h1 className="mt-2 text-xl sm:text-3xl text-foreground">遊戲機器人</h1>
             <h2 className="text-md text-muted-foreground">提供遊戲輔助功能的聊天軟件機器人</h2>
             <div className="flex mt-2 justify-center sm:justify-start">
-              <Link href={`https://line.me/R/ti/p/${process.env.LINE_BOT_ID}`} target="_blank">
+              <Link
+                href={`https://line.me/R/ti/p/${process.env.LINE_BOT_ID}`}
+                target="_blank"
+                aria-label="link to LINE app"
+              >
                 <LineLogo width={30} />
               </Link>
             </div>

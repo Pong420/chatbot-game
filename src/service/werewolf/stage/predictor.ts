@@ -5,7 +5,7 @@ export class Predictor extends Stage {
   readonly name = 'Predictor';
 
   static available(stage: Stage) {
-    return !!stage.getPlayersByCharacter(PredictorCharacter, stage.survivors).length ? Predictor : undefined;
+    return !!stage.getPlayersByCharacter(PredictorCharacter, stage.players).length ? Predictor : undefined;
   }
 
   onStart(stage: Stage): void {

@@ -65,15 +65,12 @@ test('basic', () => {
   nextStage('Witcher');
   witcher.poison(hunter);
 
+  nextStage('Predictor');
   nextStage('Daytime');
   nextStage('Vote');
 
   allVoteTo(villagers[2]);
   nextStage('Voted');
 
-  nextStage('Night');
-
-  // console.log(count(hunter));
+  nextStage('Guard');
 });
-
-// test('hunter', () => {});

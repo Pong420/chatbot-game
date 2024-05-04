@@ -5,7 +5,7 @@ export class Guard extends Stage {
   readonly name = 'Guard';
 
   static available(stage: Stage) {
-    return !!stage.getPlayersByCharacter(GuardCharacter, stage.survivors).length ? Guard : undefined;
+    return !!stage.getPlayersByCharacter(GuardCharacter, stage.players).length ? Guard : undefined;
   }
 
   onStart(stage: Stage): void {

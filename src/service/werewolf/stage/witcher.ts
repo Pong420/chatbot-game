@@ -5,7 +5,7 @@ export class Witcher extends Stage {
   readonly name = 'Witcher';
 
   static available(stage: Stage) {
-    return !!stage.getPlayersByCharacter(WitcherCharacter, stage.survivors).length ? Witcher : undefined;
+    return !!stage.getPlayersByCharacter(WitcherCharacter, stage.players).length ? Witcher : undefined;
   }
 
   onStart(stage: Stage): void {

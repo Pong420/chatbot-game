@@ -164,6 +164,11 @@ test('main', async () => {
 
   await next(() => board.voted(game.stage));
 
+  // Guard --------------------------------------------------------------------------------
+
+  await next(board.guardGroup());
+  expect(game.getPlayer(guard.userId).isDead).toBe(true);
+
   // Night --------------------------------------------------------------------------------
 
   await next(board.werewolfGroup());
@@ -176,6 +181,11 @@ test('main', async () => {
   await next(board.witcherGroup());
   await witcher.s(t(`IamWitcher`)).toEqual(board.poison(stage, witcher.userId));
   await witcher.s(t.regex(`Poison`, villagers[2].name)).toTextMessage(t(`PoisonSuccess`));
+
+  // Predictor --------------------------------------------------------------------------------
+
+  await next(board.predictorGroup());
+  expect(game.getPlayer(predictor.userId).isDead).toBe(true);
 
   // Daytime --------------------------------------------------------------------------------
 

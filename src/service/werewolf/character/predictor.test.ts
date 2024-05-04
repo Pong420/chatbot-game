@@ -79,6 +79,7 @@ test('predictor', () => {
   nextStage('Night');
   werewolfs[0].idle();
 
+  nextStage('Predictor');
   nextStage('Daytime');
 
   nextStage('Vote');

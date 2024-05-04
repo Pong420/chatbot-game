@@ -103,7 +103,9 @@ export function testSuite() {
 
     numOfPlayers = customCharacters?.length || numOfPlayers || 6;
 
-    expect(() => game.next()).toThrowError(t('NoEnoughPlayers', 6));
+    expect(() => game.next()).toThrowError(
+      t('NoEnoughPlayers', customCharacters?.length ? customCharacters?.length : 6)
+    );
 
     for (let i = 0; i < numOfPlayers; i++) {
       const name = `player_${i}`;

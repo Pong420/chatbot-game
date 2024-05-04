@@ -9,7 +9,7 @@ export default function Layout({ children, params }: React.PropsWithChildren<Doc
 
   return (
     <div className="min-h-full flex flex-col">
-      <Header />
+      <Header siderbarLabel="文檔" sidebar={<DocNav />} />
       <main className="container flex-1 items-start flex max-w-screen-xl px-4">
         <Sidebar hidden={!doc?.navbar}>
           <DocNav />

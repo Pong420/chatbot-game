@@ -10,6 +10,7 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-full">
       <Header />
+
       <main className="container max-w-7xl flex-1 pt-4 sm:pt-12 md:pt-30 pb-10 select-none">
         <div className="flex flex-col-reverse gap-4 mx-auto items-center text-center sm:flex-row sm:text-left sm:justify-between sm:items-start">
           <div>

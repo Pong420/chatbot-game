@@ -44,7 +44,7 @@ export async function generateStaticParams(): Promise<DocPageProps['params'][]> 
   }));
 }
 
-export function getLocale(type: string) {
+function getLocale(type: string) {
   switch (type) {
     case 'line':
       return import('@line/locales');

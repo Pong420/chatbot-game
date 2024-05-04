@@ -4,26 +4,14 @@ import { allDocs } from 'contentlayer/generated';
 import { format, parseISO } from 'date-fns';
 import { absoluteUrl, cn } from '@/lib/utils';
 import { getTableOfContents } from '@/lib/toc';
+import { DocPageProps, getDocFromParams } from '@/lib/doc';
 import { translate, translateRegex } from '@/utils/locale';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Mdx } from '@/components/mdx-components';
 import { DocToc } from '@/components/Doc/DocToc';
 import '@/app/mdx.css';
 
-interface DocPageProps {
-  params: {
-    slug: string[];
-  };
-}
-
-async function getDocFromParams({ params }: DocPageProps) {
-  const slug = params.slug?.join('/') || '';
-  const doc = allDocs.find(doc => doc.slugAsParams === slug);
-  return doc || null;
-}
-
 export async function generateMetadata({ params }: DocPageProps): Promise<Metadata> {
-  const doc = await getDocFromParams({ params });
+  const doc = getDocFromParams({ params });
 
   if (!doc) {
     return {};
@@ -56,7 +44,7 @@ export async function generateStaticParams(): Promise<DocPageProps['params'][]> 
   }));
 }
 
-function getLocale(type: string) {
+export function getLocale(type: string) {
   switch (type) {
     case 'line':
       return import('@line/locales');
@@ -66,7 +54,7 @@ function getLocale(type: string) {
 }
 
 export default async function DocPage({ params }: DocPageProps) {
-  const doc = await getDocFromParams({ params });
+  const doc = getDocFromParams({ params });
 
   if (!doc) {
     return null;
@@ -101,13 +89,9 @@ export default async function DocPage({ params }: DocPageProps) {
         </div>
       </article>
       {doc.toc && (
-        <div className="hidden text-sm md:block">
-          <div className="fixed top-14">
-            <ScrollArea className="pb-10">
-              <div className="sticky top-16 -mt-10 h-[calc(100vh-3.5rem)] py-12">
-                <DocToc toc={toc} />
-              </div>
-            </ScrollArea>
+        <div className="hidden text-sm lg:block">
+          <div className="fixed top-14 py-10">
+            <DocToc toc={toc} />
           </div>
         </div>
       )}

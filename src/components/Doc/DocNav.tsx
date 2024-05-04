@@ -4,11 +4,11 @@ import { useState, Fragment } from 'react';
 import { usePathname } from 'next/navigation';
 import { ChevronRightIcon, ChevronDownIcon } from '@radix-ui/react-icons';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { docEntries, DocItem } from '@/components/constants';
+import { docEntries, Doc } from '@/lib/doc';
 import { SidebarItem, SidebarItemProps } from '@/components/Sidebar/SidebarItem';
 
 export interface DocNestedNavProps {
-  docs: DocItem;
+  docs: Doc[];
   defaultOpen: boolean;
   isActive?: SidebarItemProps['isActive'];
 }

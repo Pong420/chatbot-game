@@ -1,15 +1,17 @@
-// import { DocNavBar } from '@/components/Doc/DocNav';
-import { DocNav } from '@/components/Doc/DocNav';
-import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
 import { Sidebar } from '@/components/Sidebar/Sidebar';
+import { DocNav } from '@/components/Doc/DocNav';
+import { DocPageProps, getDocFromParams } from '@/lib/doc';
 
-export default function Layout({ children }: React.PropsWithChildren) {
+export default function Layout({ children, params }: React.PropsWithChildren<DocPageProps>) {
+  const doc = getDocFromParams({ params });
+
   return (
     <div className="min-h-full flex flex-col">
       <Header />
       <main className="container flex-1 items-start flex max-w-screen-xl px-4">
-        <Sidebar>
+        <Sidebar hidden={!doc?.navbar}>
           <DocNav />
         </Sidebar>
         {children}

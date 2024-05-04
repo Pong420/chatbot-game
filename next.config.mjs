@@ -11,7 +11,10 @@ const nextConfig = {
     };
   },
   async redirects() {
-    return [{ source: '/docs/werewolf', destination: '/docs/werewolf/flow', permanent: true }];
+    return [
+      { source: '/docs/werewolf', destination: '/docs/werewolf/flow', permanent: true },
+      { source: '/docs', destination: '/docs/todo', permanent: true }
+    ];
   },
 
   webpack(config, { webpack }) {

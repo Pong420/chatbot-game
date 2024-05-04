@@ -3,34 +3,13 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { format, parseISO } from 'date-fns';
 import { allPosts } from 'contentlayer/generated';
-import { Mdx } from '@/components/mdx-components';
-import { Sidebar } from '@/components/Sidebar/Sidebar';
-import { PostNav } from '@/components/Post/PostNav';
+import { PostProps, getPostFromParams } from '@/lib/post';
 import { cn } from '@/lib/utils';
-
-interface PostProps {
-  params: {
-    slug?: string[];
-  };
-}
-
-async function getPostFromParams(params: PostProps['params']) {
-  const slug = params?.slug?.join('/');
-  const post = allPosts.find(post => post.slugAsParams === slug);
-
-  if (!post) {
-    null;
-  }
-
-  return post;
-}
+import { Mdx } from '@/components/mdx-components';
 
 export async function generateMetadata({ params }: PostProps): Promise<Metadata> {
-  const post = await getPostFromParams(params);
-
-  if (!post) {
-    return {};
-  }
+  const post = getPostFromParams(params);
+  if (!post) return {};
 
   return {
     title: post.title,
@@ -68,14 +47,11 @@ export default async function PostPage({ params }: PostProps) {
     );
   }
 
-  const post = await getPostFromParams(params);
+  const post = getPostFromParams(params);
   if (!post) return notFound();
 
   return (
     <>
-      <Sidebar>
-        <PostNav />
-      </Sidebar>
       <article className="flex-1">
         <div className="py-6 pr-6 lg:py-8">
           <h1 className={cn('scroll-m-20 text-4xl font-bold tracking-tight')}>{post.title}</h1>

@@ -134,8 +134,12 @@ export class Game extends GameInstance {
       Voted
     ];
 
-    const nextIndex = (stages.indexOf(CurrStage) + 1) % stages.length;
-    const NextStage = stages[nextIndex];
+    const getNext = (stage: typeof Stage) => {
+      const nextIndex = (stages.indexOf(stage) + 1) % stages.length;
+      return stages[nextIndex];
+    };
+
+    const NextStage = getNext(CurrStage);
 
     if (!NextStage) {
       throw `cannot get next stage from ${this.stage.name}`;
@@ -150,7 +154,7 @@ export class Game extends GameInstance {
     }
 
     if (this.stage instanceof HunterEnd) {
-      return this.stage.ref === 'vote' ? this.getNextStage(Voted) : Vote;
+      return this.stage.ref === 'vote' ? getNext(Voted) : Vote;
     }
 
     if (typeof NextStage.available === 'function' && !NextStage.available(this.stage)) {

@@ -63,7 +63,7 @@ test('basic', () => {
   werewolfs[1].kill(guard);
 
   nextStage('Witcher');
-  witcher.poison(hunter);
+  witcher.poison(werewolfs[1]);
 
   nextStage('Predictor');
   nextStage('Daytime');
@@ -73,4 +73,31 @@ test('basic', () => {
   nextStage('Voted');
 
   nextStage('Guard');
+
+  nextStage('Night');
+  werewolfs[0].kill(witcher);
+
+  nextStage('Witcher');
+  nextStage('Predictor');
+  nextStage('Daytime');
+  nextStage('Vote');
+
+  allVoteTo(hunter);
+
+  nextStage('Voted');
+  nextStage('Hunter');
+
+  hunter.noShoot();
+
+  nextStage('HunterEnd');
+
+  nextStage('Guard');
+  nextStage('Night');
+  werewolfs[0].kill(villagers[0]);
+
+  nextStage('Witcher');
+  nextStage('Predictor');
+  nextStage('Daytime');
+
+  nextStage('End');
 });

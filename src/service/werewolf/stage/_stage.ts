@@ -45,6 +45,9 @@ export class Stage {
     return this._survivors.map(id => this.players.get(id)!);
   }
 
+  /**
+   * For display who death
+   */
   protected _death: string[] = [];
 
   @Exclude()
@@ -52,6 +55,9 @@ export class Stage {
     return this._death.map(id => this.players.get(id)!);
   }
 
+  /**
+   * For witcher know who being death
+   */
   @Exclude()
   get nearDeath() {
     return this.survivors.filter(s => !!s.causeOfDeath.length);

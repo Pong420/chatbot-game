@@ -1,4 +1,3 @@
-import { parseISO } from 'date-fns';
 import { WebhookEvent } from '@line/bot-sdk';
 import { isGroupEvent } from '@line/types';
 import { createHandler } from '@line/handler';
@@ -20,18 +19,17 @@ export default [
   /**
    * Auto update game stage if anyone sent a menssage in the group
    * This function should put at last, prevents blocked the other handler
+   *
+   * Known issue:
+   * If witcher no more medicine, the stage may skip immediately then the players may reliased that.
    */
   createHandler(
     (event: WebhookEvent) => isGroupEvent(event) && event.type === 'message',
     WerewolfGame,
-    async ({ game, data }) => {
+    async ({ game }) => {
       if (!game.autoMode) return;
       if (game.stage instanceof Init || game.stage instanceof Start) return;
-      /**
-       * Amins to prevents prevents stage changed immediately
-       * Else player may know witcher used all medicine are used
-       */
-      if (+new Date() - +parseISO(data.updated_at) < 3000) return;
+
       try {
         game.next();
         await updateGame(game);

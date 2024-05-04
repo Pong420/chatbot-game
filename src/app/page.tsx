@@ -1,5 +1,4 @@
 import Link from 'next/link';
-
 import { default as LineLogo } from '@/assets/LINE_logo.svg';
 import { Logo } from '@/components/Logo';
 import { Header } from '@/components/Header';

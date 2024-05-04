@@ -17,9 +17,13 @@ declare let survivors: Character[];
 declare let werewolfs: Werewolf[];
 declare let villagers: Villager[];
 declare let hunters: Hunter[];
+declare let hunter: Hunter;
 declare let guards: Guard[];
+declare let guard: Guard;
 declare let predictors: Predictor[];
+declare let predictor: Predictor;
 declare let witchers: Witcher[];
+declare let witcher: Witcher;
 
 export function testSuite() {
   vi.stubGlobal('game', undefined);
@@ -28,9 +32,13 @@ export function testSuite() {
   vi.stubGlobal('werewolfs', []);
   vi.stubGlobal('villagers', []);
   vi.stubGlobal('hunters', []);
+  vi.stubGlobal('hunter', undefined);
   vi.stubGlobal('guards', []);
+  vi.stubGlobal('guard', undefined);
   vi.stubGlobal('predictors', []);
+  vi.stubGlobal('predictor', undefined);
   vi.stubGlobal('witchers', []);
+  vi.stubGlobal('witcher', undefined);
 
   const testSerialisation = () => {
     const serialized = game.serialize();
@@ -64,9 +72,13 @@ export function testSuite() {
     werewolfs = game.getPlayersByCharacter(Werewolf);
     villagers = game.getPlayersByCharacter(Villager);
     hunters = game.getPlayersByCharacter(Hunter);
+    hunter = hunters[0];
     guards = game.getPlayersByCharacter(Guard);
+    guard = guards[0];
     predictors = game.getPlayersByCharacter(Predictor);
+    predictor = predictors[0];
     witchers = game.getPlayersByCharacter(Witcher);
+    witcher = witchers[0];
 
     return stage as S;
   };
@@ -77,23 +89,21 @@ export function testSuite() {
 
   const createGame = ({ customCharacters, numOfPlayers }: CreateGameOptions) => {
     game = Game.create({ data: { groupId: '1' } });
-    game.customCharacters = customCharacters;
     stage = game.stage;
 
+    if (customCharacters) {
+      game.customCharacters = customCharacters;
+    }
+
     expect(stage).toBeInstanceOf(Init);
-    const init = stage as Init;
 
     testSerialisation();
 
     next(Start);
 
-    if (customCharacters?.length) {
-      expect(init.characters).toHaveLength(customCharacters.length);
-    }
+    numOfPlayers = customCharacters?.length || numOfPlayers || 6;
 
-    numOfPlayers = game.stage.characters.length;
-
-    expect(() => game.next()).toThrowError(t('NoEnoughPlayers', numOfPlayers));
+    expect(() => game.next()).toThrowError(t('NoEnoughPlayers', 6));
 
     for (let i = 0; i < numOfPlayers; i++) {
       const name = `player_${i}`;

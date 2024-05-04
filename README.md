@@ -10,6 +10,7 @@
     - werewolves know each other
       - kill one or idle
   - debounce response
+  - fix stage should not be skip, if the characters are dead
 
 ## Development
 

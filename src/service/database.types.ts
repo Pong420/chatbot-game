@@ -28,6 +28,96 @@ export type Database = {
   };
   public: {
     Tables: {
+      achievement: {
+        Row: {
+          bad_shot: number;
+          bodhisattva: number;
+          dead_on_the_first_day: number;
+          fratricidal_fighting: number;
+          god_of_gamblers: number;
+          good_werewolf: number;
+          i_am_guard: number;
+          i_am_hunter: number;
+          i_am_predictor: number;
+          i_am_villager: number;
+          i_am_werewolf: number;
+          i_am_witcher: number;
+          id: number;
+          killed_by_vote: number;
+          last_of_survivor: number;
+          lonely_werewolf: number;
+          nice_shot: number;
+          nightmare: number;
+          no_shot: number;
+          poison_master: number;
+          protected: number;
+          selfless: number;
+          suicided: number;
+          traitor: number;
+          user_id: string;
+          vote_to_kill: number;
+          voyeur: number;
+        };
+        Insert: {
+          bad_shot?: number;
+          bodhisattva?: number;
+          dead_on_the_first_day?: number;
+          fratricidal_fighting?: number;
+          god_of_gamblers?: number;
+          good_werewolf?: number;
+          i_am_guard?: number;
+          i_am_hunter?: number;
+          i_am_predictor?: number;
+          i_am_villager?: number;
+          i_am_werewolf?: number;
+          i_am_witcher?: number;
+          id?: number;
+          killed_by_vote?: number;
+          last_of_survivor?: number;
+          lonely_werewolf?: number;
+          nice_shot?: number;
+          nightmare?: number;
+          no_shot?: number;
+          poison_master?: number;
+          protected?: number;
+          selfless?: number;
+          suicided?: number;
+          traitor?: number;
+          user_id: string;
+          vote_to_kill?: number;
+          voyeur?: number;
+        };
+        Update: {
+          bad_shot?: number;
+          bodhisattva?: number;
+          dead_on_the_first_day?: number;
+          fratricidal_fighting?: number;
+          god_of_gamblers?: number;
+          good_werewolf?: number;
+          i_am_guard?: number;
+          i_am_hunter?: number;
+          i_am_predictor?: number;
+          i_am_villager?: number;
+          i_am_werewolf?: number;
+          i_am_witcher?: number;
+          id?: number;
+          killed_by_vote?: number;
+          last_of_survivor?: number;
+          lonely_werewolf?: number;
+          nice_shot?: number;
+          nightmare?: number;
+          no_shot?: number;
+          poison_master?: number;
+          protected?: number;
+          selfless?: number;
+          suicided?: number;
+          traitor?: number;
+          user_id?: string;
+          vote_to_kill?: number;
+          voyeur?: number;
+        };
+        Relationships: [];
+      };
       games: {
         Row: {
           created_at: string;

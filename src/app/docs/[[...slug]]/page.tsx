@@ -8,7 +8,6 @@ import { DocPageProps, getDocFromParams } from '@/lib/doc';
 import { translate, translateRegex } from '@/utils/locale';
 import { Mdx } from '@/components/mdx-components';
 import { DocToc } from '@/components/Doc/DocToc';
-import '@/app/mdx.css';
 
 export async function generateMetadata({ params }: DocPageProps): Promise<Metadata> {
   const doc = getDocFromParams({ params });

@@ -8,6 +8,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from './ui/checkbox';
+import '@/app/mdx.css';
 
 const components = {
   Accordion,

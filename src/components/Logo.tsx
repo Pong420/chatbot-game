@@ -3,8 +3,21 @@ import logo from '@/assets/logo.png';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import Link from 'next/link';
 
-export function Logo({ withTooltip = true, ...props }: Partial<ImageProps> & { withTooltip?: boolean }) {
-  const content = <Image {...props} src={logo} alt="Pixel Art - Robot 1 by ProjectRobo1989" />;
+export function Logo({
+  withTooltip = true,
+  size,
+  ...props
+}: Partial<ImageProps> & { size?: number; withTooltip?: boolean }) {
+  const content = (
+    <Image
+      {...props}
+      src={logo}
+      width={size}
+      height={size ? (71 / 64) * size : undefined}
+      priority
+      alt="Pixel Art - Robot 1 by ProjectRobo1989"
+    />
+  );
 
   if (withTooltip) {
     return (

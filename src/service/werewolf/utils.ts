@@ -1,5 +1,5 @@
-import { type CharacterKey } from '@werewolf/character';
-import { t } from '@werewolf/locales';
+import { CharacterKey } from './character';
+import { t } from './locales';
 
 export interface CharacterProps {
   good: boolean;

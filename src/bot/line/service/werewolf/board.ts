@@ -18,6 +18,7 @@ import {
   uriAction,
   orderList
 } from '@line/utils/createMessage';
+import { liffUrl } from '@line/utils/liff';
 
 interface PlayerListProps {
   names: string[];
@@ -40,12 +41,7 @@ export function initiate(id: number) {
     rows: orderList(t.paragraph('SettingsDesc')),
     buttons: [
       primaryButton(messageAction(t(`UseDefaultSetup`), t(`SetupCompleted`))),
-      secondaryButton(
-        uriAction(
-          t(`UseCustomSetup`),
-          `https://liff.line.me/${process.env.NEXT_PUBLIC_LIFF_ID}/werewolf/settings/${id}`
-        )
-      )
+      secondaryButton(uriAction(t(`UseCustomSetup`), liffUrl(`/werewolf/settings/${id}`)))
     ]
   });
 }

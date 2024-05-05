@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { type Character } from '@/app/werewolf/settings/utils';
+import { type Character } from '@werewolf/utils';
 
 export interface CharacterSelectorProps {
   characters: Character[];

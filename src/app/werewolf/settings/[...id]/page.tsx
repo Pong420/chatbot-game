@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import { redirect, RedirectType } from 'next/navigation';
 import { checkIsLineClient } from '@line/next';
 import { SettingForm } from '@/components/werewolf/SettingForm';
-import { characters } from '@/app/werewolf/settings/utils';
-import { updateSettings } from '../actions';
+import { updateSettings } from '@/service/actions/werewolf';
+import { characters } from '@werewolf/utils';
 
 export const metadata: Metadata = {
   title: `狼人殺設定`

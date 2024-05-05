@@ -4,8 +4,35 @@ import { z } from 'zod';
 import { Init } from '@werewolf/stage';
 import { type GameSettingOption, Werewolf } from '@werewolf/game';
 import { CharacterKey } from '@werewolf/character';
+import { t } from '@werewolf/locales';
 import { GameStatus, getGame, updateGame } from '@service/game';
-import { charactersMap } from './utils';
+
+export interface CharacterProps {
+  good: boolean;
+}
+
+export interface Character {
+  key: string;
+  name: string;
+  props: CharacterProps;
+}
+
+export const charactersMap: Record<CharacterKey, CharacterProps> = {
+  Werewolf: { good: false },
+  Villager: { good: true },
+  Witcher: { good: true },
+  Guard: { good: true },
+  Hunter: { good: true },
+  Predictor: { good: true }
+};
+
+export const characters = Object.entries(charactersMap).map(([key, props]) => {
+  return {
+    key,
+    props,
+    name: t(key as CharacterKey)
+  };
+});
 
 const schema = z.object({
   autoMode: z.boolean().optional(),

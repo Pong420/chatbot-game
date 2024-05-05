@@ -1,13 +1,13 @@
 'use server';
 
 import { z } from 'zod';
+import { revalidatePath } from 'next/cache';
 import { GameStatus, getGame, updateGame } from '@service/game';
-import { createMessage, CreateMessagePayload } from '@service/chat';
+import { CreateMessage, createMessage, getChat } from '@service/chat';
 import { Init } from '@werewolf/stage';
 import { type GameSettingOption, Werewolf } from '@werewolf/game';
 import { charactersMap } from '@werewolf/utils';
 import { CharacterKey } from '@werewolf/character';
-import { revalidatePath } from 'next/cache';
 
 const schema = z.object({
   autoMode: z.boolean().optional(),
@@ -66,28 +66,38 @@ export async function updateSettings(
   }
 }
 
-export async function sendMessage(
-  gameId: number,
-  groupId: string,
-  { sender: userId, ...payload }: Omit<CreateMessagePayload, 'chat'>
-) {
-  const chat = `${gameId}_${groupId}`;
-  // const game = await isWerewolfGame(gameId);
-  // if (!game) return { message: `遊戲不存在` };
+export interface SendMessage extends Omit<CreateMessage, 'chat' | 'sender'> {
+  userId: string;
+}
 
-  // const player = game.players.get(sender);
-  // if (!(player && player instanceof Werewolf)) return { message: '玩家不存在' };
+export async function sendMessage(chat: string, { userId, ...payload }: SendMessage) {
+  const chatResp = await getChat({ chat });
+  if (!chatResp.data?.game) return { data: null, error: 'Not Found' };
 
-  const { error } = await createMessage({
+  let sender = userId;
+
+  if (process.env.NODE_ENV === 'production') {
+    const { game: gameId } = chatResp.data;
+    const game = await isWerewolfGame(gameId);
+    if (!game) return { message: `遊戲不存在` };
+
+    const player = game.players.get(userId);
+    if (!(player && player instanceof Werewolf)) return { message: '玩家不存在' };
+
+    sender = player.nickname;
+  }
+
+  const { data, error } = await createMessage({
     chat,
-    // sender: player.nickname,
-    sender: 'Pong',
+    sender,
     ...payload
   });
 
   if (error) {
-    return { message: error.message };
+    return { data, error: error.message };
   }
 
-  revalidatePath(`/werewolf/chat/${gameId}/${groupId}/`, 'layout');
+  revalidatePath(`/chat/${chat}`);
+
+  return { data: data[0], error };
 }

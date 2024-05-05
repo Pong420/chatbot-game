@@ -1,62 +1,74 @@
 'use client';
 
 import { useState, useEffect, useTransition } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-import { ChatInput } from './ChatInput';
-import { LoadingScreen } from '../LoadingScreen';
 import { Message } from '@service/chat';
+import { sendMessage, SendMessage } from '@service/actions/werewolf';
+import { supabase } from '@service/supabase.borwser';
+import { ChatInput } from './ChatInput';
 import { ChatMessage } from './ChatMessage';
+import { RealtimeChannel } from '@supabase/supabase-js';
 
 export interface SubmitPayload {
   text: string;
-  sender: string;
+  userId: string;
 }
 
 export interface ChatProps {
-  userId?: string;
+  chat: string;
   initialMessages: Message[];
-  onSubmit: (payload: SubmitPayload) => Promise<{ message: string } | undefined>;
+  onSubmit: (payload: SendMessage) => ReturnType<typeof sendMessage>;
 }
 
 const scrollToBottom = () => {
   window.scrollTo(0, document.documentElement.scrollHeight);
 };
 
-export function Chat({ userId, initialMessages, onSubmit }: ChatProps) {
-  // const [userId, setUserId] = useState<string>();
+export function Chat({ chat, initialMessages, onSubmit }: ChatProps) {
+  const [channel, setChannel] = useState<RealtimeChannel>();
   const [messages, setMessages] = useState(initialMessages);
   const [sendingMessage, startSendMessage] = useTransition();
-  const router = useRouter();
-  const pathname = usePathname();
+  const [getUserId] = useState(async () => {
+    try {
+      const { liff } = await import('@line/liff');
+      const liffId = process.env.NEXT_PUBLIC_LIFF_ID || '';
+      await liff.init({ liffId });
+      const { userId } = await liff.getProfile();
+      return userId;
+    } catch (error) {
+      return 'Anonymous';
+    }
+  });
 
   const handleSubmit = (text: string) => {
-    // if (!profile) return;
-    if (!userId) return;
+    text = text.trim();
+    if (!text) return;
     startSendMessage(async () => {
-      await onSubmit({ text, sender: userId });
+      const userId = await getUserId;
+      const { data } = await onSubmit?.({ text, userId });
+      data && channel?.send({ type: 'broadcast', event: 'message', payload: data });
     });
   };
 
   useEffect(() => {
-    if (userId) return;
-    async function init() {
-      // const { liff } = await import('@line/liff');
-      // const liffId = process.env.NEXT_PUBLIC_LIFF_ID || '';
-      // await liff.init({ liffId });
-      // const profile = await liff.getProfile();
-      const profile = { userId: 'testing' };
-      router.push(`${pathname}/${profile.userId}`);
-    }
-    init().catch(console.log);
-  }, [userId, router, pathname]);
+    const channel = supabase
+      .channel(chat, {
+        config: {
+          broadcast: { self: true }
+        }
+      })
+      .on('broadcast', { event: 'message' }, resp => {
+        if (resp.type === 'broadcast' && resp.event === 'message') {
+          setMessages(messages => [...messages, resp['payload']]);
+        }
+      })
+      .subscribe();
+    setChannel(channel);
+    return () => {
+      channel.unsubscribe();
+    };
+  }, [chat]);
 
-  useEffect(() => {
-    scrollToBottom();
-  }, []);
-
-  if (!userId) {
-    return <LoadingScreen />;
-  }
+  useEffect(() => scrollToBottom(), [messages]);
 
   return (
     <>

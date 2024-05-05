@@ -1,28 +1,18 @@
-'use server';
-
 import { supabase } from '@service/supabase';
-import { Tables } from './database.types';
+import { Tables, TablesInsert } from './database.types';
 
-export type Message = Tables<'chats'>;
+export type Chat = Tables<'chats'>;
+export type Message = Tables<'chat_messages'>;
+export type CreateMessage = TablesInsert<'chat_messages'>;
 
-export interface GetChatMessages {
-  chat: string;
+export async function getChat({ chat }: { chat: string }) {
+  return supabase.from('chats').select('*').eq('id', chat).single();
 }
 
-export interface CreateMessagePayload {
-  chat: string;
-  text: string;
-  sender: string;
+export async function createMessage(payload: CreateMessage) {
+  return supabase.from('chat_messages').insert(payload).select();
 }
 
-export async function createMessage({ chat, text, sender }: CreateMessagePayload) {
-  return supabase.from('chats').insert({
-    chat,
-    text,
-    sender
-  });
-}
-
-export async function getMessages({ chat }: GetChatMessages) {
-  return supabase.from('chats').select('*').eq('chat', chat);
+export async function getMessages({ chat }: { chat: string }) {
+  return supabase.from('chat_messages').select('*').eq('chat', chat);
 }

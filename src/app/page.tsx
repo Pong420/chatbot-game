@@ -40,6 +40,7 @@ export default function Home() {
             description="用於遊戲或者機器人相關回覆，默認使用聊天軟件中的暱稱，之後可以向機器人提交修改暱稱指示，修改聊天軟件的暱稱後不會自動更新。"
           />
           <Feature
+            path="designation"
             title="稱號系統 (未完成)"
             description="參與遊戲並達成某種條件取得，例如狼人殺的【我是村民」，「嫌疑犯」，「披著羊皮的狼】，用於遊戲或者機器人相關回覆。"
           />

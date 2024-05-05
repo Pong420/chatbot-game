@@ -1,38 +1,13 @@
 'use server';
 
 import { z } from 'zod';
+import { GameStatus, getGame, updateGame } from '@service/game';
+import { createMessage, CreateMessagePayload } from '@service/chat';
 import { Init } from '@werewolf/stage';
 import { type GameSettingOption, Werewolf } from '@werewolf/game';
+import { charactersMap } from '@werewolf/utils';
 import { CharacterKey } from '@werewolf/character';
-import { t } from '@werewolf/locales';
-import { GameStatus, getGame, updateGame } from '@service/game';
-
-export interface CharacterProps {
-  good: boolean;
-}
-
-export interface Character {
-  key: string;
-  name: string;
-  props: CharacterProps;
-}
-
-export const charactersMap: Record<CharacterKey, CharacterProps> = {
-  Werewolf: { good: false },
-  Villager: { good: true },
-  Witcher: { good: true },
-  Guard: { good: true },
-  Hunter: { good: true },
-  Predictor: { good: true }
-};
-
-export const characters = Object.entries(charactersMap).map(([key, props]) => {
-  return {
-    key,
-    props,
-    name: t(key as CharacterKey)
-  };
-});
+import { revalidatePath } from 'next/cache';
 
 const schema = z.object({
   autoMode: z.boolean().optional(),
@@ -40,18 +15,22 @@ const schema = z.object({
   werewolvesKnowEachOthers: z.boolean().optional()
 } satisfies Record<keyof GameSettingOption, unknown>);
 
+export async function isWerewolfGame(id: number) {
+  const data = await getGame(id, { status: GameStatus.OPEN }).catch(() => null);
+  if (!data || data.type !== Werewolf.type) return null;
+  return Werewolf.create(data);
+}
+
 export async function updateSettings(
-  id: number,
+  gameId: number,
   hostId: string,
   payload: z.infer<typeof schema>
 ): Promise<{ message?: string }> {
   const { customCharacters } = payload;
 
   try {
-    const data = await getGame(id, { status: GameStatus.OPEN }).catch(() => null);
-
-    if (!data || data.type !== Werewolf.type) return { message: `遊戲不存在` };
-    const game = Werewolf.create(data);
+    const game = await isWerewolfGame(gameId);
+    if (!game) return { message: `遊戲不存在` };
 
     if (game.host !== hostId) return { message: `只有主持人可以進行設定` };
     if (!(game.stage instanceof Init)) return { message: `遊戲已開始，無法更改設定` };
@@ -85,4 +64,30 @@ export async function updateSettings(
   } catch (error) {
     return { message: '設定失敗' };
   }
+}
+
+export async function sendMessage(
+  gameId: number,
+  groupId: string,
+  { sender: userId, ...payload }: Omit<CreateMessagePayload, 'chat'>
+) {
+  const chat = `${gameId}_${groupId}`;
+  // const game = await isWerewolfGame(gameId);
+  // if (!game) return { message: `遊戲不存在` };
+
+  // const player = game.players.get(sender);
+  // if (!(player && player instanceof Werewolf)) return { message: '玩家不存在' };
+
+  const { error } = await createMessage({
+    chat,
+    // sender: player.nickname,
+    sender: 'Pong',
+    ...payload
+  });
+
+  if (error) {
+    return { message: error.message };
+  }
+
+  revalidatePath(`/werewolf/chat/${gameId}/${groupId}/`, 'layout');
 }

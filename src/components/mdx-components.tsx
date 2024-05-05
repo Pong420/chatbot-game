@@ -51,13 +51,13 @@ const components = {
     <p className={cn('leading-7 [&:not(:first-child)]:mt-6', className)} {...props} />
   ),
   ul: ({ className, ...props }: React.HTMLAttributes<HTMLUListElement>) => (
-    <ul className={cn('my-6 ml-6 list-disc', className)} {...props} />
+    <ul className={cn('my-6 ml-6 list-disc first:mt-0', className)} {...props} />
   ),
   ol: ({ className, ...props }: React.HTMLAttributes<HTMLOListElement>) => (
-    <ol className={cn('my-6 ml-6 list-decimal', className)} {...props} />
+    <ol className={cn('my-6 ml-6 list-decimal first:mt-0', className)} {...props} />
   ),
   li: ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => (
-    <li className={cn('mt-2', className)} {...props} />
+    <li className={cn('mt-2', 'first:mt-0', className)} {...props} />
   ),
   blockquote: ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => (
     <blockquote className={cn('mt-6 border-l-2 pl-6 italic', className)} {...props} />

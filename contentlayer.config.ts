@@ -21,9 +21,10 @@ const slugFields = (): ComputedFields => ({
 
 const getDescription = (content: string, length: number) => {
   content = content.trim();
-  length = Math.min(content.length, length);
 
   const total = wordsCount(content);
+  length = Math.min(total, length);
+
   let result = content.slice(0, length);
   let i = 0;
   while (wordsCount(result) < length) {

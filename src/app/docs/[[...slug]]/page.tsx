@@ -60,11 +60,11 @@ export default async function DocPage({ params }: DocPageProps) {
     return null;
   }
 
+  const toc = await getTableOfContents(doc.body.raw);
+
   const messages = await Promise.all(doc.messages?.split(',').map(getLocale) || []).then(modules =>
     modules.reduce((r, m) => (m ? { ...r, ...m?.messages } : r), {} as Record<string, string | string[]>)
   );
-
-  const toc = await getTableOfContents(doc.body.raw);
 
   const globals = {
     ...messages,

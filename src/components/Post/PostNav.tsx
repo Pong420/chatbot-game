@@ -17,11 +17,14 @@ export function PostNav() {
 
   return (
     <>
-      {allPosts.map(p => (
-        <SidebarItem key={p._id} level={2} href={p.slug} isActive={isActive}>
-          <div className=" text-ellipsis overflow-hidden">{p.title}</div>
-        </SidebarItem>
-      ))}
+      {allPosts
+        .slice()
+        .reverse()
+        .map(p => (
+          <SidebarItem key={p._id} level={2} href={p.slug} isActive={isActive}>
+            <div className=" text-ellipsis overflow-hidden">{p.title}</div>
+          </SidebarItem>
+        ))}
     </>
   );
 }

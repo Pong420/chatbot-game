@@ -183,6 +183,7 @@ export class Game extends GameInstance {
   }
 
   getAchivement(): [userId: string, payload: Record<string, number>][] {
+    if (this.stage.turn <= 1) return [];
     return Array.from(this.players, ([userId, player]) => [userId, achievementCount(player, this)]);
   }
 }

@@ -7,7 +7,6 @@ import { CreateMessage, createMessage, getChat } from '@service/chat';
 import { Init } from '@werewolf/stage';
 import { type GameSettingOption, Werewolf } from '@werewolf/game';
 import { charactersMap } from '@werewolf/utils';
-import { CharacterKey } from '@werewolf/character';
 
 const schema = z.object({
   autoMode: z.boolean().optional(),
@@ -29,6 +28,9 @@ export async function updateSettings(
   const { customCharacters } = payload;
 
   try {
+    const r = schema.safeParse(payload);
+    if (r.error) return { message: `Invalid Data` };
+
     const game = await isWerewolfGame(gameId);
     if (!game) return { message: `遊戲不存在` };
 
@@ -50,13 +52,9 @@ export async function updateSettings(
       if (bad < 1) return { message: `最少要一個壞人` };
       if (customCharacters.length < 6) return { message: `角色數量不能小於【6】` };
       if (customCharacters.length > 12) return { message: `角色數量不能多於【12】` };
-      game.customCharacters = customCharacters as CharacterKey[];
     }
 
-    const r = schema.safeParse(payload);
-    if (r.error) return { message: `Invalid Data` };
-
-    Object.assign(game.stage, r.data);
+    Object.assign(game, r.data);
 
     await updateGame(game);
 

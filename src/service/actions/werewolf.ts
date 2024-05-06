@@ -10,7 +10,7 @@ import { charactersMap } from '@werewolf/utils';
 
 const schema = z.object({
   autoMode: z.boolean().optional(),
-  customCharacters: z.array(z.string()).min(6).max(12).optional(),
+  customCharacters: z.array(z.string()).optional(),
   werewolvesKnowEachOthers: z.boolean().optional()
 } satisfies Record<keyof GameSettingOption, unknown>);
 
@@ -28,15 +28,6 @@ export async function updateSettings(
   const { customCharacters } = payload;
 
   try {
-    const r = schema.safeParse(payload);
-    if (r.error) return { message: `Invalid Data` };
-
-    const game = await isWerewolfGame(gameId);
-    if (!game) return { message: `遊戲不存在` };
-
-    if (game.host !== hostId) return { message: `只有主持人可以進行設定` };
-    if (!(game.stage instanceof Init)) return { message: `遊戲已開始，無法更改設定` };
-
     if (customCharacters?.length) {
       let bad = 0;
       let good = 0;
@@ -54,7 +45,16 @@ export async function updateSettings(
       if (customCharacters.length > 12) return { message: `角色數量不能多於【12】` };
     }
 
-    Object.assign(game, r.data);
+    const r = schema.safeParse(payload);
+    if (r.error) return { message: `Invalid Data` };
+
+    const game = await isWerewolfGame(gameId);
+    if (!game) return { message: `遊戲不存在` };
+
+    if (game.host !== hostId) return { message: `只有主持人可以進行設定` };
+    if (!(game.stage instanceof Init)) return { message: `遊戲已開始，無法更改設定` };
+
+    Object.assign(game.stage, r.data);
 
     await updateGame(game);
 

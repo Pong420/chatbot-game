@@ -101,7 +101,7 @@ export function settings(game: Game) {
   }
 
   rows.push(row(t(game.autoMode ? 'AutoModeEnabled' : 'AutoModeDisabled')));
-  rows.push(row(t(game.werewolvesKnowEachOthers ? `WerewolvesDontKnowEachOthers` : `WerewolvesDontKnowEachOthers`)));
+  rows.push(row(t(game.werewolvesKnowEachOthers ? `WerewolvesKnowEachOthers` : `WerewolvesDontKnowEachOthers`)));
 
   return tableMessage({
     title: [centeredText(t(`SetupCompleted`))],

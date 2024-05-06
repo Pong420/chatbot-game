@@ -13,7 +13,7 @@ export function Logo({
       {...props}
       src={logo}
       width={size}
-      height={size ? (71 / 64) * size : undefined}
+      height={size ? Math.round((781 / 707) * size) : undefined}
       priority
       alt="Pixel Art - Robot 1 by ProjectRobo1989"
     />

@@ -25,7 +25,7 @@ export default function Home() {
               </Link>
             </div>
           </div>
-          <Logo width={150} className="block sm:mr-10" style={{ transform: `scale(-1, 1)` }} />
+          <Logo size={150} className="block sm:mr-10" style={{ transform: `scale(-1, 1)` }} />
         </div>
 
         <div className="flex flex-wrap gap-y-4 mt-4 sm:mt-20 justify-between">

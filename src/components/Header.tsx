@@ -37,7 +37,7 @@ export function Header({ siderbarLabel, sidebar }: HeaderProps) {
         </SidebarMobile>
 
         <Link href="/" className="flex items-center gap-2 mr-6">
-          <Logo width={30} withTooltip={false} />
+          <Logo size={30} withTooltip={false} />
           <div className="font-bold">遊戲機器人</div>
         </Link>
 

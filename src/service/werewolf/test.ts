@@ -87,13 +87,15 @@ export function testSuite() {
     return next(stages[key] as Stages[K]);
   };
 
-  const createGame = ({ customCharacters, numOfPlayers }: CreateGameOptions) => {
+  const createGame = ({ customCharacters, numOfPlayers, ...settings }: CreateGameOptions) => {
     game = Game.create({ data: { groupId: '1' } });
     stage = game.stage;
 
-    if (customCharacters) {
+    if (customCharacters?.length) {
       game.customCharacters = customCharacters;
     }
+
+    Object.assign(game, JSON.parse(JSON.stringify({ ...settings })));
 
     expect(stage).toBeInstanceOf(Init);
 
@@ -101,7 +103,7 @@ export function testSuite() {
 
     next(Start);
 
-    numOfPlayers = customCharacters?.length || numOfPlayers || 6;
+    numOfPlayers = customCharacters?.length || numOfPlayers || 12;
 
     expect(() => game.next()).toThrowError(
       t('NoEnoughPlayers', customCharacters?.length ? customCharacters?.length : 6)

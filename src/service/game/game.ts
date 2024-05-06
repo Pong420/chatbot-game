@@ -97,3 +97,7 @@ export async function updateGame(
   Object.assign(resp.data?.data as object, { id: resp.data?.id });
   return resp.data;
 }
+
+export async function deleteGame(id: number) {
+  return supabase.from('games').delete().eq('id', id);
+}

@@ -1,8 +1,9 @@
 import { Character } from './_character';
 import { Action } from '../decorators';
 import { t } from '../locales';
-import { Killed } from '../death';
 import { Night } from '../stage';
+
+export type WerewolfDecision = { type: 'kill'; target: string } | { type: 'idle' };
 
 export class Werewolf extends Character {
   readonly type = 'Werewolf';
@@ -13,21 +14,15 @@ export class Werewolf extends Character {
   killed: string[] = [];
 
   hungry = false;
+
   knowEachOthers = false;
+  decision?: WerewolfDecision;
 
   protected _kill(character: Character) {
     const suicide = this.id === character.id;
     if (character.isDead) throw t('CantKillDeadTarget', character.id === this.id ? t('Self') : character.nickname);
     if (character.isKilledBy(this)) throw suicide ? t('DuplicatedSuicide') : t('DuplicatedKill');
-
-    if (character.isProtected.length) {
-      character.isProtected = character.isProtected.slice(0, -1);
-    } else {
-      character.dead(Killed, { userId: this.id });
-    }
-
-    this.killed.push(character.id);
-    this.hungry = false;
+    this.decision = { type: 'kill', target: character.id };
   }
 
   @Action(() => Night)
@@ -39,7 +34,7 @@ export class Werewolf extends Character {
   @Action(() => Night)
   idle() {
     if (this.hungry) throw t('Hungry');
-    this.hungry = true;
+    this.decision = { type: 'idle' };
     return t('IdleSuccess');
   }
 

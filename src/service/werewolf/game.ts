@@ -98,11 +98,13 @@ export class Game extends GameInstance {
   protected shouldEndGame() {
     const survivors = this.stage.survivors;
     const werewolfs = this.getPlayersByCharacter(Werewolf, survivors);
+    const werewolvesCount = this.werewolvesKnowEachOthers ? 1 : werewolfs.length;
+    const survivorsCount = survivors.length - werewolfs.length + werewolvesCount;
     const allDead = survivors.length === 0;
     const werewolfWin =
-      werewolfs.length > 1
-        ? survivors.length <= werewolfs.length // remaining werewolfs
-        : werewolfs.length === 1 && survivors.length <= 2; // remaining 1 werewolf and 1 good guy;
+      werewolvesCount > 1
+        ? survivors.length <= werewolvesCount // remaining werewolfs
+        : werewolvesCount === 1 && survivorsCount <= 2; // remaining 1 werewolf and 1 good guy;
     const allWerewolfsDead = !werewolfs.length;
     const ended = allDead || allWerewolfsDead || werewolfWin;
 

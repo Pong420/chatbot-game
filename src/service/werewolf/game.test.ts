@@ -28,8 +28,6 @@ test('basic', () => {
   werewolfs.forEach(w => !w.endTurn && w.idle());
   expect(() => werewolfs[0].kill(villagers[0])).toThrowError(t(`TurnEnded`));
   expect(() => villagers[0].vote(villagers[1])).toThrowError(t('VoteNotStarted'));
-  expect(stage.nearDeath).toHaveLength(1);
-  expect(stage.death).toHaveLength(0);
 
   // --------------------------------------------------------------------------------
 
@@ -95,8 +93,6 @@ test('basic', () => {
   nextStage('Night');
 
   expect(werewolfs[0].kill(villagers[1])).toEqual(t(`KillSuccss`));
-  expect(stage.nearDeath).toHaveLength(1);
-  expect(stage.death).toHaveLength(0);
 
   // --------------------------------------------------------------------------------
 

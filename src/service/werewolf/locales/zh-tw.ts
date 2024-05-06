@@ -222,6 +222,7 @@ export default defineMessages(
     VoteEndBoard: `投票結束`,
     Banishment: `{0}被處死了`,
 
+    Suicided: '自殺',
     CannotShowReport: `遊戲未完結，無法顯示`
   },
   Character,

@@ -41,17 +41,25 @@ export function getDetailReport(character: Character, game: Game) {
   }
 
   if (character instanceof Werewolf) {
-    if (character.isKilledBy(character)) {
-      desc += `感到厭世，選擇自殺，大家謹記自殺解決不了問題`;
-    } else if (character.killed.length) {
-      const killed = mapPlayers(character.killed).filter(c => c.isDead);
-      const failed = mapPlayers(character.killed).filter(c => !c.isDead);
-      desc += `成功殺死 ${stringifyCharacters(killed, true)}`;
-      if (failed.length) {
-        desc += `，嘗試殺死 ${stringifyCharacters(killed, true)} 失敗`;
+    const suicided = character.killed.includes(character.id);
+    const killed = [...new Set(character.killed.filter(id => id !== character.id))];
+
+    if (suicided) {
+      desc += '感到厭世，選擇自殺';
+      if (!character.isDead) {
+        desc += '，但最後沒有死去';
+      }
+    }
+
+    if (killed.length) {
+      const success = mapPlayers(killed).filter(c => c.isDead);
+      const fail = mapPlayers(killed).filter(c => !c.isDead);
+      desc += `成功殺死 ${stringifyCharacters(success, true)}`;
+      if (fail.length) {
+        desc += `，嘗試殺死 ${stringifyCharacters(success, true)}但失敗`;
       }
     } else {
-      desc += `沒有殺害任何人，這是【披著狼皮的羊】?`;
+      desc += `沒有殺害任何人，這是【披著狼皮的羊】`;
     }
   }
 
@@ -123,7 +131,6 @@ export function getDetailReport(character: Character, game: Game) {
         desc += '被毒死了，無法開槍';
       } else if (character.shot) {
         const target = game.getPlayer(character.shot);
-        // const { target } = character;
         desc += `開槍帶走了${stringifyCharacters([target], true)}，`;
         desc += target instanceof Werewolf ? '究竟是亂開，還是真準？' : '是私怨？還是【暴民】基因作祟?';
       } else {
@@ -157,8 +164,11 @@ export function getDeathReport(game: Game) {
           text += c.causeOfDeath
             .map(cause => {
               if (cause instanceof Voting) return `【${cause.percetage}%得票率】`;
-              else if (c.id === cause.userId) return `【自殺】`;
-              else return `【${game.getPlayer(cause.userId).nickname}】手上`;
+              else if (c.id === cause.userId) return `【${t(`Suicided`)}】`;
+              else {
+                const name = cause.userId === 'werewolves' ? t(`Werewolf`) : game.getPlayer(cause.userId).nickname;
+                return `【${name}】手上`;
+              }
             })
             .join('');
         } else {

@@ -14,6 +14,12 @@ export async function getChat({ chat }: { chat: string }) {
   return supabase.from('chats').select('*').eq('id', chat).single();
 }
 
+export async function deleteChat({ chat, gameId }: { chat?: string; gameId: number }) {
+  const req = supabase.from('chats').delete();
+  if (chat) return req.eq('id', chat);
+  if (gameId) return req.eq('game', gameId);
+}
+
 export async function createMessage(payload: CreateMessage) {
   return supabase.from('chat_messages').insert(payload).select();
 }

@@ -11,7 +11,7 @@ import { Witcher } from './witcher';
 declare let game: Game;
 declare let stage: Stage;
 declare let survivors: Character[];
-declare let werewolfs: Werewolf[];
+declare let werewolves: Werewolf[];
 declare let villagers: Villager[];
 declare let witchers: Witcher[];
 
@@ -22,7 +22,7 @@ test('witcher', () => {
   expect(game.stage).toBeInstanceOf(stages.Start);
 
   nextStage('Night');
-  werewolfs[0].idle();
+  werewolves[0].idle();
 
   nextStage('Witcher');
   expect(stage.nearDeath).toHaveLength(0);
@@ -40,7 +40,7 @@ test('witcher', () => {
   nextStage('Voted');
 
   nextStage('Night');
-  werewolfs[0].kill(villagers[0]);
+  werewolves[0].kill(villagers[0]);
 
   nextStage('Witcher');
   expect(stage.nearDeath).toHaveLength(1);
@@ -56,7 +56,7 @@ test('witcher', () => {
 
   nextStage('Voted');
   nextStage('Night');
-  werewolfs[0].kill(villagers[1]);
+  werewolves[0].kill(villagers[1]);
 
   nextStage('Witcher');
   expect(() => witchers[0].rescue(villagers[0])).toThrowError(t(`TargetIsDead`, villagers[0].nickname));
@@ -73,7 +73,7 @@ test('witcher', () => {
 
   nextStage('Night');
 
-  werewolfs[0].kill(villagers[1]);
+  werewolves[0].kill(villagers[1]);
 
   nextStage('Witcher');
   expect(() => witchers[0].rescue(villagers[1])).toThrowError(t(`Rescued`));
@@ -90,11 +90,11 @@ test('witcher', () => {
 
   nextStage('Night');
 
-  werewolfs[0].kill(witchers[0]);
+  werewolves[0].kill(witchers[0]);
 
   nextStage('Witcher');
   expect(() => witchers[0].poison(witchers[0])).toThrowError(t(`PoisonSelf`));
-  expect(witchers[0].poison(werewolfs[0])).toEqual(t(`PoisonSuccess`));
+  expect(witchers[0].poison(werewolves[0])).toEqual(t(`PoisonSuccess`));
 
   nextStage('Daytime');
 
@@ -110,7 +110,7 @@ test('witcher - no medicine', () => {
   createGame({ customCharacters: ['Werewolf', 'Witcher', 'Villager', 'Villager', 'Villager', 'Villager'] });
 
   nextStage('Night');
-  werewolfs[0].kill(villagers[0]);
+  werewolves[0].kill(villagers[0]);
 
   witchers[0].rescued = villagers[0].id;
   witchers[0].poisoned = villagers[0].id;

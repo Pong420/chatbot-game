@@ -9,7 +9,7 @@ import { Voting } from './death';
 declare let game: Game;
 declare let stage: Stage;
 declare let survivors: Character[];
-declare let werewolfs: Werewolf[];
+declare let werewolves: Werewolf[];
 declare let villagers: Villager[];
 
 test('basic', () => {
@@ -20,13 +20,13 @@ test('basic', () => {
   expect(game.players.size).toBe(6);
 
   nextStage('Night');
-  expect(werewolfs).toHaveLength(1);
+  expect(werewolves).toHaveLength(1);
   expect(villagers).toHaveLength(5);
   expect(() => game.next()).toThrowError(t('StageNotEnded'));
 
-  werewolfs[0].kill(villagers[0]);
-  werewolfs.forEach(w => !w.endTurn && w.idle());
-  expect(() => werewolfs[0].kill(villagers[0])).toThrowError(t(`TurnEnded`));
+  werewolves[0].kill(villagers[0]);
+  werewolves.forEach(w => !w.endTurn && w.idle());
+  expect(() => werewolves[0].kill(villagers[0])).toThrowError(t(`TurnEnded`));
   expect(() => villagers[0].vote(villagers[1])).toThrowError(t('VoteNotStarted'));
 
   // --------------------------------------------------------------------------------
@@ -40,14 +40,14 @@ test('basic', () => {
 
   let vote: VoteBaseStage = nextStage('Vote');
 
-  expect(() => werewolfs[0].kill(villagers[1])).toThrowError(t('NotYourTurn'));
+  expect(() => werewolves[0].kill(villagers[1])).toThrowError(t('NotYourTurn'));
 
   expect(() => villagers[0].vote(villagers[0])).toThrowError(t('YouDead'));
   expect(() => villagers[0].vote(villagers[1])).toThrowError(t('YouDead'));
   expect(() => villagers[2].vote(villagers[0])).toThrowError(t('CantKillDeadTarget', villagers[0].nickname));
 
-  villagers[1].vote(werewolfs[0]);
-  werewolfs[0].vote(villagers[1]);
+  villagers[1].vote(werewolves[0]);
+  werewolves[0].vote(villagers[1]);
 
   expect(() => game.next()).toThrowError(t('StageNotEnded'));
 
@@ -67,8 +67,8 @@ test('basic', () => {
   expect(() => game.next()).toThrowError(t('StageNotEnded'));
   expect(() => villagers[2].vote(villagers[0])).toThrowError(t('CantKillDeadTarget', villagers[0].nickname)); // expecet not to VoteOutOfRange
 
-  expect(() => villagers[1].vote(werewolfs[0])).toThrowError(t(`CandidateCantVote`));
-  expect(() => werewolfs[0].vote(villagers[1])).toThrowError(t(`CandidateCantVote`));
+  expect(() => villagers[1].vote(werewolves[0])).toThrowError(t(`CandidateCantVote`));
+  expect(() => werewolves[0].vote(villagers[1])).toThrowError(t(`CandidateCantVote`));
 
   allWaive();
 
@@ -92,7 +92,7 @@ test('basic', () => {
 
   nextStage('Night');
 
-  expect(werewolfs[0].kill(villagers[1])).toEqual(t(`KillSuccss`));
+  expect(werewolves[0].kill(villagers[1])).toEqual(t(`KillSuccss`));
 
   // --------------------------------------------------------------------------------
 
@@ -102,7 +102,7 @@ test('basic', () => {
   // --------------------------------------------------------------------------------
 
   vote = nextStage('Vote');
-  allVoteTo(werewolfs[0]);
+  allVoteTo(werewolves[0]);
 
   // --------------------------------------------------------------------------------
 
@@ -110,7 +110,7 @@ test('basic', () => {
 
   nextStage('End');
 
-  expect(werewolfs[0].isDead).toBeTrue();
-  expect(werewolfs[0].causeOfDeath[0]).toBeInstanceOf(Voting);
+  expect(werewolves[0].isDead).toBeTrue();
+  expect(werewolves[0].causeOfDeath[0]).toBeInstanceOf(Voting);
   expect(stage.death).toHaveLength(1);
 });

@@ -9,7 +9,7 @@ import { achievementCount } from './achivement';
 declare let game: Game;
 declare let stage: Stage;
 declare let survivors: Character[];
-declare let werewolfs: Werewolf[];
+declare let werewolves: Werewolf[];
 declare let villagers: Villager[];
 declare let hunters: Hunter[];
 declare let hunter: Hunter;
@@ -28,7 +28,7 @@ test('basic', () => {
   nextStage('Guard');
 
   villagers.forEach(c => expect(count(c)).toEqual({ i_am_villager: 1 }));
-  werewolfs.forEach(c => expect(count(c)).toEqual({ i_am_werewolf: 1 }));
+  werewolves.forEach(c => expect(count(c)).toEqual({ i_am_werewolf: 1 }));
   hunters.forEach(c => expect(count(c)).toEqual({ i_am_hunter: 1 }));
   guards.forEach(c => expect(count(c)).toEqual({ i_am_guard: 1 }));
   predictors.forEach(c => expect(count(c)).toEqual({ i_am_predictor: 1 }));
@@ -37,16 +37,16 @@ test('basic', () => {
   guard.protect(guard);
 
   nextStage('Night');
-  werewolfs[0].kill(werewolfs[0]);
-  werewolfs[1].kill(villagers[3]);
-  werewolfs[2].kill(werewolfs[3]);
-  werewolfs[3].kill(werewolfs[2]);
+  werewolves[0].kill(werewolves[0]);
+  werewolves[1].kill(villagers[3]);
+  werewolves[2].kill(werewolves[3]);
+  werewolves[3].kill(werewolves[2]);
 
   nextStage('Witcher');
-  witcher.rescue(werewolfs[0]);
+  witcher.rescue(werewolves[0]);
 
   nextStage('Predictor');
-  predictor.predict(werewolfs[0]);
+  predictor.predict(werewolves[0]);
 
   nextStage('Daytime');
   nextStage('Vote');
@@ -59,11 +59,11 @@ test('basic', () => {
   guard.protect(villagers[0]);
 
   nextStage('Night');
-  werewolfs[0].kill(villagers[0]);
-  werewolfs[1].kill(guard);
+  werewolves[0].kill(villagers[0]);
+  werewolves[1].kill(guard);
 
   nextStage('Witcher');
-  witcher.poison(werewolfs[1]);
+  witcher.poison(werewolves[1]);
 
   nextStage('Predictor');
   nextStage('Daytime');
@@ -75,7 +75,7 @@ test('basic', () => {
   nextStage('Guard');
 
   nextStage('Night');
-  werewolfs[0].kill(witcher);
+  werewolves[0].kill(witcher);
 
   nextStage('Witcher');
   nextStage('Predictor');
@@ -93,7 +93,7 @@ test('basic', () => {
 
   nextStage('Guard');
   nextStage('Night');
-  werewolfs[0].kill(villagers[0]);
+  werewolves[0].kill(villagers[0]);
 
   nextStage('Witcher');
   nextStage('Predictor');
@@ -111,15 +111,15 @@ test('basic', () => {
   expect(count(villagers[2])).toEqual({ i_am_villager: 1, vote_to_kill: 1 });
   expect(count(villagers[3])).toEqual({ i_am_villager: 1, dead_on_the_first_day: 1 });
 
-  expect(count(werewolfs[0])).toEqual({ i_am_werewolf: 1, god_of_gamblers: 1, nightmare: 1, traitor: 3 });
-  expect(count(werewolfs[1])).toEqual({ i_am_werewolf: 1, traitor: 2 });
-  expect(count(werewolfs[2])).toEqual({
+  expect(count(werewolves[0])).toEqual({ i_am_werewolf: 1, god_of_gamblers: 1, nightmare: 1, traitor: 3 });
+  expect(count(werewolves[1])).toEqual({ i_am_werewolf: 1, traitor: 2 });
+  expect(count(werewolves[2])).toEqual({
     i_am_werewolf: 1,
     traitor: 1,
     fratricidal_fighting: 1,
     dead_on_the_first_day: 1
   });
-  expect(count(werewolfs[3])).toEqual({
+  expect(count(werewolves[3])).toEqual({
     i_am_werewolf: 1,
     traitor: 1,
     fratricidal_fighting: 1,

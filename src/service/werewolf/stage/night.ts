@@ -41,11 +41,11 @@ export class Night extends Stage {
   }
 
   onEnd(): void {
-    const werewolfs = this.game.getPlayersByCharacter(Werewolf, this.survivors);
+    const werewolves = this.game.getPlayersByCharacter(Werewolf, this.survivors);
 
     if (this.game.werewolvesKnowEachOthers) {
       const stats: Record<string, WerewolfDecision[]> = {};
-      werewolfs.forEach(survivor => {
+      werewolves.forEach(survivor => {
         if (!survivor.decision) return;
         const d = { ...survivor.decision };
         const key = d.type === 'kill' ? `${d.type}_${d.target}` : d.type;
@@ -67,9 +67,9 @@ export class Night extends Stage {
       const decision = randomPick(result.decisions);
 
       this.handleKill(decision, 'werewolves');
-      werewolfs.forEach(werewolf => this.updateStatus(werewolf, decision));
+      werewolves.forEach(werewolf => this.updateStatus(werewolf, decision));
     } else {
-      werewolfs.forEach(werewolf => {
+      werewolves.forEach(werewolf => {
         const { decision } = werewolf;
         if (!decision) return;
         this.handleKill(decision, werewolf.id);

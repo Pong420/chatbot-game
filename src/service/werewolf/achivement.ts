@@ -80,9 +80,9 @@ export function achievementCount(character: Character, game: Game) {
     // 我是獵人
     achievement['i_am_hunter'] = 1;
 
-    const werewolfs = game.getPlayersByCharacter(Werewolf);
+    const werewolves = game.getPlayersByCharacter(Werewolf);
     // 職業獵人
-    if (werewolfs.some(c => c.isKilledBy(character))) {
+    if (werewolves.some(c => c.isKilledBy(character))) {
       achievement['nice_shot'] = 1;
     } else if (character.shot) {
       achievement['bad_shot'] = 1;

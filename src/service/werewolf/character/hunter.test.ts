@@ -11,7 +11,7 @@ import { Witcher } from './witcher';
 
 declare let game: Game;
 declare let survivors: Character[];
-declare let werewolfs: Werewolf[];
+declare let werewolves: Werewolf[];
 declare let villagers: Villager[];
 declare let hunters: Hunter[];
 declare let witchers: Witcher[];
@@ -23,7 +23,7 @@ test.each(['', 'not '])('hunter was killed - %sshot', shot => {
   expect(game.stage).toBeInstanceOf(stages.Start);
 
   nextStage('Night');
-  werewolfs[0].kill(villagers[0]);
+  werewolves[0].kill(villagers[0]);
   expect(() => hunters[0].shoot(hunters[0])).toThrowError(t(`NotReadyForShoot`));
   expect(() => hunters[0].shoot(villagers[0])).toThrowError(t(`NotReadyForShoot`));
 
@@ -34,7 +34,7 @@ test.each(['', 'not '])('hunter was killed - %sshot', shot => {
   nextStage('Voted');
 
   nextStage('Night');
-  werewolfs[0].kill(hunters[0]);
+  werewolves[0].kill(hunters[0]);
 
   nextStage('Daytime');
 
@@ -45,10 +45,10 @@ test.each(['', 'not '])('hunter was killed - %sshot', shot => {
   expect(() => hunters[1].shoot(hunters[0])).toThrowError(t(`NotReadyForShoot`));
 
   if (shot === '') {
-    hunters[0].shoot(werewolfs[0]);
-    expect(survivors).toContain(werewolfs[0]);
+    hunters[0].shoot(werewolves[0]);
+    expect(survivors).toContain(werewolves[0]);
     nextStage('HunterEnd');
-    // expect(survivors).not.toContain(werewolfs[0]);
+    // expect(survivors).not.toContain(werewolves[0]);
     // nextStage('End');
   } else {
     hunters[0].noShoot();
@@ -66,7 +66,7 @@ test('hunter - vote', () => {
   expect(game.stage).toBeInstanceOf(stages.Start);
 
   nextStage('Night');
-  werewolfs[0].idle();
+  werewolves[0].idle();
 
   nextStage('Daytime');
   nextStage('Vote');
@@ -84,7 +84,7 @@ test('hunter - witcher', () => {
   expect(game.stage).toBeInstanceOf(stages.Start);
 
   nextStage('Night');
-  werewolfs[0].kill(hunters[0]);
+  werewolves[0].kill(hunters[0]);
 
   nextStage('Witcher');
   witchers[0].rescue(hunters[0]);
@@ -96,7 +96,7 @@ test('hunter - witcher', () => {
   nextStage('Voted');
 
   nextStage('Night');
-  werewolfs[0].kill(hunters[0]);
+  werewolves[0].kill(hunters[0]);
 
   nextStage('Witcher');
   witchers[0].poison(hunters[0]);

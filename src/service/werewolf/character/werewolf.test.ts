@@ -15,7 +15,7 @@ import { Stage, stages } from '../stage';
 declare let game: Game;
 declare let stage: Stage;
 declare let survivors: Character[];
-declare let werewolfs: Werewolf[];
+declare let werewolves: Werewolf[];
 declare let villagers: Villager[];
 declare let hunter: Hunter;
 declare let guard: Guard;
@@ -28,21 +28,21 @@ test('werewolves know each others', () => {
   expect(game.stage).toBeInstanceOf(stages.Start);
 
   nextStage('Guard');
-  expect(werewolfs).toHaveLength(4);
-  expect(werewolfs).toSatisfyAll((w: Werewolf) => w.knowEachOthers);
+  expect(werewolves).toHaveLength(4);
+  expect(werewolves).toSatisfyAll((w: Werewolf) => w.knowEachOthers);
   guard.protect(villagers[0]);
 
   nextStage('Night');
-  werewolfs[0].idle();
+  werewolves[0].idle();
   expect(() => game.next()).toThrowError(t(`StageNotEnded`));
-  werewolfs.slice(1).forEach(w => w.kill(villagers[0]));
+  werewolves.slice(1).forEach(w => w.kill(villagers[0]));
 
   nextStage('Witcher');
   expect(game.stage.nearDeath).toHaveLength(0);
   expect(villagers[0].causeOfDeath).toHaveLength(0);
   expect(witcher.idle());
 
-  expect(werewolfs[0].hungry).toBeFalse();
+  expect(werewolves[0].hungry).toBeFalse();
 
   nextStage('Predictor');
   predictor.predict(villagers[0]);
@@ -57,13 +57,13 @@ test('werewolves know each others', () => {
   guard.protect(guard);
 
   nextStage('Night');
-  werewolfs.forEach(werewolf => {
+  werewolves.forEach(werewolf => {
     expect(() => werewolf.kill(villagers[0])).toThrowError(t(`CantKillDeadTarget`, villagers[0].nickname));
-    werewolf.kill(werewolfs[0]);
+    werewolf.kill(werewolves[0]);
   });
 
   nextStage('Witcher');
-  witcher.rescue(werewolfs[0]);
+  witcher.rescue(werewolves[0]);
 
   nextStage('Predictor');
   predictor.predict(guard);
@@ -75,18 +75,18 @@ test('werewolves know each others', () => {
   nextStage('Voted');
 
   nextStage('Guard');
-  guard.protect(werewolfs[0]);
+  guard.protect(werewolves[0]);
 
   nextStage('Night');
-  werewolfs[0].kill(predictor);
-  werewolfs.slice(1).forEach(werewolf => werewolf.idle());
+  werewolves[0].kill(predictor);
+  werewolves.slice(1).forEach(werewolf => werewolf.idle());
 
   nextStage('Witcher');
-  expect(werewolfs).toSatisfyAll((werewolf: Werewolf) => werewolf.hungry);
+  expect(werewolves).toSatisfyAll((werewolf: Werewolf) => werewolf.hungry);
   expect(predictor.causeOfDeath).toHaveLength(0);
 
   nextStage('Predictor');
-  predictor.predict(werewolfs[1]);
+  predictor.predict(werewolves[1]);
 
   nextStage('Daytime');
   nextStage('Vote');
@@ -98,11 +98,11 @@ test('werewolves know each others', () => {
   guard.noProtect();
 
   nextStage('Night');
-  werewolfs.forEach(werewolf => {
+  werewolves.forEach(werewolf => {
     expect(() => werewolf.idle()).toThrowError(t(`Hungry`));
   });
-  werewolfs.slice(0, 2).forEach(werewolf => werewolf.kill(villagers[1]));
-  werewolfs.slice(2, 4).forEach(werewolf => werewolf.kill(villagers[2]));
+  werewolves.slice(0, 2).forEach(werewolf => werewolf.kill(villagers[1]));
+  werewolves.slice(2, 4).forEach(werewolf => werewolf.kill(villagers[2]));
 
   nextStage('Witcher');
   nextStage('Predictor');
@@ -118,14 +118,14 @@ test('werewolves know each others', () => {
 
   nextStage('Guard');
   nextStage('Night');
-  werewolfs.forEach(werewolf => werewolf.kill(hunter));
+  werewolves.forEach(werewolf => werewolf.kill(hunter));
 
   nextStage('Witcher');
   nextStage('Predictor');
   nextStage('Daytime');
   nextStage('Hunter');
 
-  hunter.shoot(werewolfs[3]);
+  hunter.shoot(werewolves[3]);
   nextStage('HunterEnd');
 
   nextStage('Vote');

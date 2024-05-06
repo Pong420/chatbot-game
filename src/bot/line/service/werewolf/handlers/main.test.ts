@@ -10,7 +10,7 @@ declare let game: WerewolfGame;
 declare let stage: WerewolfGame['stage'];
 declare let survivors: WerewolfPlayer[];
 declare let villagers: WerewolfPlayer[];
-declare let werewolfs: WerewolfPlayer[];
+declare let werewolves: WerewolfPlayer[];
 declare let werewolf: WerewolfPlayer;
 declare let hunters: WerewolfPlayer[];
 declare let hunter: WerewolfPlayer;
@@ -64,28 +64,28 @@ test('main', async () => {
 
   await next(board.werewolfGroup());
 
-  for (const werewolf of werewolfs.slice(0, -1)) {
+  for (const werewolf of werewolves.slice(0, -1)) {
     await werewolf.s(t(`IamWerewolf`)).toEqual(board.werewolf(game, werewolf.userId));
     await werewolf.s(t.regex(`Kill`, villagers[0].name)).toTextMessage(t(`KillSuccss`));
     await werewolf.s(t.regex(`Kill`, villagers[0].name)).toTextMessage(t(`TurnEnded`));
   }
 
-  await werewolfs.slice(-1)[0].s(t(`Idle`)).toTextMessage(t(`IdleSuccess`));
+  await werewolves.slice(-1)[0].s(t(`Idle`)).toTextMessage(t(`IdleSuccess`));
 
   await hunter.s(t(`IamHunter`)).toTextMessage(t(`NotYourTurn2`));
-  await hunter.s(t.regex(`Shoot`, werewolfs[0].name)).toTextMessage(t(`NotReadyForShoot`));
+  await hunter.s(t.regex(`Shoot`, werewolves[0].name)).toTextMessage(t(`NotReadyForShoot`));
 
   // Witcher --------------------------------------------------------------------------------
 
-  await anyGroupMessage(werewolfs[0], board.witcherGroup());
+  await anyGroupMessage(werewolves[0], board.witcherGroup());
 
   await witcher.s(t(`IamWitcher`)).toEqual(board.rescue(stage));
   await witcher.s(t(`ShowRescueBoard`)).toEqual(board.rescue(stage));
   await witcher.s(t(`ShowPoisonBoard`)).toEqual(board.poison(stage, witcher.userId));
   await witcher.s(t.regex(`Rescue`, villagers[0].name)).toTextMessage(t(`RescueSuccess`));
   await witcher.s(t.regex(`Rescue`, villagers[0].name)).toTextMessage(t(`TurnEnded`));
-  await werewolfs[0].s(t(`ShowRescueBoard`)).toBeUndefined();
-  await werewolfs[0].s(t(`ShowPoisonBoard`)).toBeUndefined();
+  await werewolves[0].s(t(`ShowRescueBoard`)).toBeUndefined();
+  await werewolves[0].s(t(`ShowPoisonBoard`)).toBeUndefined();
 
   // Predictor --------------------------------------------------------------------------------
 
@@ -93,8 +93,8 @@ test('main', async () => {
 
   await predictor.s(t(`IamPredictor`)).toEqual(board.predictor(game, predictor.userId));
   await predictor
-    .s(t.regex(`Predict`, werewolfs[0].name))
-    .toTextMessage(t(`PredictResult`, werewolfs[0].name, t('PredictedBadGuy')));
+    .s(t.regex(`Predict`, werewolves[0].name))
+    .toTextMessage(t(`PredictResult`, werewolves[0].name, t('PredictedBadGuy')));
 
   // Daytime --------------------------------------------------------------------------------
 
@@ -102,10 +102,10 @@ test('main', async () => {
 
   // Vote --------------------------------------------------------------------------------
 
-  await anyGroupMessage(werewolfs[0], () => board.vote(game));
+  await anyGroupMessage(werewolves[0], () => board.vote(game));
   await host.g(t(`WhoNotVoted`)).toEqual(board.notVoted(stage));
   await next(() => board.vote(game));
-  await allVoteTo(werewolfs[3]);
+  await allVoteTo(werewolves[3]);
 
   // Voted --------------------------------------------------------------------------------
 
@@ -121,9 +121,9 @@ test('main', async () => {
   // Night --------------------------------------------------------------------------------
 
   await next(board.werewolfGroup());
-  await werewolfs[0].s(t.regex(`Kill`, hunter.name)).toTextMessage(t(`KillSuccss`));
-  await werewolfs[1].s(t.regex(`Idle`)).toTextMessage(t(`IdleSuccess`));
-  await werewolfs[2].s(t.regex(`Suicide`)).toTextMessage(t(`SuicideSuccss`));
+  await werewolves[0].s(t.regex(`Kill`, hunter.name)).toTextMessage(t(`KillSuccss`));
+  await werewolves[1].s(t.regex(`Idle`)).toTextMessage(t(`IdleSuccess`));
+  await werewolves[2].s(t.regex(`Suicide`)).toTextMessage(t(`SuicideSuccss`));
 
   // Witcher --------------------------------------------------------------------------------
 
@@ -172,9 +172,9 @@ test('main', async () => {
   // Night --------------------------------------------------------------------------------
 
   await next(board.werewolfGroup());
-  await werewolfs[0].s(t.regex(`Kill`, werewolfs[1].name)).toTextMessage(t(`KillSuccss`));
-  await werewolfs[1].s(t.regex(`Idle`)).toTextMessage(t(`Hungry`));
-  await werewolfs[1].s(t.regex(`Kill`, witcher.name)).toTextMessage(t(`KillSuccss`));
+  await werewolves[0].s(t.regex(`Kill`, werewolves[1].name)).toTextMessage(t(`KillSuccss`));
+  await werewolves[1].s(t.regex(`Idle`)).toTextMessage(t(`Hungry`));
+  await werewolves[1].s(t.regex(`Kill`, witcher.name)).toTextMessage(t(`KillSuccss`));
 
   // Witcher --------------------------------------------------------------------------------
 

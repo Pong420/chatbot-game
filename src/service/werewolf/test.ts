@@ -14,7 +14,7 @@ interface CreateGameOptions extends GameSettingOption {
 declare let game: Game;
 declare let stage: Stage;
 declare let survivors: Character[];
-declare let werewolfs: Werewolf[];
+declare let werewolves: Werewolf[];
 declare let villagers: Villager[];
 declare let hunters: Hunter[];
 declare let hunter: Hunter;
@@ -29,7 +29,7 @@ export function testSuite() {
   vi.stubGlobal('game', undefined);
   vi.stubGlobal('stage', undefined);
   vi.stubGlobal('survivors', []);
-  vi.stubGlobal('werewolfs', []);
+  vi.stubGlobal('werewolves', []);
   vi.stubGlobal('villagers', []);
   vi.stubGlobal('hunters', []);
   vi.stubGlobal('hunter', undefined);
@@ -69,7 +69,7 @@ export function testSuite() {
     expect(stage).toBeInstanceOf(StageConstructor);
 
     survivors = game.stage.survivors;
-    werewolfs = game.getPlayersByCharacter(Werewolf);
+    werewolves = game.getPlayersByCharacter(Werewolf);
     villagers = game.getPlayersByCharacter(Villager);
     hunters = game.getPlayersByCharacter(Hunter);
     hunter = hunters[0];

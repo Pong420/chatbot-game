@@ -36,7 +36,7 @@ declare let game: Game;
 declare let stage: Stage;
 declare let survivors: WerewolfPlayer[];
 declare let villagers: WerewolfPlayer[];
-declare let werewolfs: WerewolfPlayer[];
+declare let werewolves: WerewolfPlayer[];
 declare let werewolf: WerewolfPlayer;
 declare let hunters: WerewolfPlayer[];
 declare let hunter: WerewolfPlayer;
@@ -54,7 +54,7 @@ export function testSuite() {
   vi.stubGlobal('stage', undefined);
   vi.stubGlobal('villagers', []);
   vi.stubGlobal('survivors', []);
-  vi.stubGlobal('werewolfs', []);
+  vi.stubGlobal('werewolves', []);
   vi.stubGlobal('werewolf', undefined);
   vi.stubGlobal('hunters', []);
   vi.stubGlobal('hunter', undefined);
@@ -78,7 +78,7 @@ export function testSuite() {
 
     survivors = game.stage.survivors.map(p => players.find(player => player.userId === p.id)!).filter(Boolean);
     villagers = getPlayersByCharacter(Villager);
-    werewolfs = getPlayersByCharacter(Werewolf);
+    werewolves = getPlayersByCharacter(Werewolf);
     hunters = getPlayersByCharacter(Hunter);
     hunter = hunters[0];
     guards = getPlayersByCharacter(Guard);

@@ -1,8 +1,8 @@
 import { Action, FlexComponent } from '@line/bot-sdk';
 import { t } from '@werewolf/locales';
-import { Game, Werewolf } from '@werewolf/game';
+import { Game } from '@werewolf/game';
 import { Stage, VoteBaseStage, HunterEnd, End, Start } from '@werewolf/stage';
-import { Character, Predictor, Villager } from '@werewolf/character';
+import { Character, Predictor, Villager, Werewolf } from '@werewolf/character';
 import {
   messageAction,
   sendTextToBot,
@@ -15,9 +15,9 @@ import {
   wrapedText,
   createFlexText,
   Payload,
-  uriAction,
   orderList,
-  liffUrl
+  liffAction,
+  postBackTextAction
 } from '@line/utils/createMessage';
 
 interface PlayerListProps {
@@ -41,7 +41,7 @@ export function initiate(id: number) {
     rows: orderList(t.paragraph('SettingsDesc')),
     buttons: [
       primaryButton(messageAction(t(`UseDefaultSetup`), t(`SetupCompleted`))),
-      secondaryButton(uriAction(t(`UseCustomSetup`), liffUrl(`/werewolf/settings/${id}`)))
+      secondaryButton(liffAction(t(`UseCustomSetup`), `/werewolf/settings/${id}`))
     ]
   });
 }
@@ -309,9 +309,9 @@ function playerList({ title = [], names, action, buttons, footer }: PlayerListPr
   });
 }
 
-export function werewolf(game: Werewolf, killerId: string) {
+export function werewolf(game: Game, werewolfId: string) {
   const names = game.stage.survivors.reduce(
-    (names, player) => (killerId === player.id ? names : [...names, player.nickname]),
+    (names, player) => (werewolfId === player.id ? names : [...names, player.nickname]),
     [] as string[]
   );
 
@@ -323,7 +323,24 @@ export function werewolf(game: Werewolf, killerId: string) {
   });
 }
 
-export function guard(game: Werewolf, guardId: string) {
+export function werewolves(game: Game, werewolfId: string) {
+  const names = game.stage.survivors.reduce(
+    (names, player) => (werewolfId !== player.id && player instanceof Werewolf ? names : [...names, player.nickname]),
+    [] as string[]
+  );
+
+  return playerList({
+    names,
+    title: [centeredText(t(`WerewolvesBoard`))],
+    footer: [wrapedText(t(`WerewolvesBoardDesc`))],
+    buttons: [
+      primaryButton(liffAction(t('ChatRoom'), `/chat/${game.chat}`)),
+      secondaryButton(postBackTextAction(t(`WerewolfControlPanel`)))
+    ]
+  });
+}
+
+export function guard(game: Game, guardId: string) {
   const names = game.stage.survivors.reduce(
     (names, player) => (guardId === player.id ? names : [...names, player.nickname]),
     [] as string[]
@@ -336,7 +353,7 @@ export function guard(game: Werewolf, guardId: string) {
   });
 }
 
-export function predictor(game: Werewolf, predictorId: string) {
+export function predictor(game: Game, predictorId: string) {
   const predictor = game.getPlayer<Predictor>(predictorId);
   return tableMessage({
     title: [wrapAndCenterText(t(`PredictorBoard`))],
@@ -390,8 +407,8 @@ export function poison(stage: Stage, witcherId: string) {
   });
 }
 
-export function hunter(stage: Stage, hunterId: string) {
-  const names = stage.survivors.reduce(
+export function hunter(game: Game, hunterId: string) {
+  const names = game.stage.survivors.reduce(
     (res, survivor) => (survivor.id === hunterId ? res : [...res, survivor.nickname]),
     [] as string[]
   );

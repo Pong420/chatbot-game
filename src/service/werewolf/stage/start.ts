@@ -75,6 +75,9 @@ export class Start extends Stage {
         const CharacterConstructor = randomPick(characters);
         const data = instanceToPlain(v);
         const player = plainToInstance(CharacterConstructor, data);
+        if (player instanceof Werewolf && this.game.werewolvesKnowEachOthers) {
+          player.knowEachOthers = true;
+        }
         return [id, player];
       })
     );

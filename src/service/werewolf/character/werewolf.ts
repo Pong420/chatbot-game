@@ -13,6 +13,7 @@ export class Werewolf extends Character {
   killed: string[] = [];
 
   hungry = false;
+  knowEachOthers = false;
 
   protected _kill(character: Character) {
     const suicide = this.id === character.id;

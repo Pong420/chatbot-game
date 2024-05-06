@@ -12,7 +12,7 @@ export default [
   createHandler(Group, TextEqual(t('IamWerewolf')), IsPlayer, () => t(`IamWerewolfGroup`)),
   createHandler(
     Single,
-    TextEqual(t('IamWerewolf')),
+    TextEqual([t('IamWerewolf'), t('WerewolfControlPanel')]),
     IsWerewolf({ turnEndedError: true, yourAreNotError: true }),
     ({ userId, game }) => board.werewolf(game, userId)
   ),

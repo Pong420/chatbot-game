@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { redirect, RedirectType } from 'next/navigation';
 import { checkIsLineClient } from '@line/next';
 import { SettingForm } from '@/components/werewolf/SettingForm';
-import { updateSettings } from '@/service/actions/werewolf';
+import { updateSettings } from '@service/actions/werewolf';
 import { characters } from '@werewolf/utils';
 
 export const metadata: Metadata = {

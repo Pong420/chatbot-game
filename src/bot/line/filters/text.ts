@@ -14,6 +14,7 @@ interface TextEqualOptions extends TextOptions {
 
 type TextEqualReturn<T = string | boolean | undefined> = (event: WebhookEvent) => T | Promise<T>;
 export function TextEqual(except: string | string[]): TextEqualReturn<false | undefined>;
+export function TextEqual(except: string | string[], options?: TextEqualOptions): TextEqualReturn; // prettier-ignore
 export function TextEqual(except: string | string[], options: TextEqualOptions & { shouldReturn: true }): TextEqualReturn; // prettier-ignore
 export function TextEqual(except: string | string[], options: TextEqualOptions = {}): TextEqualReturn {
   const validate =
@@ -26,7 +27,7 @@ export function TextEqual(except: string | string[], options: TextEqualOptions =
 
     if (isPostBackEvent(event)) {
       text = getPostBackText(event);
-    } else if (options?.postbackOnly) return;
+    } else if (options?.postbackOnly) return false;
 
     if (isTextMessage(event)) {
       text = event.message.text;

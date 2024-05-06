@@ -14,7 +14,7 @@ export default [
     Single,
     TextEqual(t('IamHunter')),
     IsHunter({ turnEndedError: true, yourAreNotError: true }),
-    ({ game, character }) => board.hunter(game.stage, character.id)
+    ({ game, character }) => board.hunter(game, character.id)
   ),
   createHandler(Single, IsHunter({ target: t('Shoot') }), async ({ game, target, character }) => {
     const message = character.shoot(target);

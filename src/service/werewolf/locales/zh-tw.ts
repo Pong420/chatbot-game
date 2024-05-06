@@ -104,8 +104,8 @@ export default defineMessages(
     AvailableCharactersDefault: `可用角色視乎最終遊戲人數`,
     AutoModeEnabled: `自動模式: 開啟`,
     AutoModeDisabled: `自動模式: 關閉`,
-    WerewolvesKnowEachOthers: `狼人會知道誰是隊友`,
-    WerewolvesDontKnowEachOthers: `狼人不知道誰是隊友`,
+    WerewolvesKnowEachOthers: `狼人知道誰是狼人，但每晚只會有一種行動`,
+    WerewolvesDontKnowEachOthers: `狼人不知道誰是狼人，每位狼人可以任意行動`,
     Friendship: `謹記！友誼第一`,
 
     Players: '參賽者',
@@ -152,6 +152,10 @@ export default defineMessages(
     DuplicatedSuicide: '知道了，你就這麼想死嗎?',
     CantKillDeadTarget: ['{0}已經死了，你們是有多大仇!?', '{0}已經死了，放過他吧'],
     ClickToSelect: '點擊名稱選擇目標',
+    WerewolvesBoard: `狼人聯盟`,
+    WerewolvesBoardDesc: `最終行動是小數服從多數，平票隨機選擇，小心內鬼！`,
+    ChatRoom: `聊天室`,
+    WerewolfControlPanel: `狼人操作`,
 
     IamGuardGroup: `請守護我(\´▽\`ʃ♡ƪ)`,
     ProtectSuccess: [`好`, `你是好人`],

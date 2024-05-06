@@ -1,5 +1,6 @@
 import { createHandler } from '@line/handler';
 import { Group, TextEqual, TextMatch } from '@line/filter';
+import { createChat } from '@service/chat';
 import { endGame, updateGame } from '@service/game';
 import { t } from '@werewolf/locales';
 import { Werewolf } from '@werewolf/game';
@@ -43,6 +44,16 @@ export default [
   createHandler(Group, TextEqual(t('SetupCompleted')), IsHost, async ({ game }) => {
     if (!(game.stage instanceof Init)) return;
     game.next();
+
+    if (game.werewolvesKnowEachOthers) {
+      const chatCreated = await createChat({ game: game.id });
+      if (chatCreated.error || !chatCreated.data) {
+        console.warn('chat create error', chatCreated);
+        return t(`SystemError`);
+      }
+      game.chat = chatCreated.data.id;
+    }
+
     await updateGame(game);
     return board.settings(game);
   }),

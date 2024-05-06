@@ -55,6 +55,8 @@ export class Game extends GameInstance {
 
   host: string; // host's userId;
 
+  chat?: string; // chat id
+
   autoMode = true;
 
   @Type(() => Stage, {

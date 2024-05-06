@@ -147,7 +147,7 @@ test('main', async () => {
   // Hunter --------------------------------------------------------------------------------
 
   await next(board.hunterGroup());
-  await hunter.s(t(`IamHunter`)).toEqual(board.hunter(stage, hunter.userId));
+  await hunter.s(t(`IamHunter`)).toEqual(board.hunter(game, hunter.userId));
   await hunter.s(t.regex(`Shoot`, hunter.name)).toTextMessage(t('ShootSelf'));
   await hunter.s(t.regex(`Shoot`, guard.name)).toTextMessage(t('ShootSuccess'));
 

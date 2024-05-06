@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useTransition } from 'react';
+import { toast } from 'sonner';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { Message } from '@service/chat';
 import { sendMessage, SendMessage } from '@service/actions/werewolf';
@@ -58,11 +59,13 @@ export function Chat({ chat, initialMessages, onSubmit }: ChatProps) {
           setMessages(messages => [...messages, resp['payload']]);
         }
       })
-      .subscribe();
+      .subscribe(status => {
+        if (status === 'CHANNEL_ERROR') toast.error('Disconnected');
+      });
 
     getProfile()
       .then(setProfile)
-      .catch(() => void 0);
+      .catch(() => toast.error('登入失敗'));
 
     setChannel(channel);
     return () => {

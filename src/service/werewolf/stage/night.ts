@@ -1,7 +1,7 @@
 import { Stage } from './_stage';
 import { Killed } from '../death';
 import { Werewolf, WerewolfDecision } from '../character';
-import { randomPick } from '@/utils/random';
+import { randomOption } from '@/utils/random';
 
 export class Night extends Stage {
   readonly name = 'Night';
@@ -64,7 +64,7 @@ export class Night extends Stage {
         }
       }
 
-      const decision = randomPick(result.decisions);
+      const decision = randomOption(result.decisions);
 
       this.handleKill(decision, 'werewolves');
       werewolves.forEach(werewolf => this.updateStatus(werewolf, decision));

@@ -95,7 +95,7 @@ export function SettingForm({ isLineClient, characters, onSubmit }: SettingFormP
       id: 'enableCustomCharacters',
       title: `自選遊戲角色`,
       description: [
-        `角色數量最少6個，最多12，其中最少1個好人和1個壞人，角色可以自由配搭，例如可以 11狼人 + 1村民，但不保證沒有Bug。`,
+        `角色數量最少6個，最多12，其中最少1個好人和1個壞人，角色可以自由配搭，例如可以 11狼人 + 1村民。已儘量考慮各種可能性，如有問題歡迎回報。`,
         `自定義角色後，參與人數必須和角色數量一樣才能開始遊戲。`
       ],
       children: (
@@ -110,18 +110,16 @@ export function SettingForm({ isLineClient, characters, onSubmit }: SettingFormP
       id: 'autoMode',
       title: `自動模式`,
       description: [
-        `開啟後，每次收到群組有訊息都會查看是否能進入下回合，可以的話會回覆下一回合的訊息。`,
+        `開啟後，收到任何人發群組訊息都會進行查詢，如能進入下回合即會回覆，只要群組有人在聊天就可以。`,
         `希望帶節奏的主持人可以關閉，然後主動輸入【n】去查詢師是否等進入下一回合。`
       ]
     },
     {
       id: 'werewolvesKnowEachOthers',
-      title: `狼人知道誰是隊友 ( 未開放 )`,
+      title: `狼人知道誰是狼人`,
       description: [
-        `開啟後，在狼人的回合，狼人可以知道其他狼人是誰，但每一回合只能選擇一個目標殺死，或者選擇平安夜，實際行動按小數服從多數，平票隨機選擇一個選項。`,
-        `因為技術限制，目前狼人只能自己拉個群組討論，所以這個設定有點雞肋，我最多只能建一個簡單的網頁聊天室，但麻煩暫時不考慮。`
-      ],
-      disabled: true
+        `開啟後，在狼人的回合，機器人會回覆其他狼人的身份，但每一回合只能選擇一個目標殺死，或者選擇平安夜，實際行動按小數服從多數，平票隨機選擇一個選項。`
+      ]
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ] satisfies { [x: string]: any; id: keyof SettingValues }[];
@@ -131,11 +129,10 @@ export function SettingForm({ isLineClient, characters, onSubmit }: SettingFormP
   return (
     <form className="max-w-screen-sm mx-auto p-4 flex flex-col min-h-full" onSubmit={handleSubmit}>
       <div className="flex flex-col gap-4">
-        {settings.map(({ id, title, description, children, disabled }) => (
+        {settings.map(({ id, title, description, children }) => (
           <FormField
             key={id}
             name={id}
-            disabled={disabled}
             control={form.control}
             render={({ field: { value, ...field } }) => (
               <Card className="p-4 group aria-disabled:opacity-50 select-none" aria-disabled={field.disabled}>

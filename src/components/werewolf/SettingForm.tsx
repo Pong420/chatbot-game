@@ -2,12 +2,13 @@
 import { useEffect, useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { getLiffProfile } from '@line/next';
 import type { GameSettingOption } from '@werewolf/game';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { FormField } from '@/components/ui/form';
 import {
   AlertDialog,
@@ -86,9 +87,7 @@ export function SettingForm({ isLineClient, characters, onSubmit }: SettingFormP
       try {
         if (isLineClient) {
           const { liff } = await import('@line/liff');
-          const liffId = process.env.NEXT_PUBLIC_LIFF_ID || '';
-          await liff.init({ liffId });
-          const { userId } = await liff.getProfile();
+          const { userId } = await getLiffProfile();
           await submit(userId, formdata);
           try {
             await liff.sendMessages([{ type: 'text', text: '狼人殺設定完畢' }]);

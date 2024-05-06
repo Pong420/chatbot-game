@@ -1,0 +1,7 @@
+//robots.txt
+
+User-agent: *
+Disallow: /chat
+
+User-agent: *
+Allow: /

@@ -26,6 +26,10 @@ export const uriAction = (label: string, uri: string): Action => {
   };
 };
 
+export function liffUrl(pathname: string) {
+  return `https://liff.line.me/${process.env.NEXT_PUBLIC_LIFF_ID}${pathname}`;
+}
+
 export const sendTextToBot = (label: string, text = label) => {
   const botId = process.env.LINE_BOT_ID || '';
   if (!botId) throw new Error(`botId not defined`);

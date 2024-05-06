@@ -120,6 +120,7 @@ export type Database = {
       };
       chat_messages: {
         Row: {
+          avatar: string | null;
           chat: string;
           created_at: string;
           id: number;
@@ -127,6 +128,7 @@ export type Database = {
           text: string;
         };
         Insert: {
+          avatar?: string | null;
           chat: string;
           created_at?: string;
           id?: number;
@@ -134,6 +136,7 @@ export type Database = {
           text: string;
         };
         Update: {
+          avatar?: string | null;
           chat?: string;
           created_at?: string;
           id?: number;

@@ -16,9 +16,9 @@ import {
   createFlexText,
   Payload,
   uriAction,
-  orderList
+  orderList,
+  liffUrl
 } from '@line/utils/createMessage';
-import { liffUrl } from '@line/utils/liff';
 
 interface PlayerListProps {
   names: string[];

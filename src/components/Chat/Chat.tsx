@@ -1,12 +1,16 @@
 'use client';
 
 import { useState, useEffect, useTransition } from 'react';
+import { RealtimeChannel } from '@supabase/supabase-js';
 import { Message } from '@service/chat';
 import { sendMessage, SendMessage } from '@service/actions/werewolf';
 import { supabase } from '@service/supabase.borwser';
+import { Profile, getProfile } from '@line/next';
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
+import { LoadingScreen } from '@/components/LoadingScreen';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { ChatInput } from './ChatInput';
 import { ChatMessage } from './ChatMessage';
-import { RealtimeChannel } from '@supabase/supabase-js';
 
 export interface SubmitPayload {
   text: string;
@@ -20,31 +24,24 @@ export interface ChatProps {
 }
 
 const scrollToBottom = () => {
-  window.scrollTo(0, document.documentElement.scrollHeight);
+  /**
+   * 365 for ios virtual keybord is opened
+   */
+  window.scrollTo(0, document.documentElement.scrollHeight - 365);
 };
 
 export function Chat({ chat, initialMessages, onSubmit }: ChatProps) {
   const [channel, setChannel] = useState<RealtimeChannel>();
   const [messages, setMessages] = useState(initialMessages);
+  const [profile, setProfile] = useState<Profile>();
   const [sendingMessage, startSendMessage] = useTransition();
-  const [getUserId] = useState(async () => {
-    try {
-      const { liff } = await import('@line/liff');
-      const liffId = process.env.NEXT_PUBLIC_LIFF_ID || '';
-      await liff.init({ liffId });
-      const { userId } = await liff.getProfile();
-      return userId;
-    } catch (error) {
-      return 'Anonymous';
-    }
-  });
 
   const handleSubmit = (text: string) => {
     text = text.trim();
-    if (!text) return;
+    if (!text || !profile) return;
     startSendMessage(async () => {
-      const userId = await getUserId;
-      const { data } = await onSubmit?.({ text, userId });
+      const { userId, pictureUrl } = profile;
+      const { data } = await onSubmit?.({ text, userId, avatar: pictureUrl });
       data && channel?.send({ type: 'broadcast', event: 'message', payload: data });
     });
   };
@@ -62,21 +59,39 @@ export function Chat({ chat, initialMessages, onSubmit }: ChatProps) {
         }
       })
       .subscribe();
+
+    getProfile()
+      .then(setProfile)
+      .catch(() => void 0);
+
     setChannel(channel);
     return () => {
       channel.unsubscribe();
     };
   }, [chat]);
 
-  useEffect(() => scrollToBottom(), [messages]);
+  useEffect(() => scrollToBottom(), [messages, profile]);
+
+  if (!profile) return <LoadingScreen />;
 
   return (
     <>
-      {messages.map(m => (
-        <ChatMessage key={m.id} sender={m.sender}>
-          {m.text}
-        </ChatMessage>
-      ))}
+      <Alert className="bg-amber-400 border-none shadow-md">
+        <ExclamationTriangleIcon className="h-4 w-4" />
+        <AlertTitle>注意</AlertTitle>
+        <AlertDescription>對話沒有經過沒有加密而且半公開，請勿在這裡發送重要的訊息。</AlertDescription>
+      </Alert>
+      <div className="space-y-0">
+        {messages.map((m, i) => (
+          <ChatMessage
+            key={m.id}
+            sender={m.sender === messages[i - 1]?.sender ? undefined : m.sender}
+            self={m.sender === profile.userId}
+          >
+            {m.text}
+          </ChatMessage>
+        ))}
+      </div>
       <ChatInput className="max-w-xl" loading={sendingMessage} onSubmit={handleSubmit} />
     </>
   );

@@ -17,7 +17,8 @@ import {
   Payload,
   orderList,
   liffAction,
-  postBackTextAction
+  postBackTextAction,
+  uriAction
 } from '@line/utils/createMessage';
 
 interface PlayerListProps {
@@ -187,9 +188,8 @@ export function myCharacter(character: Character) {
     title: [centeredText(t('YourCharacter'))],
     rows: [[wrapedText(t('YourCharacter', character.type))]],
     buttons: [
-      primaryButton(messageAction(iamCmd))
-      // TODO: link to website
-      // secondaryButton(messageAction(t('CharacterIntroButton'), introCmd))
+      primaryButton(messageAction(iamCmd)),
+      secondaryButton(uriAction(t('CharacterIntroButton'), `https://chatbot-games.vercel.app/docs/werewolf/characters`))
     ]
   });
 }

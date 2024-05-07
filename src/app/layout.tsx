@@ -23,7 +23,8 @@ export const metadata: Metadata = {
       sizes: '180x180',
       url: '/apple-touch-icon.png'
     }
-  }
+  },
+  keywords: ['Line聊天機器人', 'Line遊戲']
 };
 
 export const viewport: Viewport = {
@@ -35,7 +36,9 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="zh-TW" suppressHydrationWarning>
-      <head></head>
+      <head>
+        <meta name="google-site-verification" content="DGWASqUvaiJCxsTPT8lPX1a6-kj4yB6GNTSl2BpXREE" />
+      </head>
       <body>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           {children}

@@ -21,7 +21,7 @@ export async function deleteChat({ chat, gameId }: { chat?: string; gameId: numb
 }
 
 export async function createMessage(payload: CreateMessage) {
-  return supabase.from('chat_messages').insert(payload).select();
+  return supabase.from('chat_messages').insert(payload).select().single();
 }
 
 export async function getMessages({ chat }: { chat: string }) {

@@ -69,33 +69,38 @@ export interface SendMessage extends Omit<CreateMessage, 'chat' | 'sender'> {
 }
 
 export async function sendMessage(chat: string, { userId, ...payload }: SendMessage) {
-  const chatResp = await getChat({ chat });
-  if (!chatResp.data?.game) return { data: null, error: 'Not Found' };
+  try {
+    const chatResp = await getChat({ chat });
+    if (!chatResp.data?.game) return { data: null, error: 'Not Found' };
 
-  let sender = userId;
+    let sender = userId;
 
-  if (process.env.NODE_ENV === 'production') {
-    const { game: gameId } = chatResp.data;
-    const game = await isWerewolfGame(gameId);
-    if (!game) return { message: `遊戲不存在` };
+    if (process.env.NODE_ENV === 'production' || !sender.startsWith('Anonymous')) {
+      const { game: gameId } = chatResp.data;
+      const game = await isWerewolfGame(gameId);
+      if (!game) return { error: `遊戲不存在` };
 
-    const player = game.players.get(userId);
-    if (!(player && player instanceof Werewolf)) return { message: '玩家不存在' };
+      const player = game.players.get(userId);
+      if (!(player && player instanceof Werewolf)) return { error: '玩家不存在' };
 
-    sender = player.nickname;
+      sender = player.nickname;
+    }
+
+    const { data, error } = await createMessage({
+      chat,
+      sender,
+      ...payload
+    });
+
+    if (error) {
+      return { data, error: error.message };
+    }
+
+    revalidatePath(`/chat/${chat}`);
+
+    return { data, error };
+  } catch (error) {
+    console.error(error);
+    return { message: 'System Error' };
   }
-
-  const { data, error } = await createMessage({
-    chat,
-    sender,
-    ...payload
-  });
-
-  if (error) {
-    return { data, error: error.message };
-  }
-
-  revalidatePath(`/chat/${chat}`);
-
-  return { data: data[0], error };
 }

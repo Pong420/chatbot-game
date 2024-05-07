@@ -42,12 +42,14 @@ export function Chat({ chat, initialMessages, onSubmit }: ChatProps) {
     if (!text || !profile) return;
     startSendMessage(async () => {
       const { userId, pictureUrl } = profile;
-      const { data } = await onSubmit?.({ text, userId, avatar: pictureUrl });
+      const { data, error } = await onSubmit?.({ text, userId, avatar: pictureUrl });
       data && channel?.send({ type: 'broadcast', event: 'message', payload: data });
+      error && toast.error(error);
     });
   };
 
   useEffect(() => {
+    let connected: boolean | undefined;
     const channel = supabase
       .channel(chat, {
         config: {
@@ -60,7 +62,15 @@ export function Chat({ chat, initialMessages, onSubmit }: ChatProps) {
         }
       })
       .subscribe(status => {
-        if (status === 'CHANNEL_ERROR') toast.error('Disconnected');
+        if (status === 'SUBSCRIBED') {
+          connected === false && toast.success('已連線');
+          connected = true;
+        }
+
+        if (status === 'CLOSED' && connected) {
+          connected = false;
+          toast.error('斷線了，請稍候或者嘗試重新打開');
+        }
       });
 
     getProfile()
@@ -79,12 +89,12 @@ export function Chat({ chat, initialMessages, onSubmit }: ChatProps) {
 
   return (
     <>
-      <Alert className="bg-amber-400 border-none shadow-md">
+      <Alert className="bg-amber-400 border-none shadow-md select-none">
         <ExclamationTriangleIcon className="h-4 w-4" />
         <AlertTitle>注意</AlertTitle>
         <AlertDescription>對話沒有經過沒有加密而且半公開，請勿在這裡發送重要的訊息。</AlertDescription>
       </Alert>
-      <div className="space-y-0">
+      <div className="space-y-0 select-none">
         {messages.map((m, i) => (
           <ChatMessage
             key={m.id}

@@ -1,7 +1,6 @@
 import { MetadataRoute } from 'next';
-import path from 'path';
 
-const url = (pathname = '') => path.join('https://chatbot-games.vercel.app', pathname);
+const url = (pathname = '') => 'https://chatbot-games.vercel.app' + pathname;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

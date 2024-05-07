@@ -24,7 +24,7 @@ export async function updateSettings(
   gameId: number,
   hostId: string,
   payload: z.infer<typeof schema>
-): Promise<{ message?: string }> {
+): Promise<{ error?: string }> {
   const { customCharacters } = payload;
 
   try {
@@ -39,20 +39,20 @@ export async function updateSettings(
         else bad += 1;
       }
 
-      if (good < 1) return { message: `最少要一個好人` };
-      if (bad < 1) return { message: `最少要一個壞人` };
-      if (customCharacters.length < 6) return { message: `角色數量不能小於【6】` };
-      if (customCharacters.length > 12) return { message: `角色數量不能多於【12】` };
+      if (good < 1) return { error: `最少要一個好人` };
+      if (bad < 1) return { error: `最少要一個壞人` };
+      if (customCharacters.length < 6) return { error: `角色數量不能小於【6】` };
+      if (customCharacters.length > 12) return { error: `角色數量不能多於【12】` };
     }
 
     const r = schema.safeParse(payload);
-    if (r.error) return { message: `Invalid Data` };
+    if (r.error) return { error: `Invalid Data` };
 
     const game = await isWerewolfGame(gameId);
-    if (!game) return { message: `遊戲不存在` };
+    if (!game) return { error: `遊戲不存在` };
 
-    if (game.host !== hostId) return { message: `只有主持人可以進行設定` };
-    if (!(game.stage instanceof Init)) return { message: `遊戲已開始，無法更改設定` };
+    if (game.host !== hostId) return { error: `只有主持人可以進行設定` };
+    if (!(game.stage instanceof Init)) return { error: `遊戲已開始，無法更改設定` };
 
     Object.assign(game.stage, r.data);
 
@@ -60,7 +60,7 @@ export async function updateSettings(
 
     return {};
   } catch (error) {
-    return { message: '設定失敗' };
+    return { error: '設定失敗' };
   }
 }
 

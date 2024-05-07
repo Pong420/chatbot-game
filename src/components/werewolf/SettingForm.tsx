@@ -17,7 +17,7 @@ import { CharacterSelectorProps, CharacterSelector } from './CharacterSelector';
 export interface SettingFormProps extends Pick<CharacterSelectorProps, 'characters'> {
   isLineClient?: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onSubmit: (userId: string, values: SettingValues) => Promise<{ message?: string }>;
+  onSubmit: (userId: string, values: SettingValues) => Promise<{ error?: string }>;
 }
 
 export type SettingValues = z.infer<typeof formSchema>;
@@ -60,9 +60,7 @@ export function SettingForm({ isLineClient, characters, onSubmit }: SettingFormP
     return () => subscription.unsubscribe();
   }, [watch, reset]);
 
-  const handleSubmit = form.handleSubmit(async ({ ...formdata }) => {
-    const submit: typeof onSubmit = (...args) => onSubmit(...args).then(r => (r?.message ? Promise.reject(r) : r));
-
+  const handleSubmit = form.handleSubmit(({ ...formdata }) => {
     if (!formdata.enableCustomCharacters) {
       delete formdata['customCharacters'];
     }
@@ -74,13 +72,19 @@ export function SettingForm({ isLineClient, characters, onSubmit }: SettingFormP
         if (isLineClient) {
           const { liff } = await import('@line/liff');
           const { userId } = await getLiffProfile();
-          await submit(userId, formdata);
-          try {
-            await liff.sendMessages([{ type: 'text', text: '狼人殺設定完畢' }]);
-            return liff.closeWindow();
-          } catch (error) {
-            toast.error('發送訊息失敗，請關閉視窗並手動輸入【狼人殺設定完畢】以繼續遊戲');
+          const { error } = await onSubmit(userId, formdata);
+
+          if (error) {
+            toast(error);
+            return;
           }
+
+          await liff
+            .sendMessages([{ type: 'text', text: '狼人殺設定完畢' }])
+            .then(() => liff.closeWindow())
+            .catch(() => {
+              toast.error('發送訊息失敗，請關閉視窗並手動輸入【狼人殺設定完畢】以繼續遊戲');
+            });
         }
       } catch (error) {
         toast.error(

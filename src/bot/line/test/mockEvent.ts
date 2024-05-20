@@ -1,5 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { TextMessage, TextEventMessage, MessageEvent, EventSource, Group, User, PostbackEvent } from '@line/bot-sdk';
+import {
+  TextMessage,
+  TextEventMessage,
+  MessageEvent,
+  EventSource,
+  Group,
+  User,
+  PostbackEvent,
+  WebhookEvent
+} from '@line/bot-sdk';
 import './mockClient';
 
 function createText(text: string) {
@@ -89,4 +98,17 @@ export function createGroupTextMessage(text: string, options?: MessageOptions) {
   const { userId = 'userId', groupId = 'groupId', postback, mentionees } = options || {};
   const source: Group = { userId, groupId, type: 'group' };
   return postback ? createPostbackTextEvent(text, source) : createTextMessageEvent(text, source, mentionees);
+}
+
+export function createMemeberJoinedEvent() {
+  return {
+    type: 'memberJoined',
+    joined: { members: [] },
+    mode: 'active',
+    timestamp: Date.now(),
+    source: { type: 'group', groupId: '' },
+    webhookEventId: 'webhookEventId',
+    deliveryContext: { isRedelivery: false },
+    replyToken: String(Date.now())
+  } satisfies WebhookEvent;
 }

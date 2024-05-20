@@ -10,7 +10,7 @@ import { getStageMessage } from './host';
 import * as board from '../board';
 
 export const mainHandlers = [
-  createHandler(GroupId, UserId, TextEqual(t.raw('Initiate')), async (groupId, userId) => {
+  createHandler(GroupId, TextEqual(t.raw('Initiate')), UserId, async (groupId, userId) => {
     let data = await getGame(groupId, { status: GameStatus.OPEN });
     let game: Werewolf;
 

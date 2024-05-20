@@ -2,8 +2,11 @@
 import { expect, test } from 'vitest';
 import { Werewolf as WerewolfGame } from '@werewolf/game';
 import { t } from '@werewolf/locales';
+import { createEventHandler } from '@line/handler';
+import { createMemeberJoinedEvent } from '@line/test';
 import { testSuite, WerewolfPlayer } from '../test';
 import { getDeathReport } from '../report';
+import { default as handlers } from '../handler';
 import * as board from '../board';
 
 declare let game: WerewolfGame;
@@ -213,4 +216,9 @@ test('main', async () => {
   await host.g(t(`End`)).toEqual(board.ended());
 
   await ended();
+});
+
+test('handleEvent - MemberJoin', async () => {
+  const handle = createEventHandler(handlers);
+  await expect(handle(createMemeberJoinedEvent())).resolves.toBeUndefined();
 });

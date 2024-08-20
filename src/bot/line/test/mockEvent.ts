@@ -7,9 +7,10 @@ import {
   Group,
   User,
   PostbackEvent,
-  WebhookEvent
+  MemberJoinEvent
 } from '@line/bot-sdk';
 import './mockClient';
+import { nanoid } from 'nanoid';
 
 function createText(text: string) {
   return { text, type: 'text' } satisfies TextMessage;
@@ -103,12 +104,12 @@ export function createGroupTextMessage(text: string, options?: MessageOptions) {
 export function createMemeberJoinedEvent() {
   return {
     type: 'memberJoined',
-    joined: { members: [] },
+    joined: { members: [{ userId: nanoid(), type: 'user' }] },
     mode: 'active',
     timestamp: Date.now(),
     source: { type: 'group', groupId: '' },
     webhookEventId: 'webhookEventId',
     deliveryContext: { isRedelivery: false },
     replyToken: String(Date.now())
-  } satisfies WebhookEvent;
+  } satisfies MemberJoinEvent;
 }

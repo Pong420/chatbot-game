@@ -7,15 +7,17 @@ import { createFilter } from '@line/filter';
  * Not sure the reason, cannot get the userId for some users, so we need the filter
  */
 export const UserId = (event: WebhookEvent) => {
-  const userId = event.source.userId;
-  if (
-    event.type === 'message' ||
-    event.type === 'postback' ||
-    event.type === 'memberJoined' ||
-    event.type === 'memberLeft'
-  ) {
+  if (event.type === 'message' || event.type === 'postback') {
+    const userId = event.source.userId;
     if (!userId) throw t('GetUserIdFailed');
     return userId;
+  }
+
+  if (event.type === 'memberJoined') {
+    const users = event.joined.members;
+    if (users.length === 1) {
+      return users[0].userId;
+    }
   }
 };
 

@@ -1,16 +1,6 @@
 # Chat Bot
 
-## Werewolf
-
-- TODO:
-  - check group members
-    - leave if too many people?
-  - options
-    - set vote to postback message or private
-    - werewolves know each other
-      - kill one or idle
-  - debounce response
-  - fix stage should not be skip, if the characters are dead
+https://chatbot-games.vercel.app/
 
 ## Development
 
